@@ -1,0 +1,28 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  skill-lint:
+    name: Validate SKILL.md
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Frontmatter and structure checks
+        run: |
+          test -f SKILL.md || { echo "::error::SKILL.md missing"; exit 1; }
+          head -1 SKILL.md | grep -qx -- '---' || { echo "::error::missing frontmatter opener"; exit 1; }
+          grep -q '^name: stackwich' SKILL.md || { echo "::error::frontmatter name missing"; exit 1; }
+          grep -q '^description:' SKILL.md || { echo "::error::frontmatter description missing"; exit 1; }
+          grep -q '^author:' SKILL.md || { echo "::error::frontmatter author missing"; exit 1; }
+          grep -q 'stackwich:v1' SKILL.md || { echo "::error::install block markers missing"; exit 1; }
+          grep -q '/stackwich:v1' SKILL.md || { echo "::error::install block close marker missing"; exit 1; }
+          echo "SKILL.md OK"
+
+      - name: README hero image exists
+        run: test -f docs/sandwich.jpg && echo "docs OK"
