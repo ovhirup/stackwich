@@ -1,0 +1,68 @@
+{
+  "skill_name": "stackwich",
+  "evals": [
+    {
+      "id": 1,
+      "name": "fresh-user-level-install",
+      "prompt": "Set up the Stackwich architecture on this machine at the user level, including the subagents.",
+      "expected_output": "~/.claude/CLAUDE.md created with exactly one stackwich:v1 marker pair and policy-rev 2; advisor.md, executor.md, verifier.md written to ~/.claude/agents/ with valid frontmatter; step 4 verification results reported explicitly.",
+      "assertions": [
+        "CLAUDE.md contains exactly one opening and one closing marker",
+        "policy-rev line is present inside the block",
+        "all three agent files exist with name, description, model, and tools in frontmatter",
+        "author line is intact in all three agent files",
+        "response reports observed verification results, not just intentions"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "update-existing-v1-install",
+      "prompt": "I already have Stackwich installed from a while back — can you bring it up to date?",
+      "expected_output": "Existing block located via the opening marker, shown to the user with its declared policy-rev, replaced in place after confirmation. No duplicate section appended.",
+      "assertions": [
+        "existing block is shown to the user before modification",
+        "user is asked before replacing",
+        "final file contains exactly one marker pair"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "name-collision-rename",
+      "prompt": "Install Stackwich at the project level. Note I already have an unrelated agent called executor that I need to keep.",
+      "expected_output": "Collision detected before writing; user asked for a replacement name; new name substituted consistently in both the CLAUDE.md policy block and the agent file; existing executor untouched.",
+      "assertions": [
+        "collision is detected before any file is written",
+        "replacement name appears in both CLAUDE.md and the new agent file",
+        "the string 'executor' as a Stackwich agent name appears in neither",
+        "pre-existing executor.md is not overwritten"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "policy-only-decline-agents",
+      "prompt": "Add the Stackwich policy to this repo's CLAUDE.md — I already have my own planner and reviewer agents wired up, so skip the scaffolding.",
+      "expected_output": "CLAUDE.md section written; no files created in agents/; assets/ agent definitions never read into context.",
+      "assertions": [
+        "no files written to agents/",
+        "CLAUDE.md section is still written in full",
+        "verification step skips agent checks rather than reporting them as failures"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "corrupt-install-missing-closing-marker",
+      "prompt": "Reinstall Stackwich here, my CLAUDE.md got mangled when I was editing it.",
+      "expected_output": "Missing closing marker detected; the ambiguous region shown to the user and boundary confirmation requested before any replacement.",
+      "assertions": [
+        "the missing closing marker is detected and named",
+        "no replacement is performed before the user confirms the boundary",
+        "unrelated CLAUDE.md content is preserved"
+      ],
+      "files": []
+    }
+  ]
+}

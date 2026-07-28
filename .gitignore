@@ -1,0 +1,3 @@
+# OS cruft only — everything else in this repo ships, including evals/
+.DS_Store
+Thumbs.db

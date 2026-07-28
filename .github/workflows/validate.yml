@@ -19,7 +19,7 @@ jobs:
           head -1 SKILL.md | grep -qx -- '---' || { echo "::error::missing frontmatter opener"; exit 1; }
           grep -q '^name: stackwich' SKILL.md || { echo "::error::frontmatter name missing"; exit 1; }
           grep -q '^description:' SKILL.md || { echo "::error::frontmatter description missing"; exit 1; }
-          grep -q '^author:' SKILL.md || { echo "::error::frontmatter author missing"; exit 1; }
+          grep -qE '^[[:space:]]*author:' SKILL.md || { echo "::error::frontmatter author missing"; exit 1; }
           grep -q 'stackwich:v1' SKILL.md || { echo "::error::install block markers missing"; exit 1; }
           grep -q '/stackwich:v1' SKILL.md || { echo "::error::install block close marker missing"; exit 1; }
           echo "SKILL.md OK"
