@@ -43,7 +43,7 @@ jobs:
           [ "$(grep -c '^```' grok/SKILL.md)" -eq 2 ] || { echo "::error::grok policy block fence unbalanced"; exit 1; }
           [ "$(grep -cxE -- '<!-- stackwich-grok-rev: [0-9]+ -->' grok/SKILL.md)" -eq 1 ] || { echo "::error::grok policy block needs exactly one whole-line rev comment"; exit 1; }
           for h in Prompt Context Harness Loop Graph; do
-            grep -q "^### $h" grok/SKILL.md || { echo "::error::grok policy block missing the $h layer"; exit 1; }
+            awk '/^<!-- stackwich:v1 -->$/,/^<!-- \/stackwich:v1 -->$/' grok/SKILL.md | grep -q "^### $h" || { echo "::error::grok policy block missing the $h layer"; exit 1; }
           done
           echo "grok port OK"
 
@@ -56,7 +56,7 @@ jobs:
           [ "$(grep -cx -- '<!-- /stackwich-codex:v1 -->' codex/references/templates.md)" -eq 1 ] || { echo "::error::codex templates need exactly one whole-line closing marker"; exit 1; }
           [ "$(grep -cxE -- '<!-- stackwich-codex-rev: [0-9]+ -->' codex/references/templates.md)" -eq 1 ] || { echo "::error::codex policy block needs exactly one whole-line rev comment"; exit 1; }
           for h in Prompt Context Harness Loop Graph; do
-            grep -q "^### $h" codex/references/templates.md || { echo "::error::codex policy block missing the $h layer"; exit 1; }
+            awk '/^<!-- stackwich-codex:v1 -->$/,/^<!-- \/stackwich-codex:v1 -->$/' codex/references/templates.md | grep -q "^### $h" || { echo "::error::codex policy block missing the $h layer"; exit 1; }
           done
           for a in advisor executor verifier; do
             grep -q "^## $a.toml" codex/references/templates.md || { echo "::error::templates missing $a.toml section"; exit 1; }
