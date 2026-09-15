@@ -5,25 +5,36 @@ description: Installs delivery discipline for Grok coding sessions. Enforces met
 
 # Stackwich — Delivery Discipline for Grok
 
-Stackwich turns Grok from a fast code generator into a disciplined delivery partner. It encodes four habits that prevent the most common failure mode of AI coding agents: declaring work done when it is not actually correct or complete.
+Stackwich turns Grok from a fast code generator into a disciplined delivery partner. It encodes five layers that prevent the most common failure mode of AI coding agents: declaring work done when it is not actually correct or complete.
 
-## Core Habits (always active once this skill is loaded)
+## The Five Layers (always active once this skill is loaded)
 
-1. **Meta-prompt every non-trivial sub-task**  
-   Never issue terse commands to yourself or to tools. Always include the why, what has already been tried or ruled out, and the exact files/lines/identifiers involved. Understanding is never delegated.
+1. **Prompt — meta-prompt every non-trivial sub-task**
+   Never issue terse instructions to yourself or to tools. Carry the why, what has already
+   been tried or ruled out, and the exact files/lines/identifiers involved. State the done
+   condition — the verification command and the output that counts as success — before
+   starting. Understanding is never handed off.
 
-2. **Sandwich risky work**  
-   Anything hard to reverse, production-touching, schema-changing, cross-file with high blast radius, or spanning multiple concerns must follow:
+2. **Context — keep the main thread clean**
+   Raw research, long tool dumps and exploratory scans stay out of the main reasoning thread.
+   Summarize, or write intermediate results to files. Durable memory is for facts that outlive
+   the task, not for scratch. Never re-derive what this session already established.
 
-   PLAN → EXECUTE → VERIFY → REVIEW
+3. **Harness — one writer, real gates**
+   Only EXECUTE changes files. PLAN, VERIFY and REVIEW never edit, even when the fix is one
+   character long. Nothing is "done" on the strength of intent: report the command run and its
+   actual output, or say plainly that it was not verified.
 
-   Small, clearly reversible changes may use a lighter path (execute + verify only). When in doubt, use the full sandwich.
+4. **Loop — iterate deliberately, and cap it**
+   Recurring work runs as explicit iteration that tracks what was attempted and what failed,
+   not as repeated one-shot "try again" prompts. Failure routes back to EXECUTE with the
+   original plan, capped at two cycles before the user is brought in.
 
-3. **Loop by default for recurring work**  
-   Prefer explicit iteration over one-shot "try again" prompts. Track what was attempted and what failed.
-
-4. **Context engineering**  
-   Keep raw research, long tool dumps, and exploratory scans out of the main reasoning thread. Summarize, write to files, or use memory only for durable facts. Prefer writing intermediate results to files over stuffing the conversation.
+5. **Graph — plan, execute, verify, review**
+   Anything hard to reverse, production-touching, schema-changing, or wide in blast radius
+   follows PLAN → EXECUTE → VERIFY → REVIEW. Small, clearly reversible changes may use
+   EXECUTE + VERIFY. When in doubt, use the full cycle. Each phase states what it received and
+   refuses to improvise a missing input.
 
 ## Phase Rules
 
@@ -74,19 +85,59 @@ If the same verification fails twice, stop iterating. Escalate with a clear summ
 When the user asks to install or activate Stackwich:
 
 1. Confirm whether they want it at project level or as a standing habit for this conversation / session.
-2. Write a short, durable policy block into a file named `GROK.md` at the project root (or update it if it already exists). Use clear markers so it can be updated later:
-
-```markdown
-<!-- stackwich:v1 -->
+2. Search `GROK.md` at the project root for the opening marker `<!-- stackwich:v1 -->
+<!-- stackwich-grok-rev: 1 -->
 ## Working Architecture (Stackwich)
 
-- Meta-prompt every non-trivial sub-task. Never hand off understanding.
-- Risky or hard-to-reverse changes must follow PLAN → EXECUTE → VERIFY → REVIEW.
-- Small reversible changes may use execute + verify only.
-- Always run real project verification commands. Report GATE: PASS or GATE: FAIL.
-- Two-strike rule: same verification fails twice → stop and escalate.
-- Never create suffixed file copies as a workaround.
-- Keep research and raw tool output out of the main thread.
+### Prompt
+- Every hand-off carries its own context — the why, what has already been tried or ruled out,
+  and the exact files, lines and identifiers involved. A phase handed a terse instruction asks
+  for the missing context rather than guessing at it.
+- Every non-trivial step states its done condition: the verification command and the output
+  that counts as success. Work started without one cannot be closed.
+
+### Context
+- Keep raw research, long tool dumps and exploratory scans out of the main reasoning thread.
+  Summarize, or write intermediate results to files, rather than carrying them forward.
+- Durable memory is for facts that outlive the task; a plan is for implementation alignment;
+  task tracking is for current progress. These are not interchangeable.
+- Don't re-read a file you just wrote to "confirm" it — the write already succeeded or it
+  errored. Don't re-derive facts already established in this session.
+
+### Harness
+- Single writer: only the EXECUTE phase changes files. PLAN, VERIFY and REVIEW never edit,
+  even when the fix is obvious and one character long — a repair made inside a review is an
+  unreviewed change nobody knows exists.
+- Nothing is "done" on the strength of intent. Report what was observed: the command run and
+  its actual output. If it wasn't verified, say so instead of implying it was.
+- Match effort to the change. Don't escalate a small reversible edit into the full cycle, and
+  don't spend a heavier reasoning budget than the work actually requires.
+
+### Loop
+- Recurring work runs as explicit iteration that tracks what was attempted and what failed,
+  not as repeated one-shot "try again" prompts.
+- Failure routing, with a hard stop:
+  - `GATE: FAIL` -> return to EXECUTE with the failure output and the original plan.
+  - `REVISE: ...` -> return to EXECUTE with the numbered list and the original plan.
+  - Either path is capped at 2 cycles. On the third, stop and bring the user the plan, what was
+    tried, and the outstanding gate or review output. Never loop silently.
+- Two-strike rule: if the same verification fails twice, stop iterating blind and escalate with
+  what was tried. Never respond to repeated failure by creating a suffixed copy of a file to
+  debug in.
+
+### Graph
+- Risky or hard-to-reverse changes follow PLAN -> EXECUTE -> VERIFY -> REVIEW in full. Small,
+  clearly reversible changes may use EXECUTE + VERIFY. When in doubt, use the full cycle.
+- Apply the full cycle whenever the change touches shared configuration, schemas, public APIs
+  or CI; is hard to reverse; spans multiple concerns or has unclear blast radius; or the user
+  asks for production-grade handling.
+- Each phase has an input contract and refuses to improvise a missing half. EXECUTE receives
+  the plan's exact steps, its declared file scope, and the verification command with its
+  expected output. VERIFY receives that same verification spec plus the actual diff. REVIEW
+  receives the original plan alongside the diff and the gate result. A phase missing its input
+  says which one and stops.
+- Batch independent mechanical work into a single pass. Never interleave edits to the same file
+  across passes — concurrent writers corrupt diffs.
 <!-- /stackwich:v1 -->
 ```
 

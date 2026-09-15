@@ -12,12 +12,13 @@ Stackwich makes Grok behave like a disciplined engineer instead.
 
 ## What it does
 
-Stackwich installs four habits into Grok coding sessions:
+Stackwich installs five layers into Grok coding sessions:
 
-1. **Meta-prompt every non-trivial sub-task** — never hand off understanding
-2. **Sandwich risky work** — PLAN → EXECUTE → VERIFY → REVIEW
-3. **Loop by default** for recurring work
-4. **Context engineering** — keep research and raw tool output out of the main thread
+1. **Prompt** — meta-prompt every non-trivial sub-task; never hand off understanding
+2. **Context** — keep research and raw tool output out of the main reasoning thread
+3. **Harness** — one writer, and nothing is "done" without observed output
+4. **Loop** — deliberate iteration, capped at two cycles before you're brought in
+5. **Graph** — PLAN → EXECUTE → VERIFY → REVIEW for anything risky
 
 It also enforces:
 - A hard verification gate (`GATE: PASS` / `GATE: FAIL`)
@@ -31,6 +32,7 @@ It also enforces:
 
 | Aspect              | Claude Code version              | Grok edition                          |
 |---------------------|----------------------------------|---------------------------------------|
+| Layer model         | Prompt · Context · Harness · Loop · Graph | The same five layers         |
 | Policy location     | `CLAUDE.md`                      | `GROK.md`                             |
 | Architecture        | 3 companion agents (advisor / executor / verifier) | Explicit phases inside one agent     |
 | Verification        | Dedicated verifier agent         | Grok runs real project commands itself |
@@ -51,9 +53,11 @@ mkdir -p ~/.grok/skills/stackwich-grok
 cp SKILL.md ~/.grok/skills/stackwich-grok/
 ```
 
-> **Port status:** this port tracks the original four-habit framing. The Claude Code
-> parent is at v2.1.0 (five layers: Prompt / Context / Harness / Loop / Graph).
-> A parity pass is tracked separately.
+> **Port status:** at parity with the Claude Code parent's five-layer policy, as
+> `stackwich-grok-rev 1`. The port tracks the parent's layer structure, not its revision
+> number — a parent bump does not automatically oblige a port bump. The Graph layer is
+> expressed as explicit phases inside one agent rather than three subagents: a deliberate
+> design choice for this runtime, not a shortfall.
 
 ---
 
