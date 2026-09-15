@@ -41,5 +41,20 @@ jobs:
           grep -q 'stackwich:v1' grok/SKILL.md || { echo "::error::grok marker missing"; exit 1; }
           echo "grok port OK"
 
+      - name: Codex port well-formed
+        run: |
+          test -f codex/SKILL.md || { echo "::error::codex/SKILL.md missing"; exit 1; }
+          grep -qx -- 'name: stackwich-codex' codex/SKILL.md || { echo "::error::codex port name must be stackwich-codex"; exit 1; }
+          grep -q 'stackwich-codex:v1' codex/SKILL.md || { echo "::error::codex open marker missing"; exit 1; }
+          grep -q '/stackwich-codex:v1' codex/SKILL.md || { echo "::error::codex close marker missing"; exit 1; }
+          test -f codex/references/templates.md || { echo "::error::codex/references/templates.md missing — SKILL.md depends on it"; exit 1; }
+          grep -q 'stackwich-codex:v1' codex/references/templates.md || { echo "::error::templates policy block marker missing"; exit 1; }
+          for a in advisor executor verifier; do
+            grep -q "^## $a.toml" codex/references/templates.md || { echo "::error::templates missing $a.toml section"; exit 1; }
+          done
+          test -f codex/agents/openai.yaml || { echo "::error::codex/agents/openai.yaml missing"; exit 1; }
+          test -f codex/LICENSE || { echo "::error::codex/LICENSE missing"; exit 1; }
+          echo "codex port OK"
+
       - name: README hero image exists
         run: test -f docs/sandwich.jpg && echo "docs OK"

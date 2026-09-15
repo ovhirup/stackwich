@@ -1,0 +1,4 @@
+interface:
+  display_name: "Stackwich Codex"
+  short_description: "Install a disciplined Codex delegation workflow"
+  default_prompt: "Use $stackwich-codex to install the Stackwich Codex workflow in this project."

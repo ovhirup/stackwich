@@ -70,7 +70,7 @@ The skill does the rest interactively: asks for scope, writes the policy, offers
 
 ## Design notes
 
-**The marker never changes.** `<!-- stackwich:v1 -->` is the permanent search key; the actual revision lives on a `policy-rev` comment inside the block. If the marker were versioned, a newer release couldn't find older installs to upgrade.
+**The marker never changes.** `<!-- stackwich:v1 -->` is the permanent search key; the actual revision lives on a `policy-rev` comment inside the block. If the marker were versioned, a newer release couldn't find older installs to upgrade. The rule binds each port to whatever marker it shipped with: `grok/` reuses `stackwich:v1`, while `codex/` writes `<!-- stackwich-codex:v1 -->` to `AGENTS.md` and keeps it — renaming a marker that is already installed somewhere is precisely the upgrade break this rule exists to prevent.
 
 **Single writer.** Only `executor` mutates the filesystem. `advisor` and `verifier` have `Bash` for inspection and verification, explicitly scoped away from writes — a fix from a reviewer is an unreviewed change nobody knows exists.
 
@@ -90,6 +90,7 @@ stackwich/
 ├── evals/evals.json      # test cases for the five install paths
 ├── docs/sandwich.jpg
 ├── grok/                 # Grok port (stackwich-grok) — not a Claude Code skill
+├── codex/                # Codex port (stackwich-codex) — not a Claude Code skill
 ├── CHANGELOG.md
 ├── LICENSE
 └── README.md
