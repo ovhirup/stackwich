@@ -89,6 +89,7 @@ stackwich/
 │   └── verifier.md
 ├── evals/evals.json      # test cases for the five install paths
 ├── docs/sandwich.jpg
+├── grok/                 # Grok port (stackwich-grok) — not a Claude Code skill
 ├── CHANGELOG.md
 ├── LICENSE
 └── README.md

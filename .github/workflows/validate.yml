@@ -34,5 +34,12 @@ jobs:
           done
           echo "assets OK"
 
+      - name: Grok port well-formed
+        run: |
+          test -f grok/SKILL.md || { echo "::error::grok/SKILL.md missing"; exit 1; }
+          grep -qx -- 'name: stackwich-grok' grok/SKILL.md || { echo "::error::grok port name must be stackwich-grok"; exit 1; }
+          grep -q 'stackwich:v1' grok/SKILL.md || { echo "::error::grok marker missing"; exit 1; }
+          echo "grok port OK"
+
       - name: README hero image exists
         run: test -f docs/sandwich.jpg && echo "docs OK"
