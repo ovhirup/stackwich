@@ -1,6 +1,7 @@
 ---
 name: stackwich-codex
 description: "Install the Stackwich Codex delegation architecture: context-rich delegation, a plan-execute-verify-review sandwich for risky work, scheduled automation for recurring work, and subagent-based context engineering. Write durable policy to AGENTS.md and optionally scaffold advisor, executor, and verifier custom agents. Use when the user asks to adopt, install, convert, or bootstrap Stackwich or Stackwich Codex for a ChatGPT/Codex user account, repository, or team setup."
+author: Abhirup Banerjee (@ovhirup)
 ---
 
 # Stackwich Codex

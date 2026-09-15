@@ -46,11 +46,13 @@ Both versions share the same philosophy. The implementation is adapted to each p
 
 ### As a Grok skill
 
-Copy the `SKILL.md` into your Grok skills directory:
+Get the files, then copy the skill and its license into your Grok skills directory:
 
 ```bash
+git clone https://github.com/ovhirup/stackwich
+cd stackwich/grok
 mkdir -p ~/.grok/skills/stackwich-grok
-cp SKILL.md ~/.grok/skills/stackwich-grok/
+cp SKILL.md LICENSE ~/.grok/skills/stackwich-grok/
 ```
 
 > **Port status:** at parity with the Claude Code parent's five-layer policy, as
