@@ -39,7 +39,7 @@ Small, reversible changes skip the ceremony — the verifier alone closes the lo
 
 ## Install
 
-Clone the whole repo into your Claude Code skills directory — the skill reads `assets/` when it scaffolds the agents, so fetching `SKILL.md` alone is not enough:
+Add the marketplace, then install the plugin. Both are slash commands, typed inside a Claude Code session:
 
 ```
 /plugin marketplace add ovhirup/stackwich
@@ -53,6 +53,16 @@ Then, inside any Claude Code session:
 ```
 
 The skill does the rest interactively: asks for scope, writes the policy, offers the three agents. Run `/agents` afterwards to confirm `advisor`, `executor`, and `verifier` are picked up. Re-running it on an existing install detects the marker and offers an in-place upgrade.
+
+### Upgrading from 2.x
+
+Before 3.0, Stackwich was installed by cloning this repo into `~/.claude/skills/stackwich`. That is no longer how it is delivered, and leaving the old directory in place gives you two skills both named `stackwich`. Remove it after installing the plugin:
+
+```bash
+rm -rf ~/.claude/skills/stackwich
+```
+
+**Nothing about your policy changes.** Your `CLAUDE.md` block stays at `policy-rev 3`, your `advisor`, `executor` and `verifier` keep their existing names and contents, and there is nothing to re-run. Only the delivery mechanism moved.
 
 ## What it writes
 
@@ -107,6 +117,12 @@ stackwich/
 ```
 /plugin uninstall stackwich
 /plugin marketplace remove stackwich
+```
+
+The agents were scaffolded into your own `~/.claude/agents/`, not shipped by the plugin, so removing the plugin leaves them behind. Delete them separately if you want them gone:
+
+```bash
+rm -f ~/.claude/agents/{advisor,executor,verifier}.md
 ```
 
 …and delete the `<!-- stackwich:v1 -->` … `<!-- /stackwich:v1 -->` block from your `CLAUDE.md`.
