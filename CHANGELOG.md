@@ -33,8 +33,11 @@ re-install is needed.
 - The `stackwich-codex:v1` marker is unchanged.
 
 ### Repo
-- CI asserts each port's rev comment and all five layer headings, so the ports cannot silently
-  drift again — the failure this release exists to correct.
+- CI asserts every marker and rev comment as an exact whole-line match, plus all five layer
+  headings in each port, so a port cannot silently drift — the failure this release corrects.
+  Whole-line matching is the point: these files document their own marker syntax in prose, so a
+  substring check is satisfied by the documentation instead of the thing it documents. That bit
+  us during this release, in the parent's own check as well as both ports'.
 - `evals/evals.json` expected `policy-rev 2`; corrected to 3.
 
 ## 2.1.0 — policy-rev 3
