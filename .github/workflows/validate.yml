@@ -24,5 +24,15 @@ jobs:
           grep -q '/stackwich:v1' SKILL.md || { echo "::error::install block close marker missing"; exit 1; }
           echo "SKILL.md OK"
 
+      - name: Agent assets present and well-formed
+        run: |
+          for a in advisor executor verifier; do
+            test -f "assets/$a.md" || { echo "::error::assets/$a.md missing"; exit 1; }
+            grep -q "^name: $a" "assets/$a.md" || { echo "::error::assets/$a.md name wrong"; exit 1; }
+            grep -q '^model:' "assets/$a.md" || { echo "::error::assets/$a.md model missing"; exit 1; }
+            grep -q '^tools:' "assets/$a.md" || { echo "::error::assets/$a.md tools missing"; exit 1; }
+          done
+          echo "assets OK"
+
       - name: README hero image exists
         run: test -f docs/sandwich.jpg && echo "docs OK"
