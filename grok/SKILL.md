@@ -76,7 +76,7 @@ When the user asks to install or activate Stackwich:
 1. Confirm whether they want it at project level or as a standing habit for this conversation / session.
 2. Write a short, durable policy block into a file named `GROK.md` at the project root (or update it if it already exists). Use clear markers so it can be updated later:
 
-\`\`\`markdown
+```markdown
 <!-- stackwich:v1 -->
 ## Working Architecture (Stackwich)
 
@@ -88,7 +88,7 @@ When the user asks to install or activate Stackwich:
 - Never create suffixed file copies as a workaround.
 - Keep research and raw tool output out of the main thread.
 <!-- /stackwich:v1 -->
-\`\`\`
+```
 
 3. Tell the user the policy is now active and summarize how future non-trivial work will be handled.
 
@@ -106,6 +106,6 @@ Otherwise prefer the lighter path, but still verify.
 ## Output Contracts
 
 - Plans must be concrete and executable.
-- Verification must produce an explicit \`GATE: PASS\` or \`GATE: FAIL\`.
-- Reviews must end with \`APPROVE\` or \`REVISE: ...\`.
+- Verification must produce an explicit `GATE: PASS` or `GATE: FAIL`.
+- Reviews must end with `APPROVE` or `REVISE: ...`.
 - Never claim work is complete without a successful verification step on non-trivial changes.
