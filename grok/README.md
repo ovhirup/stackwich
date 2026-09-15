@@ -32,7 +32,7 @@ It also enforces:
 
 | Aspect              | Claude Code version              | Grok edition                          |
 |---------------------|----------------------------------|---------------------------------------|
-| Layer model         | Prompt · Context · Harness · Loop · Graph | The same five layers         |
+| Layer model         | Prompt · Context · Harness · Loop · Graph | Same five layers; Loop is a written standing task, not a `/loop` command |
 | Policy location     | `CLAUDE.md`                      | `GROK.md`                             |
 | Architecture        | 3 companion agents (advisor / executor / verifier) | Explicit phases inside one agent     |
 | Verification        | Dedicated verifier agent         | Grok runs real project commands itself |

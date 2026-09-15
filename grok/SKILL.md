@@ -45,7 +45,7 @@ Stackwich turns Grok from a fast code generator into a disciplined delivery part
   - Precise intended edits (or clear description of each step)
   - A verification command (or set of commands) with expected success criteria for every meaningful step
 - Explicitly flag anything irreversible or high-blast-radius and confirm with the user before proceeding if needed.
-- Do not start editing until the plan is clear.
+- The PLAN phase does not edit at all. It produces the plan; EXECUTE carries it out.
 
 ### EXECUTE phase
 - Carry out the plan exactly. No redesigns, no "improvements", no scope creep.
@@ -85,7 +85,24 @@ If the same verification fails twice, stop iterating. Escalate with a clear summ
 When the user asks to install or activate Stackwich:
 
 1. Confirm whether they want it at project level or as a standing habit for this conversation / session.
-2. Search `GROK.md` at the project root for the opening marker `<!-- stackwich:v1 -->
+2. Search `GROK.md` at the project root for the opening marker `<!-- stackwich:v1 -->`. That
+   exact string is the permanent search key across every future revision — the revision itself
+   lives on the `<!-- stackwich-grok-rev: N -->` comment *inside* the block, never in the
+   marker. Never rename it: a newer release searching for a different string could not find an
+   existing install to upgrade, and would append a second block beside it.
+
+   - **Both markers present** — show the user the installed block and the rev it declares, then
+     ask whether to replace everything between the markers, inclusive, or leave it. Name the old
+     and the new `stackwich-grok-rev`. Never append a second copy.
+   - **Exactly one marker present** (hand-edited or truncated file) — stop and ask. Don't guess
+     where the missing boundary falls.
+   - **Neither marker present** — append the block. If `GROK.md` doesn't exist, create it with
+     only this block; don't invent unrelated boilerplate around it.
+
+   Write this verbatim:
+
+```markdown
+<!-- stackwich:v1 -->
 <!-- stackwich-grok-rev: 1 -->
 ## Working Architecture (Stackwich)
 
@@ -114,6 +131,10 @@ When the user asks to install or activate Stackwich:
   don't spend a heavier reasoning budget than the work actually requires.
 
 ### Loop
+- Recurring or repeated work runs as a standing, written task with its own trigger and done
+  condition — not a manual re-run-by-hand habit. Grok has no `/loop` command, so this is a
+  discipline rather than a feature: write the repeating work down and run it from that, not
+  from memory.
 - Recurring work runs as explicit iteration that tracks what was attempted and what failed,
   not as repeated one-shot "try again" prompts.
 - Failure routing, with a hard stop:

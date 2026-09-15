@@ -38,8 +38,9 @@ jobs:
         run: |
           test -f grok/SKILL.md || { echo "::error::grok/SKILL.md missing"; exit 1; }
           grep -qx -- 'name: stackwich-grok' grok/SKILL.md || { echo "::error::grok port name must be stackwich-grok"; exit 1; }
-          grep -q '<!-- stackwich:v1 -->' grok/SKILL.md || { echo "::error::grok open marker missing"; exit 1; }
-          grep -q '<!-- /stackwich:v1 -->' grok/SKILL.md || { echo "::error::grok close marker missing"; exit 1; }
+          grep -qx -- '<!-- stackwich:v1 -->' grok/SKILL.md || { echo "::error::grok open marker missing or not on its own line"; exit 1; }
+          grep -qx -- '<!-- /stackwich:v1 -->' grok/SKILL.md || { echo "::error::grok close marker missing or not on its own line"; exit 1; }
+          [ "$(grep -c '^```' grok/SKILL.md)" -eq 2 ] || { echo "::error::grok policy block fence unbalanced"; exit 1; }
           grep -q 'stackwich-grok-rev:' grok/SKILL.md || { echo "::error::grok rev comment missing from the policy block"; exit 1; }
           for h in Prompt Context Harness Loop Graph; do
             grep -q "^### $h" grok/SKILL.md || { echo "::error::grok policy block missing the $h layer"; exit 1; }
