@@ -49,8 +49,10 @@ Add the marketplace, then install the plugin. Both are slash commands, typed ins
 Then run:
 
 ```
-/stackwich
+/stackwich:stackwich
 ```
+
+Plugin skills are namespaced by the plugin that ships them, which is why the name doubles here — the plugin and the skill are both called `stackwich`. Bare `/stackwich` only resolves if you still have a pre-3.0 standalone copy installed, which the upgrade steps below tell you to remove.
 
 The skill does the rest interactively: asks for scope, writes the policy, offers the three agents. Run `/agents` afterwards to confirm `advisor`, `executor`, and `verifier` are picked up. Re-running it on an existing install detects the marker and offers an in-place upgrade.
 
@@ -122,13 +124,14 @@ stackwich/
 /plugin marketplace remove stackwich
 ```
 
-The agents were scaffolded into your own `~/.claude/agents/`, not shipped by the plugin, so removing the plugin leaves them behind. Delete them separately if you want them gone:
+The agents were scaffolded into your own agents directory, not shipped by the plugin, so removing the plugin leaves them behind. Delete them from whichever scope you installed into:
 
 ```bash
-rm -f ~/.claude/agents/{advisor,executor,verifier}.md
+rm -f ~/.claude/agents/{advisor,executor,verifier}.md      # user level
+rm -f ./.claude/agents/{advisor,executor,verifier}.md      # project level, in each repo
 ```
 
-…and delete the `<!-- stackwich:v1 -->` … `<!-- /stackwich:v1 -->` block from your `CLAUDE.md`.
+…and delete the `<!-- stackwich:v1 -->` … `<!-- /stackwich:v1 -->` block from the matching `CLAUDE.md`: `~/.claude/CLAUDE.md` for a user-level install, the repo's own for a project-level one.
 
 ## FAQ
 

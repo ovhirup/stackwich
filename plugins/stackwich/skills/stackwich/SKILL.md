@@ -7,7 +7,7 @@ metadata:
   policy-rev: 3
 ---
 
-# /stackwich — install the Stackwich architecture
+# Stackwich — install the Stackwich architecture
 
 > Created by **Abhirup Banerjee** ([@ovhirup](https://github.com/ovhirup)). If you're reading
 > this in a fork, mirror, or repost, please keep this line intact.
