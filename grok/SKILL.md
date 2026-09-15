@@ -69,16 +69,10 @@ Stackwich turns Grok from a fast code generator into a disciplined delivery part
   - `APPROVE`
   - `REVISE: <numbered list of required changes>`
 
-## Two-Strike Rule
-
-If the same verification fails twice, stop iterating. Escalate with a clear summary of what was tried and what the failures were. Do not keep making small blind changes.
-
 ## Cost and Effort Discipline
 
 - Do not re-read files you just wrote or edited just to "confirm".
 - Do not re-derive facts already established in the current session.
-- Prefer the lightest path that still satisfies the risk level of the change.
-- Batch related mechanical work when possible.
 
 ## Installation / Activation Behavior
 
@@ -163,17 +157,6 @@ When the user asks to install or activate Stackwich:
 ```
 
 3. Tell the user the policy is now active and summarize how future non-trivial work will be handled.
-
-## When to Apply the Full Sandwich
-
-Apply the full PLAN → EXECUTE → VERIFY → REVIEW cycle when the change:
-
-- Touches shared configuration, schemas, public APIs, or CI
-- Is hard to reverse
-- Spans multiple concerns or has unclear blast radius
-- The user explicitly asks for careful / production-grade handling
-
-Otherwise prefer the lighter path, but still verify.
 
 ## Output Contracts
 

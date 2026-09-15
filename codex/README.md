@@ -46,9 +46,10 @@ mkdir -p ~/.agents/skills/stackwich-codex
 cp -R SKILL.md references agents LICENSE ~/.agents/skills/stackwich-codex/
 ```
 
-> **Check your skills path first.** OpenAI's current docs put skill discovery at
-> `~/.agents/skills`. Some setups use `~/.codex/skills`. Confirm against the docs for your
-> Codex version and adjust the path above before copying.
+> **Moving from an older install?** Codex discovers skills under `.agents/skills` — at the
+> repo root, at `$HOME`, or system-wide in `/etc/codex/skills`. Earlier versions used
+> `$CODEX_HOME/skills`, usually `~/.codex/skills`; that location is no longer in OpenAI's
+> documented discovery list, so move any copy living there to the path above.
 
 Then ask Codex to install Stackwich. The skill asks for scope (user or project), writes the
 policy block to `AGENTS.md` between `<!-- stackwich-codex:v1 -->` markers, and offers to
