@@ -42,6 +42,8 @@ Copy the whole directory. `SKILL.md` reads `references/templates.md` at install 
 copying `SKILL.md` alone is not enough:
 
 ```bash
+git clone https://github.com/ovhirup/stackwich
+cd stackwich/codex
 mkdir -p ~/.agents/skills/stackwich-codex
 cp -R SKILL.md references agents LICENSE ~/.agents/skills/stackwich-codex/
 ```

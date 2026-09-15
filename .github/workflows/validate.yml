@@ -26,6 +26,7 @@ jobs:
           SV="$(sed -n 's/^[[:space:]]*version:[[:space:]]*//p' plugins/stackwich/skills/stackwich/SKILL.md | head -1)"
           [ "$PV" = "$SV" ] || { echo "::error::plugin.json version ($PV) != SKILL.md version ($SV)"; exit 1; }
           cmp -s LICENSE plugins/stackwich/LICENSE || { echo "::error::plugins/stackwich/LICENSE has drifted from the root LICENSE"; exit 1; }
+          grep -q "^## $PV " CHANGELOG.md || { echo "::error::CHANGELOG.md has no '## $PV' heading — a shipped version with no release note"; exit 1; }
           echo "manifests OK"
 
       - name: Plugin shape invariants
@@ -51,6 +52,39 @@ jobs:
             awk '/^<!-- stackwich:v1 -->$/,/^<!-- \/stackwich:v1 -->$/' "$S" | grep -q "^### $h" || { echo "::error::policy block missing the $h layer"; exit 1; }
           done
           echo "SKILL.md OK"
+
+      - name: Frontmatter parses as YAML
+        run: |
+          python3 -m pip install --quiet --disable-pip-version-check pyyaml
+          python3 - <<'PY'
+          import sys, yaml, pathlib
+          targets = {
+            "plugins/stackwich/skills/stackwich/SKILL.md": "stackwich",
+            "grok/SKILL.md": "stackwich-grok",
+            "codex/SKILL.md": "stackwich-codex",
+          }
+          bad = False
+          for path, expect in targets.items():
+            text = pathlib.Path(path).read_text()
+            if not text.startswith("---\n"):
+              print(f"::error::{path} has no frontmatter block"); bad = True; continue
+            block = text.split("---\n", 2)[1]
+            try:
+              fm = yaml.safe_load(block)
+            except yaml.YAMLError as e:
+              print(f"::error::{path} frontmatter is not valid YAML: {e}"); bad = True; continue
+            if fm.get("name") != expect:
+              print(f"::error::{path} name is {fm.get('name')!r}, expected {expect!r}"); bad = True
+            desc = fm.get("description") or ""
+            if not desc:
+              print(f"::error::{path} has no description"); bad = True
+            elif len(desc) > 1024:
+              print(f"::error::{path} description is {len(desc)} chars, over the 1024 limit"); bad = True
+            if not fm.get("author") and not (fm.get("metadata") or {}).get("author"):
+              print(f"::error::{path} has no author — every distributed copy must name one"); bad = True
+          sys.exit(1 if bad else 0)
+          PY
+          echo "frontmatter OK"
 
       - name: Agent assets present and well-formed
         run: |

@@ -1,9 +1,14 @@
 ---
 name: stackwich-grok
 description: Installs delivery discipline for Grok coding sessions. Enforces meta-prompting, a mandatory plan-execute-verify-review sandwich for risky work, loop-by-default for recurring tasks, and strict context engineering. Use when the user wants better agent reliability, wants to reduce "done but broken" outcomes, is doing non-trivial code changes, or asks to install/activate Stackwich or delivery discipline.
+author: Abhirup Banerjee (@ovhirup)
 ---
 
 # Stackwich — Delivery Discipline for Grok
+
+Created by **Abhirup Banerjee** ([@ovhirup](https://github.com/ovhirup)). Adapted for Grok from
+`ovhirup/stackwich` under the MIT License. Preserve this credit and the bundled `LICENSE` when
+copying or distributing the skill.
 
 Stackwich turns Grok from a fast code generator into a disciplined delivery partner. It encodes five layers that prevent the most common failure mode of AI coding agents: declaring work done when it is not actually correct or complete.
 
