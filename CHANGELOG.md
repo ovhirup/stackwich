@@ -1,5 +1,42 @@
 # Changelog
 
+Headings are `## <repo version> — <what moved>`. Ports are named in the body with their own rev
+counters: a port tracks the parent's layer structure, not its revision number.
+
+## 2.2.0 — ports reach five-layer parity
+
+The `grok/` and `codex/` ports now install the same Prompt / Context / Harness / Loop / Graph
+structure as the Claude parent. **The parent policy block is unchanged and `policy-rev` stays at
+3** — diff an existing Claude install against this release and you will find nothing, and no
+re-install is needed.
+
+### Grok — stackwich-grok-rev 1
+- The installed `GROK.md` block grows from seven flat bullets to the five layers, carrying
+  single-writer, nothing-done-on-intent, capped failure routing, and per-phase input contracts.
+- Graph is expressed as explicit phases inside one agent rather than three subagents — the
+  port's deliberate design. The fan-out rule becomes the reason behind it: batch independent
+  work, never interleave edits to one file across passes.
+- The install step gained a marker-search procedure. It previously said only "or update it if it
+  already exists", which would have appended a second block to every existing install now that
+  the block is six times longer.
+- Fixed literal backslash-escaped backticks that left the copy-verbatim policy block with no
+  code-fence boundary.
+
+### Codex — stackwich-codex-rev 1
+- The `AGENTS.md` block keeps its twelve bullets, redistributed under the five layers, and gains
+  read-only-in-practice, capped `GATE: FAIL` / `REVISE:` routing with an infrastructure-versus-
+  change split, and orchestrator hand-off contracts.
+- The three agent TOMLs gained explicit input contracts: `advisor` no longer reviews a diff
+  without the plan that produced it, `executor` says when it could not verify rather than
+  inventing a command, and `verifier` separates an environment failure from a failed change so
+  one cannot burn a capped cycle.
+- The `stackwich-codex:v1` marker is unchanged.
+
+### Repo
+- CI asserts each port's rev comment and all five layer headings, so the ports cannot silently
+  drift again — the failure this release exists to correct.
+- `evals/evals.json` expected `policy-rev 2`; corrected to 3.
+
 ## 2.1.0 — policy-rev 3
 
 Restructures the policy block under the five engineering layers and promotes **harness** to a

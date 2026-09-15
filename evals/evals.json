@@ -5,7 +5,7 @@
       "id": 1,
       "name": "fresh-user-level-install",
       "prompt": "Set up the Stackwich architecture on this machine at the user level, including the subagents.",
-      "expected_output": "~/.claude/CLAUDE.md created with exactly one stackwich:v1 marker pair and policy-rev 2; advisor.md, executor.md, verifier.md written to ~/.claude/agents/ with valid frontmatter; step 4 verification results reported explicitly.",
+      "expected_output": "~/.claude/CLAUDE.md created with exactly one stackwich:v1 marker pair and policy-rev 3; advisor.md, executor.md, verifier.md written to ~/.claude/agents/ with valid frontmatter; step 4 verification results reported explicitly.",
       "assertions": [
         "CLAUDE.md contains exactly one opening and one closing marker",
         "policy-rev line is present inside the block",
