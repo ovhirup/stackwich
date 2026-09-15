@@ -3,6 +3,53 @@
 Headings are `## <repo version> — <what moved>`. Ports are named in the body with their own rev
 counters: a port tracks the parent's layer structure, not its revision number.
 
+## 3.0.0 — installs as a plugin
+
+Stackwich is now a Claude Code plugin marketplace rather than a repo you clone into your skills
+directory. **Your policy and your agents are unchanged.** `policy-rev` stays at 3, the
+`CLAUDE.md` block is identical, the scaffolded `advisor` / `executor` / `verifier` keep their
+names and contents, and there is nothing to re-run — only the delivery mechanism moved.
+
+### Upgrading
+
+```
+/plugin marketplace add ovhirup/stackwich
+/plugin install stackwich@stackwich
+```
+
+Then remove the old clone — `rm -rf ~/.claude/skills/stackwich` at user level, and
+`rm -rf ./.claude/skills/stackwich` in any repo you installed it into. Leaving it in place gives
+you two skills both named `stackwich`.
+
+**Do not `git pull` instead.** The skill no longer lives at the repo root, so pulling into an
+existing clone removes `SKILL.md` and `assets/` and leaves a directory Claude Code can load as
+neither a skill nor a plugin. `/stackwich` stops resolving, with no error and no pointer to the
+new install method.
+
+### Why the layout moved
+- Claude Code discovers skills only by scanning a plugin's `skills/` directory, and no manifest
+  field can point at a root-level `SKILL.md`. The skill therefore moved to
+  `plugins/stackwich/skills/stackwich/`.
+- `assets/` moved with it. `SKILL.md` resolves the agent definitions relative to its own
+  directory, so the two are only correct together — which also makes the skill directory
+  self-contained.
+
+### What the plugin deliberately does not ship
+- **No `agents/` directory.** Plugin-supplied agents install namespaced, as `stackwich:advisor`.
+  That would break the policy block's bare references, remove the
+  choice to decline scaffolding, and make rename-on-collision impossible, since a file in the
+  plugin cache is overwritten on update. The skill keeps scaffolding them from `assets/`.
+- **No stub `SKILL.md` at the repo root.** For anyone still holding a 2.x clone inside a skills
+  directory, a stub would itself be a skill named `stackwich` — the very duplicate this release
+  tells them to remove.
+
+### Repo
+- CI validates both manifests, checks the marketplace entry and `plugin.json` agree on name,
+  checks `plugin.json`'s version matches the skill's frontmatter, and fails if a root
+  `SKILL.md`, a root `assets/`, or a `plugins/stackwich/agents/` ever reappears.
+- The `grok/` and `codex/` ports are untouched and stay at the repo root — nothing there sits on
+  a Claude Code discovery path.
+
 ## 2.2.0 — ports reach five-layer parity
 
 The `grok/` and `codex/` ports now install the same Prompt / Context / Harness / Loop / Graph

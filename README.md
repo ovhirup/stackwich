@@ -39,23 +39,35 @@ Small, reversible changes skip the ceremony — the verifier alone closes the lo
 
 ## Install
 
-Clone the whole repo into your Claude Code skills directory — the skill reads `assets/` when it scaffolds the agents, so fetching `SKILL.md` alone is not enough:
-
-```bash
-# user level — applies to every project
-git clone https://github.com/ovhirup/stackwich ~/.claude/skills/stackwich
-
-# or project level
-git clone https://github.com/ovhirup/stackwich ./.claude/skills/stackwich
-```
-
-Then, inside any Claude Code session:
+Add the marketplace, then install the plugin. Both are slash commands, typed inside a Claude Code session:
 
 ```
-/stackwich
+/plugin marketplace add ovhirup/stackwich
+/plugin install stackwich@stackwich
 ```
+
+Then run:
+
+```
+/stackwich:stackwich
+```
+
+Plugin skills are namespaced by the plugin that ships them, which is why the name doubles here — the plugin and the skill are both called `stackwich`. Bare `/stackwich` only resolves if you still have a pre-3.0 standalone copy installed, which the upgrade steps below tell you to remove.
 
 The skill does the rest interactively: asks for scope, writes the policy, offers the three agents. Run `/agents` afterwards to confirm `advisor`, `executor`, and `verifier` are picked up. Re-running it on an existing install detects the marker and offers an in-place upgrade.
+
+### Upgrading from 2.x
+
+**Nothing about your policy changes.** Your `CLAUDE.md` block stays at `policy-rev 3`, your `advisor`, `executor` and `verifier` keep their existing names and contents, and there is nothing to re-run. Only the delivery mechanism moved.
+
+Before 3.0, Stackwich was installed by cloning this repo into a skills directory. Install the plugin above, then remove the old clone — leaving it in place gives you two skills both named `stackwich`:
+
+```bash
+rm -rf ~/.claude/skills/stackwich      # user level
+rm -rf ./.claude/skills/stackwich      # project level, in each repo you installed it into
+```
+
+**Don't `git pull` instead.** The skill no longer lives at the repo root, so pulling into an existing clone deletes `SKILL.md` and `assets/` and leaves a directory Claude Code can load as neither a skill nor a plugin. `/stackwich` stops resolving — with no error, and no pointer to the new install method.
 
 ## What it writes
 
@@ -82,15 +94,22 @@ The skill does the rest interactively: asks for scope, writes the policy, offers
 
 ```
 stackwich/
-├── SKILL.md              # the skill: install workflow + policy block
-├── assets/               # agent definitions, read only when scaffolding is accepted
-│   ├── advisor.md
-│   ├── executor.md
-│   └── verifier.md
-├── evals/evals.json      # test cases for the five install paths
+├── .claude-plugin/
+│   └── marketplace.json          # the marketplace catalog
+├── plugins/stackwich/
+│   ├── .claude-plugin/
+│   │   └── plugin.json           # the plugin manifest
+│   ├── LICENSE
+│   └── skills/stackwich/
+│       ├── SKILL.md              # the skill: install workflow + policy block
+│       └── assets/               # agent definitions, read only when scaffolding is accepted
+│           ├── advisor.md
+│           ├── executor.md
+│           └── verifier.md
+├── evals/evals.json              # test cases for the five install paths
 ├── docs/sandwich.jpg
-├── grok/                 # Grok port (stackwich-grok) — not a Claude Code skill
-├── codex/                # Codex port (stackwich-codex) — not a Claude Code skill
+├── grok/                         # Grok port (stackwich-grok) — not a Claude Code skill
+├── codex/                        # Codex port (stackwich-codex) — not a Claude Code skill
 ├── CHANGELOG.md
 ├── LICENSE
 └── README.md
@@ -100,12 +119,19 @@ stackwich/
 
 ## Uninstall
 
-```bash
-rm -rf ~/.claude/skills/stackwich
-rm -f ~/.claude/agents/{advisor,executor,verifier}.md
+```
+/plugin uninstall stackwich
+/plugin marketplace remove stackwich
 ```
 
-…and delete the `<!-- stackwich:v1 -->` … `<!-- /stackwich:v1 -->` block from your `CLAUDE.md`.
+The agents were scaffolded into your own agents directory, not shipped by the plugin, so removing the plugin leaves them behind. Delete them from whichever scope you installed into:
+
+```bash
+rm -f ~/.claude/agents/{advisor,executor,verifier}.md      # user level
+rm -f ./.claude/agents/{advisor,executor,verifier}.md      # project level, in each repo
+```
+
+…and delete the `<!-- stackwich:v1 -->` … `<!-- /stackwich:v1 -->` block from the matching `CLAUDE.md`: `~/.claude/CLAUDE.md` for a user-level install, the repo's own for a project-level one.
 
 ## FAQ
 
