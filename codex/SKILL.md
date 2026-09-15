@@ -5,9 +5,10 @@ description: "Install the Stackwich Codex delegation architecture: context-rich 
 
 # Stackwich Codex
 
-Install four durable habits: meta-prompt every delegation, gate risky work through a
-plan-execute-verify-review sandwich, schedule recurring work, and move noisy independent
-research into subagent threads.
+Install five layers of delivery discipline: **Prompt** (meta-prompt every delegation),
+**Context** (move noisy independent research into subagent threads), **Harness** (one writer,
+and nothing done on the strength of intent), **Loop** (schedule recurring work, and cap failure
+cycles), and **Graph** (plan, execute, verify, review for anything risky).
 
 Created by **Abhirup Banerjee** ([@ovhirup](https://github.com/ovhirup)). Adapted for
 ChatGPT/Codex from `ovhirup/stackwich` under the MIT License. Preserve this credit and the

@@ -7,42 +7,75 @@ credit in every custom-agent file.
 
 ```markdown
 <!-- stackwich-codex:v1 -->
+<!-- stackwich-codex-rev: 1 -->
 ## Working Architecture (Stackwich Codex)
 
-- Meta-prompting: whenever work is delegated to a subagent, provide the purpose, relevant
-  decisions, what has already been tried or ruled out, exact files and identifiers, scope,
-  constraints, expected output, and verification criteria. The main agent must establish the
-  understanding; never delegate the work of discovering the assignment itself.
-- Recurring or repeated work defaults to a scheduled automation when the active ChatGPT or
-  Codex surface supports it. Do not create a manual re-run habit for stable recurring work.
-- Context engineering: use subagents for independent research, exploration, read-heavy scans,
-  tests, or log analysis when this keeps noisy output out of the main thread. Use a plan for
-  implementation alignment, task tracking for current progress, and durable memory only for
-  cross-session facts. Do not treat these mechanisms as interchangeable.
+### Prompt
+- Whenever work is delegated to a subagent, provide the purpose, relevant decisions, what has
+  already been tried or ruled out, exact files and identifiers, scope, constraints, expected
+  output, and verification criteria. The main agent must establish the understanding; never
+  delegate the work of discovering the assignment itself.
+- Every delegation states its own done condition: the verification command and the expected
+  result. Work handed off without one comes back unverifiable.
+
+### Context
+- Use subagents for independent research, exploration, read-heavy scans, tests, or log
+  analysis when this keeps noisy output out of the main thread.
 - Prefer a context-carrying subagent when prior task context is relevant. Use a fresh,
   minimally briefed agent only when independence is valuable or the work is genuinely
   unrelated.
+- Use a plan for implementation alignment, task tracking for current progress, and durable
+  memory only for cross-session facts. Do not treat these mechanisms as interchangeable.
 - Do not re-fetch or re-derive facts already established in the current task. After editing,
   verify behavior, structure, or the diff; do not re-read a file solely to confirm that a
   successful write occurred.
-- Work alone for small, reversible changes. Delegate to `executor` for a fully specified
-  mechanical batch of roughly five or more files, or for a read-heavy scan that would pollute
-  the main context. Batch related mechanical work into one delegation.
+
+### Harness
+- Single writer: only `executor`, or you working alone, changes files. `advisor` and `verifier`
+  never write, even when the fix looks obvious and one character long — a repair made by a
+  reviewer is an unreviewed change nobody knows exists.
+- Read-only means read-only in practice, not only in configuration: a read-only role inspects
+  and verifies — tests, lint, build, `git diff` — and never writes, installs, deploys, or
+  publishes.
+- Nothing is "done" on the strength of intent. Report what was observed: the command run and
+  its actual output. If it was not verified, say so rather than implying it was.
 - Match cost and reasoning to the role: favor a faster, lower-cost configuration for
   `executor`; reserve higher reasoning for `advisor` planning and review. Do not select a more
   expensive model or larger agent workflow than the task requires.
+
+### Loop
+- Recurring or repeated work defaults to a scheduled automation when the active ChatGPT or
+  Codex surface supports it. Do not create a manual re-run habit for stable recurring work.
+- Failure routing, with hard stops:
+  - `GATE: FAIL` -> return the failure output to `executor` together with the original plan.
+  - `REVISE: ...` -> return the numbered list to `executor` together with the original plan.
+  - Either path is capped at 2 cycles. On the third, stop and bring the user the plan, what was
+    tried, and the outstanding gate or review output. Never loop silently.
+- Distinguish an infrastructure failure, such as a missing dependency or an unavailable
+  service, from a failed change, so cycles are not burned on environment problems.
+- Two-strike rule: if the same verification fails twice, stop blind iteration and escalate to
+  `advisor` with the commands, outputs, and attempted fixes. Never create a suffixed copy of a
+  real file merely to debug around the failure.
+
+### Graph
+- Work alone for small, reversible changes. Delegate to `executor` for a fully specified
+  mechanical batch of roughly five or more files, or for a read-heavy scan that would pollute
+  the main context. Batch related mechanical work into one delegation.
 - Consult `advisor` before any change that is hard to reverse, touches shared or production
   systems, or spans repositories or services. Obtain user confirmation before any action that
   needs new authority or mutates shared or production state.
-- For those risky changes, the full sandwich is mandatory: `advisor` plans, `executor`
+- For those risky changes the full sandwich is mandatory: `advisor` plans, `executor`
   implements, `verifier` gates, then `advisor` reviews. Otherwise, use `verifier` after
   substantive edits when independent verification adds value.
 - Use custom roles when installed. Otherwise spawn bounded subagents with the same advisor,
   executor, and verifier responsibilities. Parallelize only independent work, and avoid
   concurrent edits to overlapping files.
-- Two-strike rule: if the same verification fails twice, stop blind iteration and escalate to
-  `advisor` with the commands, outputs, and attempted fixes. Never create a suffixed copy of a
-  real file merely to debug around the failure.
+- You are the orchestrator: artifacts travel through you, so forward them intact. `executor`
+  receives the plan's exact steps plus its verification command and expected output.
+  `verifier` receives that same verification spec plus the executor's reported diff and the
+  plan's declared file scope. `advisor` reviewing receives its own original plan plus the diff
+  and the gate result. An agent missing its input contract should say so and stop, not
+  improvise the missing half.
 <!-- /stackwich-codex:v1 -->
 ```
 

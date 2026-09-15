@@ -9,12 +9,13 @@ This is the Codex-native version of [Stackwich](https://github.com/ovhirup/stack
 
 ## What it does
 
-Stackwich installs four habits into Codex sessions:
+Stackwich installs five layers into Codex sessions:
 
-1. **Meta-prompt every delegation** — never hand off understanding
-2. **Sandwich risky work** — PLAN → EXECUTE → VERIFY → REVIEW
-3. **Schedule recurring work** instead of re-running it by hand
-4. **Context engineering** — keep noisy research in subagent threads
+1. **Prompt** — meta-prompt every delegation; never hand off understanding
+2. **Context** — keep noisy research in subagent threads
+3. **Harness** — one writer, and nothing is "done" without observed output
+4. **Loop** — schedule recurring work; failure cycles are capped, never silent
+5. **Graph** — PLAN → EXECUTE → VERIFY → REVIEW for anything risky
 
 It also enforces the two-strike rule (same failure twice → stop and escalate), verification
 by behavior rather than re-reading a just-written file, and no suffixed file copies as a
@@ -58,9 +59,9 @@ scaffold `advisor`, `executor`, and `verifier` as TOML agents.
 > searched for a different string could not find existing installs to upgrade, and would
 > insert a duplicate block.
 
-> **Port status:** this port tracks the original four-habit framing. The Claude Code
-> parent is at v2.1.0 (five layers: Prompt / Context / Harness / Loop / Graph).
-> A parity pass is tracked separately.
+> **Port status:** at parity with the Claude Code parent's five-layer policy, as
+> `stackwich-codex-rev 1`. The port tracks the parent's layer structure, not its revision
+> number — a parent bump does not automatically oblige a port bump.
 
 ---
 
