@@ -41,12 +41,9 @@ Small, reversible changes skip the ceremony — the verifier alone closes the lo
 
 Clone the whole repo into your Claude Code skills directory — the skill reads `assets/` when it scaffolds the agents, so fetching `SKILL.md` alone is not enough:
 
-```bash
-# user level — applies to every project
-git clone https://github.com/ovhirup/stackwich ~/.claude/skills/stackwich
-
-# or project level
-git clone https://github.com/ovhirup/stackwich ./.claude/skills/stackwich
+```
+/plugin marketplace add ovhirup/stackwich
+/plugin install stackwich@stackwich
 ```
 
 Then, inside any Claude Code session:
@@ -82,15 +79,22 @@ The skill does the rest interactively: asks for scope, writes the policy, offers
 
 ```
 stackwich/
-├── SKILL.md              # the skill: install workflow + policy block
-├── assets/               # agent definitions, read only when scaffolding is accepted
-│   ├── advisor.md
-│   ├── executor.md
-│   └── verifier.md
-├── evals/evals.json      # test cases for the five install paths
+├── .claude-plugin/
+│   └── marketplace.json          # the marketplace catalog
+├── plugins/stackwich/
+│   ├── .claude-plugin/
+│   │   └── plugin.json           # the plugin manifest
+│   ├── LICENSE
+│   └── skills/stackwich/
+│       ├── SKILL.md              # the skill: install workflow + policy block
+│       └── assets/               # agent definitions, read only when scaffolding is accepted
+│           ├── advisor.md
+│           ├── executor.md
+│           └── verifier.md
+├── evals/evals.json              # test cases for the five install paths
 ├── docs/sandwich.jpg
-├── grok/                 # Grok port (stackwich-grok) — not a Claude Code skill
-├── codex/                # Codex port (stackwich-codex) — not a Claude Code skill
+├── grok/                         # Grok port (stackwich-grok) — not a Claude Code skill
+├── codex/                        # Codex port (stackwich-codex) — not a Claude Code skill
 ├── CHANGELOG.md
 ├── LICENSE
 └── README.md
@@ -100,9 +104,9 @@ stackwich/
 
 ## Uninstall
 
-```bash
-rm -rf ~/.claude/skills/stackwich
-rm -f ~/.claude/agents/{advisor,executor,verifier}.md
+```
+/plugin uninstall stackwich
+/plugin marketplace remove stackwich
 ```
 
 …and delete the `<!-- stackwich:v1 -->` … `<!-- /stackwich:v1 -->` block from your `CLAUDE.md`.

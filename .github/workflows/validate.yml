@@ -13,24 +13,53 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Manifests valid and in agreement
+        run: |
+          test -f .claude-plugin/marketplace.json || { echo "::error::marketplace.json missing"; exit 1; }
+          test -f plugins/stackwich/.claude-plugin/plugin.json || { echo "::error::plugin.json missing"; exit 1; }
+          jq -e . .claude-plugin/marketplace.json > /dev/null || { echo "::error::marketplace.json is not valid JSON"; exit 1; }
+          jq -e . plugins/stackwich/.claude-plugin/plugin.json > /dev/null || { echo "::error::plugin.json is not valid JSON"; exit 1; }
+          [ "$(jq '.plugins | length' .claude-plugin/marketplace.json)" -eq 1 ] || { echo "::error::marketplace must list exactly one plugin"; exit 1; }
+          [ "$(jq -r '.plugins[0].source' .claude-plugin/marketplace.json)" = "./plugins/stackwich" ] || { echo "::error::marketplace entry source must be ./plugins/stackwich"; exit 1; }
+          [ "$(jq -r '.plugins[0].name' .claude-plugin/marketplace.json)" = "$(jq -r '.name' plugins/stackwich/.claude-plugin/plugin.json)" ] || { echo "::error::marketplace entry name and plugin.json name disagree"; exit 1; }
+          PV="$(jq -r '.version' plugins/stackwich/.claude-plugin/plugin.json)"
+          SV="$(sed -n 's/^[[:space:]]*version:[[:space:]]*//p' plugins/stackwich/skills/stackwich/SKILL.md | head -1)"
+          [ "$PV" = "$SV" ] || { echo "::error::plugin.json version ($PV) != SKILL.md version ($SV)"; exit 1; }
+          cmp -s LICENSE plugins/stackwich/LICENSE || { echo "::error::plugins/stackwich/LICENSE has drifted from the root LICENSE"; exit 1; }
+          echo "manifests OK"
+
+      - name: Plugin shape invariants
+        run: |
+          test ! -e SKILL.md || { echo "::error::a root SKILL.md reappeared — the canonical skill lives at plugins/stackwich/skills/stackwich/SKILL.md and must not be duplicated"; exit 1; }
+          test ! -e assets || { echo "::error::a root assets/ reappeared — the scaffolding source lives inside the skill directory"; exit 1; }
+          test ! -e plugins/stackwich/agents || { echo "::error::the plugin must NOT ship agents/ — plugin agents install namespaced (stackwich:advisor) and the policy block references bare names; the skill scaffolds them instead"; exit 1; }
+          [ "$(ls plugins/stackwich/skills | wc -l)" -eq 1 ] || { echo "::error::plugins/stackwich/skills must contain exactly one skill directory"; exit 1; }
+          echo "plugin shape OK"
+
       - name: Frontmatter and structure checks
         run: |
-          test -f SKILL.md || { echo "::error::SKILL.md missing"; exit 1; }
-          head -1 SKILL.md | grep -qx -- '---' || { echo "::error::missing frontmatter opener"; exit 1; }
-          grep -q '^name: stackwich' SKILL.md || { echo "::error::frontmatter name missing"; exit 1; }
-          grep -q '^description:' SKILL.md || { echo "::error::frontmatter description missing"; exit 1; }
-          grep -qE '^[[:space:]]*author:' SKILL.md || { echo "::error::frontmatter author missing"; exit 1; }
-          [ "$(grep -cx -- '<!-- stackwich:v1 -->' SKILL.md)" -eq 1 ] || { echo "::error::SKILL.md must contain exactly one whole-line opening marker"; exit 1; }
-          [ "$(grep -cx -- '<!-- /stackwich:v1 -->' SKILL.md)" -eq 1 ] || { echo "::error::SKILL.md must contain exactly one whole-line closing marker"; exit 1; }
+          S=plugins/stackwich/skills/stackwich/SKILL.md
+          test -f "$S" || { echo "::error::$S missing"; exit 1; }
+          head -1 "$S" | grep -qx -- '---' || { echo "::error::missing frontmatter opener"; exit 1; }
+          grep -q '^name: stackwich' "$S" || { echo "::error::frontmatter name missing"; exit 1; }
+          grep -q '^description:' "$S" || { echo "::error::frontmatter description missing"; exit 1; }
+          grep -qE '^[[:space:]]*author:' "$S" || { echo "::error::frontmatter author missing"; exit 1; }
+          [ "$(grep -cx -- '<!-- stackwich:v1 -->' "$S")" -eq 1 ] || { echo "::error::SKILL.md must contain exactly one whole-line opening marker"; exit 1; }
+          [ "$(grep -cx -- '<!-- /stackwich:v1 -->' "$S")" -eq 1 ] || { echo "::error::SKILL.md must contain exactly one whole-line closing marker"; exit 1; }
+          [ "$(grep -cx -- '<!-- policy-rev: 3 -->' "$S")" -eq 1 ] || { echo "::error::SKILL.md must contain exactly one whole-line policy-rev: 3 comment"; exit 1; }
+          for h in Prompt Context Harness Loop Graph; do
+            awk '/^<!-- stackwich:v1 -->$/,/^<!-- \/stackwich:v1 -->$/' "$S" | grep -q "^### $h" || { echo "::error::policy block missing the $h layer"; exit 1; }
+          done
           echo "SKILL.md OK"
 
       - name: Agent assets present and well-formed
         run: |
+          A=plugins/stackwich/skills/stackwich/assets
           for a in advisor executor verifier; do
-            test -f "assets/$a.md" || { echo "::error::assets/$a.md missing"; exit 1; }
-            grep -q "^name: $a" "assets/$a.md" || { echo "::error::assets/$a.md name wrong"; exit 1; }
-            grep -q '^model:' "assets/$a.md" || { echo "::error::assets/$a.md model missing"; exit 1; }
-            grep -q '^tools:' "assets/$a.md" || { echo "::error::assets/$a.md tools missing"; exit 1; }
+            test -f "$A/$a.md" || { echo "::error::$A/$a.md missing"; exit 1; }
+            grep -q "^name: $a" "$A/$a.md" || { echo "::error::$A/$a.md name wrong"; exit 1; }
+            grep -q '^model:' "$A/$a.md" || { echo "::error::$A/$a.md model missing"; exit 1; }
+            grep -q '^tools:' "$A/$a.md" || { echo "::error::$A/$a.md tools missing"; exit 1; }
           done
           echo "assets OK"
 

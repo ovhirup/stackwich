@@ -1,0 +1,12 @@
+{
+  "name": "stackwich",
+  "description": "Delivery discipline for AI coding agents: meta-prompt delegation, a plan/execute/verify/review sandwich, and fork-based context engineering.",
+  "owner": { "name": "Abhirup Banerjee", "url": "https://github.com/ovhirup" },
+  "plugins": [
+    {
+      "name": "stackwich",
+      "source": "./plugins/stackwich",
+      "description": "Installs the Stackwich architecture into a Claude Code setup: writes the five-layer operating policy into CLAUDE.md and scaffolds advisor, executor and verifier subagents."
+    }
+  ]
+}
