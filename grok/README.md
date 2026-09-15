@@ -36,7 +36,7 @@ It also enforces:
 | Policy location     | `CLAUDE.md`                      | `GROK.md`                             |
 | Architecture        | 3 companion agents (advisor / executor / verifier) | Explicit phases inside one agent     |
 | Verification        | Dedicated verifier agent         | Grok runs real project commands itself |
-| Installation        | Skill + agent scaffolding        | Skill + policy block in `GROK.md`     |
+| Installation        | Plugin marketplace + agent scaffolding | Skill + policy block in `GROK.md` |
 
 Both versions share the same philosophy. The implementation is adapted to each platform’s strengths.
 

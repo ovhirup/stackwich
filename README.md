@@ -46,7 +46,7 @@ Add the marketplace, then install the plugin. Both are slash commands, typed ins
 /plugin install stackwich@stackwich
 ```
 
-Then, inside any Claude Code session:
+Then run:
 
 ```
 /stackwich
@@ -56,13 +56,16 @@ The skill does the rest interactively: asks for scope, writes the policy, offers
 
 ### Upgrading from 2.x
 
-Before 3.0, Stackwich was installed by cloning this repo into `~/.claude/skills/stackwich`. That is no longer how it is delivered, and leaving the old directory in place gives you two skills both named `stackwich`. Remove it after installing the plugin:
+**Nothing about your policy changes.** Your `CLAUDE.md` block stays at `policy-rev 3`, your `advisor`, `executor` and `verifier` keep their existing names and contents, and there is nothing to re-run. Only the delivery mechanism moved.
+
+Before 3.0, Stackwich was installed by cloning this repo into a skills directory. Install the plugin above, then remove the old clone — leaving it in place gives you two skills both named `stackwich`:
 
 ```bash
-rm -rf ~/.claude/skills/stackwich
+rm -rf ~/.claude/skills/stackwich      # user level
+rm -rf ./.claude/skills/stackwich      # project level, in each repo you installed it into
 ```
 
-**Nothing about your policy changes.** Your `CLAUDE.md` block stays at `policy-rev 3`, your `advisor`, `executor` and `verifier` keep their existing names and contents, and there is nothing to re-run. Only the delivery mechanism moved.
+**Don't `git pull` instead.** The skill no longer lives at the repo root, so pulling into an existing clone deletes `SKILL.md` and `assets/` and leaves a directory Claude Code can load as neither a skill nor a plugin. `/stackwich` stops resolving — with no error, and no pointer to the new install method.
 
 ## What it writes
 

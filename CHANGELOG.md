@@ -17,8 +17,14 @@ names and contents, and there is nothing to re-run — only the delivery mechani
 /plugin install stackwich@stackwich
 ```
 
-Then remove the old clone with `rm -rf ~/.claude/skills/stackwich`. Leaving it in place gives
+Then remove the old clone — `rm -rf ~/.claude/skills/stackwich` at user level, and
+`rm -rf ./.claude/skills/stackwich` in any repo you installed it into. Leaving it in place gives
 you two skills both named `stackwich`.
+
+**Do not `git pull` instead.** The skill no longer lives at the repo root, so pulling into an
+existing clone removes `SKILL.md` and `assets/` and leaves a directory Claude Code can load as
+neither a skill nor a plugin. `/stackwich` stops resolving, with no error and no pointer to the
+new install method.
 
 ### Why the layout moved
 - Claude Code discovers skills only by scanning a plugin's `skills/` directory, and no manifest
@@ -26,15 +32,16 @@ you two skills both named `stackwich`.
   `plugins/stackwich/skills/stackwich/`.
 - `assets/` moved with it. `SKILL.md` resolves the agent definitions relative to its own
   directory, so the two are only correct together — which also makes the skill directory
-  self-contained and copyable on its own.
+  self-contained.
 
 ### What the plugin deliberately does not ship
-- **No `agents/` directory.** Plugin-supplied agents install namespaced, as `stackwich:advisor`,
-  on both Claude Code and Grok. That would break the policy block's bare references, remove the
+- **No `agents/` directory.** Plugin-supplied agents install namespaced, as `stackwich:advisor`.
+  That would break the policy block's bare references, remove the
   choice to decline scaffolding, and make rename-on-collision impossible, since a file in the
   plugin cache is overwritten on update. The skill keeps scaffolding them from `assets/`.
-- **No stub `SKILL.md` at the repo root.** A stub would itself be a skill named `stackwich`, and
-  would collide with the installed plugin — the very duplicate this release tells you to avoid.
+- **No stub `SKILL.md` at the repo root.** For anyone still holding a 2.x clone inside a skills
+  directory, a stub would itself be a skill named `stackwich` — the very duplicate this release
+  tells them to remove.
 
 ### Repo
 - CI validates both manifests, checks the marketplace entry and `plugin.json` agree on name,
