@@ -1,10 +1,10 @@
 ---
 name: stackwich
-description: Installs the Stackwich architecture — meta-prompt delegation, a plan/execute/verify/review sandwich, loop-by-default for recurring work, and fork-based context engineering — into any Claude Code setup. Writes the operating policy into CLAUDE.md and optionally scaffolds three companion subagents (advisor/executor/verifier). Use this whenever the user wants to adopt, install, bootstrap, upgrade, or re-apply this delegation architecture on a new machine, project, or someone else's setup — and also when they ask more loosely for help making their Claude Code setup more disciplined, setting up planner/executor/reviewer subagents, adding a review gate before risky changes, enforcing cheap-model tiering, or fixing agents that make sloppy or out-of-scope edits.
+description: Installs the Stackwich architecture — meta-prompt delegation, a plan/execute/verify/review sandwich, loop-by-default for recurring work, and fork-based context engineering — into any Claude Code setup. Writes the operating policy into CLAUDE.md and optionally scaffolds three companion subagents (advisor/executor/verifier). Use this whenever the user wants to adopt, install, bootstrap, upgrade, or re-apply this delegation architecture on a new machine, project, or someone else's setup — and also when they ask more loosely for help making their Claude Code setup more disciplined, setting up planner/executor/reviewer subagents, adding a review gate before risky changes, enforcing cheap-model tiering, or fixing agents that make sloppy or out-of-scope edits. Also use it when the user asks why agent usage or cost keeps climbing despite cheaper models, or whether a loop or more parallel agents will actually save effort.
 metadata:
   author: Abhirup Banerjee (@ovhirup)
-  version: 3.0.0
-  policy-rev: 3
+  version: 3.1.0
+  policy-rev: 4
 ---
 
 # Stackwich — install the Stackwich architecture
@@ -59,7 +59,7 @@ substitute consistently everywhere they appear.
 
 ```markdown
 <!-- stackwich:v1 -->
-<!-- policy-rev: 3 -->
+<!-- policy-rev: 4 -->
 ## Working Architecture (Stackwich)
 
 ### Prompt
@@ -92,9 +92,15 @@ substitute consistently everywhere they appear.
 - Model tiering is a cost control: don't escalate a task to a pricier model or a bigger
   subagent than the work actually requires. (Each agent's tier is set in its own frontmatter —
   trust it rather than restating it per task.)
+- Size each delegation to what `verifier` and the reviewer can check in one pass; split a larger
+  batch into sequential gated batches. When reporting done, state how many delegations, forks,
+  and loop runs the task used — add token or cost figures only where the environment shows them.
 
 ### Loop
 - Recurring or repeated work defaults to `/loop`, not a manual re-run-by-hand habit.
+- Before starting a loop, fixed-cadence or self-paced, state its stop condition and a maximum
+  run count; if either is missing, ask the user instead of starting. A loop that produces no
+  change for 3 consecutive runs stops and reports (unless the user set a different number).
 - Failure routing, with hard stops:
   - `GATE: FAIL` -> hand the failure output back to `executor` with the original plan.
   - `REVISE: ...` -> hand the numbered list back to `executor` with the original plan.
@@ -110,6 +116,7 @@ substitute consistently everywhere they appear.
   mechanical work into one delegation instead of many small round-trips.
 - If a batch is large AND the items are independent (no shared file, no ordering dependency),
   shard it across parallel `executor` runs and fan the results into a single `verifier` pass.
+  Before launching, state the shard count and why that many.
   If items touch the same files or must land in order, keep it serial — concurrent writers
   corrupt diffs.
 - Consult `advisor` BEFORE any change that's hard to reverse, touches shared/production
@@ -149,6 +156,11 @@ than restating the rule:
 The difference isn't length — it's that the second one leaves no judgment call open, states
 what's already been ruled out so the agent doesn't re-derive it, and defines done.
 
+### Cost, loop, and fan-out questions
+If the user asks about agent cost, token budgets, loops that run too long, how many parallel
+agents to run, or whether more automation will actually save effort, read `assets/rebound.md`
+and answer from it. It is reference material, not policy — don't read it otherwise.
+
 ## 3. Offer the companion subagents
 Ask whether to scaffold the three subagents the section above refers to (`advisor`, `executor`,
 `verifier`). Skip this step entirely if the user already has their own plan/execute/verify
@@ -157,6 +169,7 @@ implementation of it.
 
 The agent definitions live in this skill's `assets/` directory (`advisor.md`, `executor.md`,
 `verifier.md`). Read them only when the user says yes, then copy them to `<scope>/agents/`.
+Copy only those three — `assets/rebound.md` is reference material, not an agent.
 
 Before copying, check `<scope>/agents/` (and the other scope, if different) for name
 collisions. If any of the three names is taken by an unrelated agent, ask the user for a
@@ -170,7 +183,7 @@ This skill installs a verify-before-done policy, so it holds itself to it. After
 confirm and report actual observed results — not intentions:
 
 1. Both markers present in `<scope>/CLAUDE.md`, exactly once each.
-2. `policy-rev: 3` is present inside the block (an upgrade from an older revision must
+2. `policy-rev: 4` is present inside the block (an upgrade from an older revision must
    leave no trace of the previous one).
 3. If agents were scaffolded: all three files exist in `<scope>/agents/`, each starts with
    valid YAML frontmatter containing `name`, `description`, `model`, and `tools`.

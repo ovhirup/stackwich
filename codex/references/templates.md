@@ -7,7 +7,7 @@ credit in every custom-agent file.
 
 ```markdown
 <!-- stackwich-codex:v1 -->
-<!-- stackwich-codex-rev: 1 -->
+<!-- stackwich-codex-rev: 2 -->
 ## Working Architecture (Stackwich Codex)
 
 ### Prompt
@@ -42,10 +42,17 @@ credit in every custom-agent file.
 - Match cost and reasoning to the role: favor a faster, lower-cost configuration for
   `executor`; reserve higher reasoning for `advisor` planning and review. Do not select a more
   expensive model or larger agent workflow than the task requires.
+- Size each delegation to what `verifier` and `advisor` can check in one pass; split a larger
+  batch into sequential gated batches. When reporting done, state how many delegations,
+  subagents, and automation runs the task used — add token or cost figures only where the
+  environment shows them.
 
 ### Loop
 - Recurring or repeated work defaults to a scheduled automation when the active ChatGPT or
   Codex surface supports it. Do not create a manual re-run habit for stable recurring work.
+- Before creating a scheduled automation or any repeating run, state its stop condition and a
+  maximum run count; if either is missing, ask the user instead of starting. A repeating run
+  with no change for 3 consecutive runs stops and reports (unless the user set another number).
 - Failure routing, with hard stops:
   - `GATE: FAIL` -> return the failure output to `executor` together with the original plan.
   - `REVISE: ...` -> return the numbered list to `executor` together with the original plan.
@@ -68,8 +75,8 @@ credit in every custom-agent file.
   implements, `verifier` gates, then `advisor` reviews. Otherwise, use `verifier` after
   substantive edits when independent verification adds value.
 - Use custom roles when installed. Otherwise spawn bounded subagents with the same advisor,
-  executor, and verifier responsibilities. Parallelize only independent work, and avoid
-  concurrent edits to overlapping files.
+  executor, and verifier responsibilities. Parallelize only independent work, state how many
+  parallel runs and why that many, and avoid concurrent edits to overlapping files.
 - You are the orchestrator: artifacts travel through you, so forward them intact. `executor`
   receives the plan's exact steps plus its verification command and expected output.
   `verifier` receives that same verification spec plus the executor's reported diff and the

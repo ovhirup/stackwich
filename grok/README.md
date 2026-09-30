@@ -56,7 +56,7 @@ cp SKILL.md LICENSE ~/.grok/skills/stackwich-grok/
 ```
 
 > **Port status:** at parity with the Claude Code parent's five-layer policy, as
-> `stackwich-grok-rev 1`. The port tracks the parent's layer structure, not its revision
+> `stackwich-grok-rev 2`. The port tracks the parent's layer structure, not its revision
 > number — a parent bump does not automatically oblige a port bump. The Graph layer is
 > expressed as explicit phases inside one agent rather than three subagents: a deliberate
 > design choice for this runtime, not a shortfall.

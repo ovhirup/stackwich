@@ -47,7 +47,7 @@ jobs:
           grep -qE '^[[:space:]]*author:' "$S" || { echo "::error::frontmatter author missing"; exit 1; }
           [ "$(grep -cx -- '<!-- stackwich:v1 -->' "$S")" -eq 1 ] || { echo "::error::SKILL.md must contain exactly one whole-line opening marker"; exit 1; }
           [ "$(grep -cx -- '<!-- /stackwich:v1 -->' "$S")" -eq 1 ] || { echo "::error::SKILL.md must contain exactly one whole-line closing marker"; exit 1; }
-          [ "$(grep -cx -- '<!-- policy-rev: 3 -->' "$S")" -eq 1 ] || { echo "::error::SKILL.md must contain exactly one whole-line policy-rev: 3 comment"; exit 1; }
+          [ "$(grep -cx -- '<!-- policy-rev: 4 -->' "$S")" -eq 1 ] || { echo "::error::SKILL.md must contain exactly one whole-line policy-rev: 4 comment"; exit 1; }
           for h in Prompt Context Harness Loop Graph; do
             awk '/^<!-- stackwich:v1 -->$/,/^<!-- \/stackwich:v1 -->$/' "$S" | grep -q "^### $h" || { echo "::error::policy block missing the $h layer"; exit 1; }
           done

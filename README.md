@@ -58,7 +58,7 @@ The skill does the rest interactively: asks for scope, writes the policy, offers
 
 ### Upgrading from 2.x
 
-**Nothing about your policy changes.** Your `CLAUDE.md` block stays at `policy-rev 3`, your `advisor`, `executor` and `verifier` keep their existing names and contents, and there is nothing to re-run. Only the delivery mechanism moved.
+**The move itself changes nothing about your policy.** 3.0 left your `CLAUDE.md` block at `policy-rev 3` and your `advisor`, `executor` and `verifier` untouched — only the delivery mechanism moved. 3.1.0 is a separate policy upgrade to `policy-rev 4`; see [CHANGELOG](CHANGELOG.md), and re-run `/stackwich:stackwich` to apply it in place.
 
 Before 3.0, Stackwich was installed by cloning this repo into a skills directory. Install the plugin above, then remove the old clone — leaving it in place gives you two skills both named `stackwich`:
 
@@ -102,11 +102,12 @@ stackwich/
 │   ├── LICENSE
 │   └── skills/stackwich/
 │       ├── SKILL.md              # the skill: install workflow + policy block
-│       └── assets/               # agent definitions, read only when scaffolding is accepted
-│           ├── advisor.md
+│       └── assets/               # read on demand, never on every trigger
+│           ├── advisor.md        # agent definitions, read only when scaffolding is accepted
 │           ├── executor.md
-│           └── verifier.md
-├── evals/evals.json              # test cases for the five install paths
+│           ├── verifier.md
+│           └── rebound.md        # cost/rebound playbook, read only for cost or loop questions
+├── evals/evals.json              # five install paths + two policy-behavior cases
 ├── docs/sandwich.jpg
 ├── grok/                         # Grok port (stackwich-grok) — not a Claude Code skill
 ├── codex/                        # Codex port (stackwich-codex) — not a Claude Code skill
