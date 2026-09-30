@@ -37,6 +37,9 @@ Verification: <exact command>
 Expected: <exact output or observable state that means success>
 
 Requires user confirmation: <every hard-to-reverse or shared-system touchpoint, or "none">
+Demand check: <if this plan makes something cheaper, faster, or automatic (cache, loop,
+  parallelism, cheaper model, codegen), the extra usage it will invite and the cap or metric
+  that bounds it — or "n/a">
 ```
 
 Flag as "requires user confirmation" anything touching prod/staging config, schema
@@ -53,7 +56,9 @@ Check in this order, because a scope failure makes the later checks moot:
 1. **Intent match** — does it do what the plan said, with no scope creep or unrequested
    refactors.
 2. **Conventions** — CLAUDE.md, lint config, patterns in neighboring files.
-3. **Blast radius** — what else calls this, what breaks if it's wrong, is it reversible.
+3. **Blast radius** — what else calls this, what breaks if it's wrong, is it reversible, and
+   whether making something cheaper or automatic will raise load, spend, or review volume
+   elsewhere.
 4. **Correctness** — does the change actually work as claimed.
 
 ## Output contract

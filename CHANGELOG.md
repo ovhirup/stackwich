@@ -3,6 +3,55 @@
 Headings are `## <repo version> — <what moved>`. Ports are named in the body with their own rev
 counters: a port tracks the parent's layer structure, not its revision number.
 
+## 3.1.0 — policy-rev 4: every efficiency gets a ceiling
+
+The policy block changes, so this is a real upgrade: `policy-rev` moves from 3 to 4. The
+`<!-- stackwich:v1 -->` marker is unchanged, so existing installs upgrade in place.
+
+### Why
+Stackwich lowers the unit cost of agent work — cheap executors, warm forks, loops instead of
+re-running by hand, parallel shards. Cheaper units invite more of them (the rebound effect, or
+Jevons paradox), so total spend and review load can rise even as each step gets cheaper. Each of
+those efficiencies now comes paired with a limit or a count. The reasoning lives in
+`assets/rebound.md`, read only when a user asks about cost, loops, or fan-out; the policy block
+carries only the imperatives.
+
+### Policy block
+- **Loop:** every loop, fixed-cadence or self-paced, states its stop condition and a maximum run
+  count before it starts, and asks the user when either is missing. A loop with no change for 3
+  consecutive runs stops and reports. The ceiling is a run count, not a spend figure, because run
+  count is observable and spend usually is not.
+- **Graph:** sharding across parallel executors now states the shard count and the reason for
+  it. There is no numeric cap — the right number depends on the work.
+- **Harness:** delegations are sized to what `verifier` and the reviewer can check in one pass,
+  and a done report counts delegations, forks, and loop runs. Token or cost figures appear only
+  where the environment shows them, so a report never states a number nobody observed.
+
+### Agents
+- `advisor`'s plan template gains a `Demand check:` line, and its blast-radius review item now
+  asks whether making something cheaper or automatic raises load, spend, or review volume
+  elsewhere. Re-scaffold `advisor` to pick this up; `executor` and `verifier` are unchanged.
+
+### Upgrading
+Update the plugin, then re-run `/stackwich:stackwich`. It finds the existing block by its marker,
+shows you the installed `policy-rev: 3`, and replaces the block in place once you confirm.
+
+If a pre-3.0 clone is still at `~/.claude/skills/stackwich` or `./.claude/skills/stackwich`,
+remove it first (see 3.0.0 below) — from this release on, it would install the stale
+`policy-rev: 3` block.
+
+### Ports
+- Grok — `stackwich-grok-rev 2`: the same three limits for a single agent. Standing tasks carry
+  a stop condition and run ceiling, the batch count is stated, and each pass is sized for VERIFY
+  and REVIEW.
+- Codex — `stackwich-codex-rev 2`: the same three limits, applied to scheduled automations and
+  parallel subagents.
+
+### Repo
+- CI asserts `policy-rev: 4`.
+- `evals/evals.json`: case 1 expects `policy-rev 4`, case 2 asserts no older revision remains,
+  and two new cases cover an unbounded loop request and a large parallel batch.
+
 ## 3.0.0 — installs as a plugin
 
 Stackwich is now a Claude Code plugin marketplace rather than a repo you clone into your skills

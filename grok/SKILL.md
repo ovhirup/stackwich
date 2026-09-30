@@ -102,7 +102,7 @@ When the user asks to install or activate Stackwich:
 
 ```markdown
 <!-- stackwich:v1 -->
-<!-- stackwich-grok-rev: 1 -->
+<!-- stackwich-grok-rev: 2 -->
 ## Working Architecture (Stackwich)
 
 ### Prompt
@@ -128,12 +128,18 @@ When the user asks to install or activate Stackwich:
   its actual output. If it wasn't verified, say so instead of implying it was.
 - Match effort to the change. Don't escalate a small reversible edit into the full cycle, and
   don't spend a heavier reasoning budget than the work actually requires.
+- Size each pass to what VERIFY and REVIEW can check at once; split larger work into sequential
+  gated passes. When reporting done, state how many passes and iterations the task used — add
+  token or cost figures only where the environment shows them.
 
 ### Loop
 - Recurring or repeated work runs as a standing, written task with its own trigger and done
   condition — not a manual re-run-by-hand habit. Grok has no `/loop` command, so this is a
   discipline rather than a feature: write the repeating work down and run it from that, not
   from memory.
+- A standing task states its stop condition and a maximum run count before its first run; if
+  either is missing, ask the user instead of starting. One that produces no change for 3
+  consecutive runs stops and reports (unless the user set a different number).
 - Recurring work runs as explicit iteration that tracks what was attempted and what failed,
   not as repeated one-shot "try again" prompts.
 - Failure routing, with a hard stop:
@@ -156,8 +162,9 @@ When the user asks to install or activate Stackwich:
   expected output. VERIFY receives that same verification spec plus the actual diff. REVIEW
   receives the original plan alongside the diff and the gate result. A phase missing its input
   says which one and stops.
-- Batch independent mechanical work into a single pass. Never interleave edits to the same file
-  across passes — concurrent writers corrupt diffs.
+- Batch independent mechanical work into a single pass; when splitting into several batches,
+  state how many and why that many. Never interleave edits to the same file across passes —
+  concurrent writers corrupt diffs.
 <!-- /stackwich:v1 -->
 ```
 
