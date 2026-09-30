@@ -3,6 +3,43 @@
 Headings are `## <repo version> — <what moved>`. Ports are named in the body with their own rev
 counters: a port tracks the parent's layer structure, not its revision number.
 
+## 3.1.1 — policy-rev 5: parallel shards fit one verifier pass
+
+The policy block changes, so `policy-rev` moves from 4 to 5 and existing installs should
+re-apply it. The `<!-- stackwich:v1 -->` marker is unchanged.
+
+### What was wrong
+3.1.0 sized each delegation to what `verifier` and the reviewer can check in one pass, but the
+Graph rule still fanned every parallel shard into a single `verifier` pass. Each shard could fit
+one pass while the combined diff needed several — the review overload 3.1.0 set out to prevent.
+Codex's automated review of the 3.1.0 pull request found it.
+
+### Policy block
+- **Graph:** "Before launching, state the shard count and why that many." becomes "Launch only as
+  many shards as that pass and the reviewer can check; state the count and why." The shards
+  launched together now fit the one `verifier` pass they fan into, and remaining work runs as
+  sequential gated batches, as the Harness rule already required. There is still no numeric cap.
+- No other bullet changed; the block is the same length.
+
+### Why not gate each shard separately
+Parallel shards write to the same working tree, so a `verifier` run on one shard would test and
+scope-check a tree still holding the other shards' unfinished edits. One pass over the combined
+result avoids that and is also the check that sees breaks between shards.
+
+### Upgrading
+Update the plugin, then re-run `/stackwich:stackwich`. It shows your installed `policy-rev: 4`
+and replaces the block in place once you confirm. The agents are unchanged — nothing to
+re-scaffold.
+
+### Ports
+Unchanged at `stackwich-grok-rev 2` and `stackwich-codex-rev 2`. Neither port fans parallel work
+into a single verification pass, so neither had this conflict.
+
+### Repo
+- CI asserts `policy-rev: 5`.
+- `evals/evals.json`: cases 1 and 2 expect `policy-rev 5`; case 7 now checks that the shards
+  launched together fit one `verifier` pass.
+
 ## 3.1.0 — policy-rev 4: every efficiency gets a ceiling
 
 The policy block changes, so this is a real upgrade: `policy-rev` moves from 3 to 4. The

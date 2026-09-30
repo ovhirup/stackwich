@@ -58,7 +58,7 @@ The skill does the rest interactively: asks for scope, writes the policy, offers
 
 ### Upgrading from 2.x
 
-**The move itself changes nothing about your policy.** 3.0 left your `CLAUDE.md` block at `policy-rev 3` and your `advisor`, `executor` and `verifier` untouched — only the delivery mechanism moved. 3.1.0 is a separate policy upgrade to `policy-rev 4`; see [CHANGELOG](CHANGELOG.md), and re-run `/stackwich:stackwich` to apply it in place.
+**The move itself changes nothing about your policy.** 3.0 left your `CLAUDE.md` block at `policy-rev 3` and your `advisor`, `executor` and `verifier` untouched — only the delivery mechanism moved. Releases from 3.1.0 on do change the policy; see [CHANGELOG](CHANGELOG.md), and re-run `/stackwich:stackwich` to apply the current revision in place.
 
 Before 3.0, Stackwich was installed by cloning this repo into a skills directory. Install the plugin above, then remove the old clone — leaving it in place gives you two skills both named `stackwich`:
 

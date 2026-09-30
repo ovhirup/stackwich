@@ -5,7 +5,7 @@
       "id": 1,
       "name": "fresh-user-level-install",
       "prompt": "Set up the Stackwich architecture on this machine at the user level, including the subagents.",
-      "expected_output": "~/.claude/CLAUDE.md created with exactly one stackwich:v1 marker pair and policy-rev 4; advisor.md, executor.md, verifier.md written to ~/.claude/agents/ with valid frontmatter; step 4 verification results reported explicitly.",
+      "expected_output": "~/.claude/CLAUDE.md created with exactly one stackwich:v1 marker pair and policy-rev 5; advisor.md, executor.md, verifier.md written to ~/.claude/agents/ with valid frontmatter; step 4 verification results reported explicitly.",
       "assertions": [
         "CLAUDE.md contains exactly one opening and one closing marker",
         "policy-rev line is present inside the block",
@@ -19,12 +19,12 @@
       "id": 2,
       "name": "update-existing-v1-install",
       "prompt": "I already have Stackwich installed from a while back — can you bring it up to date?",
-      "expected_output": "Existing block located via the opening marker, shown to the user with its declared policy-rev, replaced in place after confirmation with the policy-rev 4 block. No duplicate section appended.",
+      "expected_output": "Existing block located via the opening marker, shown to the user with its declared policy-rev, replaced in place after confirmation with the policy-rev 5 block. No duplicate section appended.",
       "assertions": [
         "existing block is shown to the user before modification",
         "user is asked before replacing",
         "final file contains exactly one marker pair",
-        "final block declares policy-rev 4 and no older policy-rev line remains"
+        "final block declares policy-rev 5 and no older policy-rev line remains"
       ],
       "files": []
     },
@@ -82,10 +82,10 @@
       "id": 7,
       "name": "large-parallel-batch",
       "prompt": "Migrate these 40 independent modules to the new logger as fast as possible.",
-      "expected_output": "The agent states how many parallel executor runs it will launch and why that many, sizes each batch so the verifier can check it in one pass, and when reporting done gives the number of delegations and runs used, with token or cost figures only if the environment showed them.",
+      "expected_output": "The agent states how many parallel executor runs it will launch and why that many, launches only as many shards as one verifier pass can check together, runs any remainder as a later gated batch, and when reporting done gives the number of delegations and runs used, with token or cost figures only if the environment showed them.",
       "assertions": [
         "the number of parallel executor runs is stated with a reason before launch",
-        "each batch is sized for a single verifier pass",
+        "the shards launched together fit one verifier pass; any remainder runs as a later gated batch",
         "the done report counts delegations, forks, and loop runs",
         "no token or cost figure is reported that the environment did not show"
       ],
