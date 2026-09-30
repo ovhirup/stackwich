@@ -1,6 +1,6 @@
 {
   "name": "stackwich",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Delivery discipline for AI coding agents. Writes the five-layer Stackwich policy (Prompt / Context / Harness / Loop / Graph) into CLAUDE.md and scaffolds advisor, executor and verifier subagents.",
   "author": { "name": "Abhirup Banerjee" },
   "homepage": "https://github.com/ovhirup/stackwich",
