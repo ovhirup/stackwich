@@ -105,7 +105,12 @@ jobs:
           s = lines(S)
           rev = one(region(s, "<!-- stackwich:v1 -->", "<!-- /stackwich:v1 -->", S), r"<!-- policy-rev: (\d+) -->", f"{S} policy-rev comment inside the block")
           fm = s[1:s.index("---", 1)] if s[:1] == ["---"] and "---" in s[1:] else []
-          meta = one(fm, r"\s+policy-rev: (\d+)", f"{S} frontmatter metadata.policy-rev")
+          md = [k for k, x in enumerate(fm) if x == "metadata:"]
+          if len(md) != 1:
+            bad.append(f"{S} frontmatter needs exactly one whole-line metadata: key, found {len(md)}"); meta = None
+          else:
+            e = next((k for k in range(md[0] + 1, len(fm)) if fm[k].strip() and not fm[k][0].isspace()), len(fm))
+            meta = one(fm[md[0] + 1:e], r"  policy-rev: (\d+)", f"{S} frontmatter policy-rev directly under metadata")
           h = "## 4. Verify the install"
           i = s.index(h) if h in s else len(s)
           j = next((k for k in range(i + 1, len(s)) if s[k].startswith("## ")), len(s))
