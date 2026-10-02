@@ -7,7 +7,7 @@ credit in every custom-agent file.
 
 ```markdown
 <!-- stackwich-codex:v1 -->
-<!-- stackwich-codex-rev: 2 -->
+<!-- stackwich-codex-rev: 3 -->
 ## Working Architecture (Stackwich Codex)
 
 ### Prompt
@@ -76,7 +76,9 @@ credit in every custom-agent file.
   substantive edits when independent verification adds value.
 - Use custom roles when installed. Otherwise spawn bounded subagents with the same advisor,
   executor, and verifier responsibilities. Parallelize only independent work, state how many
-  parallel runs and why that many, and avoid concurrent edits to overlapping files.
+  parallel runs and why that many, and avoid concurrent edits to overlapping files. Verify
+  parallel runs together in one `verifier` pass over the combined result, and launch only as
+  many as that pass and `advisor` can check.
 - You are the orchestrator: artifacts travel through you, so forward them intact. `executor`
   receives the plan's exact steps plus its verification command and expected output.
   `verifier` receives that same verification spec plus the executor's reported diff and the

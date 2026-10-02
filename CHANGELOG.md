@@ -3,6 +3,32 @@
 Headings are `## <repo version> — <what moved>`. Ports are named in the body with their own rev
 counters: a port tracks the parent's layer structure, not its revision number.
 
+## 3.1.2 — stackwich-codex-rev 3: parallel runs fit one verifier pass
+
+The Codex port's policy block changes, so `stackwich-codex-rev` moves from 2 to 3 and existing
+Codex installs should re-apply it. The `<!-- stackwich-codex:v1 -->` marker is unchanged. The
+Claude Code plugin is unchanged: `policy-rev` stays at 5 and there is nothing to re-run.
+
+### What was missing
+The port's Graph layer said to parallelize only independent work and to state how many parallel
+runs and why, but never said how those runs are verified. Each run could fit one `verifier`
+pass on its own while nothing bounded the combined result.
+
+### Codex — stackwich-codex-rev 3
+- **Graph:** the parallel-work bullet gains "Verify parallel runs together in one `verifier`
+  pass over the combined result, and launch only as many as that pass and `advisor` can check."
+  Remaining work runs as sequential gated batches, as the port's Harness rule already required.
+  There is no numeric cap.
+- No other bullet changed. The agent TOMLs are unchanged — nothing to re-scaffold.
+
+### Upgrading
+Copy the updated `codex/` directory over your install (see `codex/README.md`), then ask Codex to
+install Stackwich again. It shows the installed block and replaces it in place once you confirm.
+
+### Ports
+Grok is unchanged at `stackwich-grok-rev 2`: it runs as one agent with explicit phases, so it
+has no parallel runs to verify.
+
 ## 3.1.1 — policy-rev 5: parallel shards fit one verifier pass
 
 The policy block changes, so `policy-rev` moves from 4 to 5 and existing installs should
