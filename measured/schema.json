@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ovhirup/stackwich/measured/schema.json",
+  "title": "Stackwich measured event",
+  "description": "One append-only audit event for the measured layer. No secrets, no customer data, no network.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ts", "event", "actor", "work_id"],
+  "properties": {
+    "ts": { "type": "string", "minLength": 20 },
+    "event": {
+      "enum": [
+        "sandwich.planned",
+        "sandwich.executed",
+        "sandwich.verified",
+        "sandwich.reviewed",
+        "model.tier",
+        "gate.human",
+        "retro.effectiveness",
+        "delivery.estimate",
+        "iteration.item",
+        "dora.signal",
+        "risk.item"
+      ]
+    },
+    "actor": {
+      "enum": ["human", "advisor", "executor", "verifier", "orchestrator"]
+    },
+    "work_id": { "type": "string", "minLength": 1 },
+    "dry_run": { "type": "boolean" },
+    "verdict": { "type": "string" },
+    "role": { "type": "string" },
+    "tier": { "enum": ["plan", "execute", "verify", "review"] },
+    "gate": { "type": "string" },
+    "decision": { "enum": ["approve", "reject", "pending"] },
+    "approver_role": { "type": "string" },
+    "tool": { "type": "string" },
+    "score": { "type": "integer", "minimum": 1, "maximum": 5 },
+    "hours_returned": { "type": "number", "minimum": 0 },
+    "item_id": { "type": "string" },
+    "committed": { "type": "boolean" },
+    "done": { "type": "boolean" },
+    "kind": {
+      "enum": ["deploy", "change_fail", "lead_time_hours", "restore_hours"]
+    },
+    "value": { "type": "number" },
+    "risk_id": { "type": "string" },
+    "severity": { "enum": ["low", "medium", "high"] },
+    "open": { "type": "boolean" },
+    "summary": { "type": "string" }
+  }
+}

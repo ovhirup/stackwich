@@ -3,6 +3,26 @@
 Headings are `## <repo version> — <what moved>`. Ports are named in the body with their own rev
 counters: a port tracks the parent's layer structure, not its revision number.
 
+## 3.2.0 — measured teams layer
+
+The Claude Code policy is unchanged: `policy-rev` stays at 5 and there is nothing to re-run.
+The `<!-- stackwich:v1 -->` marker is unchanged. This release adds an optional local measured
+layer beside the skill. `/stackwich:stackwich` does not install it and does not write it into
+`CLAUDE.md`.
+
+### Added
+- `measured/schema.json`, `measured/log_event.py`, `measured/report.py`, and
+  `measured/approve.py`: append-only JSONL events, a Markdown or JSON report, and a four-role
+  approval gate. A dry run writes nothing. A second execute is refused.
+- `measured/examples/sprint.jsonl`: a public demo log. It contains no customer data.
+- `measured/test_measured.py`: checks the append-only log, the report rates, and the gate.
+- `docs/teams-layer.md`: what is recorded, how a report is produced, and what this base does
+  not do.
+- The skill points at the layer from a new section. The policy block is not edited.
+
+### Ports
+Grok stays at `stackwich-grok-rev 2`. Codex stays at `stackwich-codex-rev 3`.
+
 ## 3.1.2 — stackwich-codex-rev 3: parallel runs fit one verifier pass
 
 The Codex port's policy block changes, so `stackwich-codex-rev` moves from 2 to 3 and existing

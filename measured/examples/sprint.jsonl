@@ -1,0 +1,14 @@
+{"actor":"advisor","event":"sandwich.planned","ts":"2026-10-15T00:00:00Z","work_id":"demo-sprint"}
+{"actor":"executor","dry_run":false,"event":"sandwich.executed","ts":"2026-10-15T00:01:00Z","work_id":"demo-sprint"}
+{"actor":"verifier","event":"sandwich.verified","ts":"2026-10-15T00:02:00Z","verdict":"PASS","work_id":"demo-sprint"}
+{"actor":"verifier","event":"sandwich.verified","ts":"2026-10-15T00:02:30Z","verdict":"FAIL","work_id":"demo-sprint"}
+{"actor":"advisor","event":"sandwich.reviewed","ts":"2026-10-15T00:03:00Z","verdict":"APPROVE","work_id":"demo-sprint"}
+{"actor":"orchestrator","event":"model.tier","role":"executor","tier":"execute","ts":"2026-10-15T00:04:00Z","work_id":"demo-sprint"}
+{"actor":"human","approver_role":"change-approver","decision":"approve","event":"gate.human","gate":"release","ts":"2026-10-15T00:05:00Z","work_id":"demo-sprint"}
+{"actor":"human","approver_role":"change-approver","decision":"reject","event":"gate.human","gate":"prod","ts":"2026-10-15T00:05:30Z","work_id":"demo-sprint"}
+{"actor":"human","event":"retro.effectiveness","score":4,"tool":"claude","ts":"2026-10-15T00:06:00Z","work_id":"demo-retro"}
+{"actor":"human","event":"delivery.estimate","hours_returned":3.5,"ts":"2026-10-15T00:07:00Z","work_id":"demo-sprint"}
+{"actor":"human","committed":true,"done":false,"event":"iteration.item","item_id":"story-1","ts":"2026-10-15T00:08:00Z","work_id":"demo-sprint"}
+{"actor":"human","committed":true,"done":true,"event":"iteration.item","item_id":"story-2","ts":"2026-10-15T00:08:30Z","work_id":"demo-sprint"}
+{"actor":"orchestrator","event":"dora.signal","kind":"lead_time_hours","ts":"2026-10-15T00:09:00Z","value":6,"work_id":"demo-sprint"}
+{"actor":"human","event":"risk.item","open":true,"risk_id":"r1","severity":"low","summary":"Public demo risk","ts":"2026-10-15T00:10:00Z","work_id":"demo-sprint"}

@@ -109,6 +109,8 @@ stackwich/
 │           └── rebound.md        # cost/rebound playbook, read only for cost or loop questions
 ├── evals/evals.json              # five install paths + two policy-behavior cases
 ├── docs/sandwich.jpg
+├── docs/teams-layer.md           # measured-layer design note
+├── measured/                     # optional local JSONL log, report, and approval gate
 ├── grok/                         # Grok port (stackwich-grok) — not a Claude Code skill
 ├── codex/                        # Codex port (stackwich-codex) — not a Claude Code skill
 ├── CHANGELOG.md
@@ -117,6 +119,20 @@ stackwich/
 ```
 
 `assets/` is kept out of `SKILL.md` deliberately: progressive disclosure. The agent definitions are ~150 lines that don't need to enter context on every trigger, and never at all when the user declines the scaffolding.
+
+## Measured layer (Teams)
+
+Optional local instrumentation beside the skill. It does not change the installed policy (`policy-rev` stays 5) and it is not written into `CLAUDE.md`.
+
+`measured/` appends sandwich, model-tier, human-gate, and delivery events to a JSONL file on disk. `measured/report.py` prints a Markdown or JSON report: verification pass rate, review approve rate, human gate pass rate, hours returned, retro scores, commitment versus carryover, DORA numbers, and open risks. `measured/approve.py` is a four-role dry-run and approval gate. The planner, writer, verifier, and approver must be different people, and a dry run writes nothing.
+
+Azure DevOps and Jira are export targets. There is no tracker client and no dashboard service. The public demo log is `measured/examples/sprint.jsonl`. The design note is [docs/teams-layer.md](docs/teams-layer.md).
+
+```bash
+python3 measured/report.py --log measured/examples/sprint.jsonl
+python3 measured/approve.py --self-check
+python3 measured/test_measured.py
+```
 
 ## Uninstall
 
