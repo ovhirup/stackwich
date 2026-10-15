@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -118,8 +119,14 @@ def validate_event(event: dict) -> dict:
 
 
 def _number(value, label: str) -> None:
-    if isinstance(value, bool) or not isinstance(value, (int, float)):
-        raise EventError(f"{label} must be a number")
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+        raise EventError(f"{label} must be a finite number")
+
+
+def _text(event: dict, field: str) -> None:
+    value = event[field]
+    if not isinstance(value, str) or not value.strip():
+        raise EventError(f"{field} must be a non-empty string")
 
 
 def _check_values(name: str, event: dict) -> None:
@@ -129,11 +136,17 @@ def _check_values(name: str, event: dict) -> None:
         raise EventError("verdict must be PASS or FAIL")
     if name == "sandwich.reviewed" and event["verdict"] not in REVIEW_VERDICTS:
         raise EventError("verdict must be APPROVE or REVISE")
-    if name == "model.tier" and event["tier"] not in TIERS:
-        raise EventError("tier must be plan, execute, verify, or review")
-    if name == "gate.human" and event["decision"] not in DECISIONS:
-        raise EventError("decision must be approve, reject, or pending")
+    if name == "model.tier":
+        if event["tier"] not in TIERS:
+            raise EventError("tier must be plan, execute, verify, or review")
+        _text(event, "role")
+    if name == "gate.human":
+        if event["decision"] not in DECISIONS:
+            raise EventError("decision must be approve, reject, or pending")
+        _text(event, "gate")
+        _text(event, "approver_role")
     if name == "retro.effectiveness":
+        _text(event, "tool")
         score = event["score"]
         if isinstance(score, bool) or not isinstance(score, int) or not 1 <= score <= 5:
             raise EventError("score must be an integer from 1 to 5")
@@ -142,6 +155,7 @@ def _check_values(name: str, event: dict) -> None:
         if event["hours_returned"] < 0:
             raise EventError("hours_returned must be >= 0")
     if name == "iteration.item":
+        _text(event, "item_id")
         if not isinstance(event["committed"], bool) or not isinstance(event["done"], bool):
             raise EventError("committed and done must be booleans")
     if name == "dora.signal":
@@ -149,6 +163,8 @@ def _check_values(name: str, event: dict) -> None:
             raise EventError("kind is not a recorded DORA signal")
         _number(event["value"], "value")
     if name == "risk.item":
+        _text(event, "risk_id")
+        _text(event, "summary")
         if event["severity"] not in SEVERITIES:
             raise EventError("severity must be low, medium, or high")
         if not isinstance(event["open"], bool):

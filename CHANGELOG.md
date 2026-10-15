@@ -20,6 +20,11 @@ layer beside the skill. `/stackwich:stackwich` does not install it and does not 
   not do.
 - The skill points at the layer from a new section. The policy block is not edited.
 
+### Fixed
+- `log_event.py` refuses a non-string identifier, and it refuses `NaN` and `Infinity`.
+- `report.py` counts the latest state of each risk, so closing a risk does not leave it open.
+- `schema.json` requires the fields each event type actually uses.
+
 ### Ports
 Grok stays at `stackwich-grok-rev 2`. Codex stays at `stackwich-codex-rev 3`.
 

@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from log_event import EventError, append_event
+from log_event import EventError, append_event, validate_event
 from report import summarize, render_markdown
 
 ROOT = Path(__file__).resolve().parent
@@ -72,6 +72,31 @@ class MeasuredTests(unittest.TestCase):
             )
             self.assertEqual(gate.returncode, 0, gate.stderr)
             self.assertIn("SOD: PASS", gate.stdout)
+
+    def test_rejects_bad_identifiers_and_nonfinite_numbers(self):
+        bad_tool = dict(FIXTURE[8])
+        bad_tool["tool"] = []
+        with self.assertRaises(EventError):
+            validate_event(bad_tool)
+        bad_hours = dict(FIXTURE[9])
+        bad_hours["hours_returned"] = float("nan")
+        with self.assertRaises(EventError):
+            validate_event(bad_hours)
+        bad_inf = dict(FIXTURE[12])
+        bad_inf["value"] = float("inf")
+        with self.assertRaises(EventError):
+            validate_event(bad_inf)
+
+    def test_latest_risk_state(self):
+        opened = dict(FIXTURE[13])
+        closed = dict(opened)
+        closed["ts"] = "2026-10-15T00:11:00Z"
+        closed["open"] = False
+        other = dict(opened)
+        other["risk_id"] = "r2"
+        other["ts"] = "2026-10-15T00:12:00Z"
+        summary = summarize([opened, closed, other])
+        self.assertEqual(summary["risks"], {"open": 1, "closed": 1})
 
 
 if __name__ == "__main__":

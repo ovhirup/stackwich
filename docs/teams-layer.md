@@ -22,7 +22,7 @@ earlier lines.
 | `retro.effectiveness` | A 1–5 score for one named tool. |
 | `iteration.item` | A committed item and whether it is done. Not done is carryover. |
 | `dora.signal` | One recorded number: deploy, change fail, lead time hours, or restore hours. |
-| `risk.item` | An open or closed risk and a low, medium, or high severity. |
+| `risk.item` | An open or closed risk and a low, medium, or high severity. A later line for the same work and risk id replaces the earlier state. |
 
 Actors are `human`, `advisor`, `executor`, `verifier`, and `orchestrator`.
 

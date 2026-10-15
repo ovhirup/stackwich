@@ -51,7 +51,7 @@ def summarize(events: list[dict]) -> dict:
     retros: dict[str, list[int]] = {}
     committed = done = carryover = 0
     dora = []
-    risks = {"open": 0, "closed": 0}
+    latest_risks: dict[tuple[str, str], bool] = {}
     tiers: dict[str, int] = {}
     sandwich = {"planned": 0, "executed": 0, "executed_dry_run": 0, "verified": 0, "reviewed": 0}
     for event in events:
@@ -95,10 +95,14 @@ def summarize(events: list[dict]) -> dict:
         elif name == "dora.signal":
             dora.append({"kind": event["kind"], "value": event["value"], "work_id": event["work_id"]})
         elif name == "risk.item":
-            risks["open" if event["open"] else "closed"] += 1
+            latest_risks[(event["work_id"], event["risk_id"])] = bool(event["open"])
         elif name == "model.tier":
             key = f"{event['role']}:{event['tier']}"
             tiers[key] = tiers.get(key, 0) + 1
+    risks = {
+        "open": sum(1 for is_open in latest_risks.values() if is_open),
+        "closed": sum(1 for is_open in latest_risks.values() if not is_open),
+    }
     retro_rows = {
         tool: {"count": len(scores), "mean_score": sum(scores) / len(scores)}
         for tool, scores in sorted(retros.items())
