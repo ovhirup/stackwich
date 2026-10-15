@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ovhirup/stackwich/measured/schema.json",
+  "title": "Stackwich measured event",
+  "description": "One append-only audit event for the measured layer. No secrets, no customer data, no network.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ts", "event", "actor", "work_id"],
+  "properties": {
+    "ts": { "type": "string", "minLength": 20 },
+    "event": {
+      "enum": [
+        "sandwich.planned",
+        "sandwich.executed",
+        "sandwich.verified",
+        "sandwich.reviewed",
+        "model.tier",
+        "gate.human",
+        "retro.effectiveness",
+        "delivery.estimate",
+        "iteration.item",
+        "dora.signal",
+        "risk.item"
+      ]
+    },
+    "actor": {
+      "enum": ["human", "advisor", "executor", "verifier", "orchestrator"]
+    },
+    "work_id": { "type": "string", "minLength": 1 },
+    "dry_run": { "type": "boolean" },
+    "verdict": { "type": "string" },
+    "role": { "type": "string", "minLength": 1 },
+    "tier": { "enum": ["plan", "execute", "verify", "review"] },
+    "gate": { "type": "string", "minLength": 1 },
+    "decision": { "enum": ["approve", "reject", "pending"] },
+    "approver_role": { "type": "string", "minLength": 1 },
+    "tool": { "type": "string", "minLength": 1 },
+    "score": { "type": "integer", "minimum": 1, "maximum": 5 },
+    "hours_returned": { "type": "number", "minimum": 0 },
+    "item_id": { "type": "string", "minLength": 1 },
+    "committed": { "type": "boolean" },
+    "done": { "type": "boolean" },
+    "kind": {
+      "enum": ["deploy", "change_fail", "lead_time_hours", "restore_hours"]
+    },
+    "value": { "type": "number" },
+    "risk_id": { "type": "string", "minLength": 1 },
+    "severity": { "enum": ["low", "medium", "high"] },
+    "open": { "type": "boolean" },
+    "summary": { "type": "string", "minLength": 1 }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "event": { "const": "sandwich.executed" } }, "required": ["event"] },
+      "then": { "required": ["dry_run"] }
+    },
+    {
+      "if": { "properties": { "event": { "const": "sandwich.verified" } }, "required": ["event"] },
+      "then": { "required": ["verdict"], "properties": { "verdict": { "enum": ["PASS", "FAIL"] } } }
+    },
+    {
+      "if": { "properties": { "event": { "const": "sandwich.reviewed" } }, "required": ["event"] },
+      "then": { "required": ["verdict"], "properties": { "verdict": { "enum": ["APPROVE", "REVISE"] } } }
+    },
+    {
+      "if": { "properties": { "event": { "const": "model.tier" } }, "required": ["event"] },
+      "then": { "required": ["role", "tier"] }
+    },
+    {
+      "if": { "properties": { "event": { "const": "gate.human" } }, "required": ["event"] },
+      "then": { "required": ["gate", "decision", "approver_role"] }
+    },
+    {
+      "if": { "properties": { "event": { "const": "retro.effectiveness" } }, "required": ["event"] },
+      "then": { "required": ["tool", "score"] }
+    },
+    {
+      "if": { "properties": { "event": { "const": "delivery.estimate" } }, "required": ["event"] },
+      "then": { "required": ["hours_returned"] }
+    },
+    {
+      "if": { "properties": { "event": { "const": "iteration.item" } }, "required": ["event"] },
+      "then": { "required": ["item_id", "committed", "done"] }
+    },
+    {
+      "if": { "properties": { "event": { "const": "dora.signal" } }, "required": ["event"] },
+      "then": { "required": ["kind", "value"] }
+    },
+    {
+      "if": { "properties": { "event": { "const": "risk.item" } }, "required": ["event"] },
+      "then": { "required": ["risk_id", "severity", "open", "summary"] }
+    }
+  ]
+}
