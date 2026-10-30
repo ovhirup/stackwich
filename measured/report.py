@@ -4,6 +4,12 @@
 The report reads events already accepted by log_event.py. It does not call a
 network, a tracker, or a model. An optional local git scan counts Co-authored-by
 trailers and prints only the counts.
+
+Gates, iteration items, and risks are reported as current state: one entity per
+(work_id, gate), (work_id, item_id), or (work_id, risk_id), taking the latest
+line in the log. Order is log order, not ts, because the log is append-only and
+ts may tie or be supplied by the caller. Event counts for gates and items are
+reported separately as history. The report covers the whole log it is given.
 """
 
 from __future__ import annotations
@@ -46,10 +52,12 @@ def _rate(passed: int, failed: int) -> float | None:
 def summarize(events: list[dict]) -> dict:
     verified_pass = verified_fail = 0
     review_approve = review_revise = 0
-    gate_approve = gate_reject = gate_pending = 0
+    gate_events = {"approve": 0, "reject": 0, "pending": 0}
+    latest_gates: dict[tuple[str, str], str] = {}
     hours = 0.0
     retros: dict[str, list[int]] = {}
-    committed = done = carryover = 0
+    iteration_events = 0
+    latest_items: dict[tuple[str, str], tuple[bool, bool]] = {}
     dora = []
     latest_risks: dict[tuple[str, str], bool] = {}
     tiers: dict[str, int] = {}
@@ -75,23 +83,15 @@ def summarize(events: list[dict]) -> dict:
             else:
                 review_revise += 1
         elif name == "gate.human":
-            if event["decision"] == "approve":
-                gate_approve += 1
-            elif event["decision"] == "reject":
-                gate_reject += 1
-            else:
-                gate_pending += 1
+            gate_events[event["decision"]] += 1
+            latest_gates[(event["work_id"], event["gate"])] = event["decision"]
         elif name == "delivery.estimate":
             hours += float(event["hours_returned"])
         elif name == "retro.effectiveness":
             retros.setdefault(event["tool"], []).append(event["score"])
         elif name == "iteration.item":
-            if event["committed"]:
-                committed += 1
-                if event["done"]:
-                    done += 1
-                else:
-                    carryover += 1
+            iteration_events += 1
+            latest_items[(event["work_id"], event["item_id"])] = (bool(event["committed"]), bool(event["done"]))
         elif name == "dora.signal":
             dora.append({"kind": event["kind"], "value": event["value"], "work_id": event["work_id"]})
         elif name == "risk.item":
@@ -99,6 +99,11 @@ def summarize(events: list[dict]) -> dict:
         elif name == "model.tier":
             key = f"{event['role']}:{event['tier']}"
             tiers[key] = tiers.get(key, 0) + 1
+    gates = {decision: 0 for decision in ("approve", "reject", "pending")}
+    for decision in latest_gates.values():
+        gates[decision] += 1
+    committed = sum(1 for is_committed, _ in latest_items.values() if is_committed)
+    done = sum(1 for is_committed, is_done in latest_items.values() if is_committed and is_done)
     risks = {
         "open": sum(1 for is_open in latest_risks.values() if is_open),
         "closed": sum(1 for is_open in latest_risks.values() if not is_open),
@@ -114,11 +119,13 @@ def summarize(events: list[dict]) -> dict:
         "verification": {"pass": verified_pass, "fail": verified_fail},
         "review_approve_rate": _rate(review_approve, review_revise),
         "review": {"approve": review_approve, "revise": review_revise},
-        "gate_pass_rate": _rate(gate_approve, gate_reject),
-        "gates": {"approve": gate_approve, "reject": gate_reject, "pending": gate_pending},
+        "gate_pass_rate": _rate(gates["approve"], gates["reject"]),
+        "gates": gates,
+        "gate_events": gate_events,
         "hours_returned": hours,
         "retro": retro_rows,
-        "iteration": {"committed": committed, "done": done, "carryover": carryover},
+        "iteration": {"committed": committed, "done": done, "carryover": committed - done},
+        "iteration_events": iteration_events,
         "dora": dora,
         "risks": risks,
         "model_tier": tiers,
@@ -177,6 +184,9 @@ def render_markdown(summary: dict) -> str:
         f"- Gate pass rate: {_percent(summary['gate_pass_rate'])} "
         f"({summary['gates']['approve']} approve, {summary['gates']['reject']} reject, "
         f"{summary['gates']['pending']} pending)",
+        f"- Gate decision events: {sum(summary['gate_events'].values())} "
+        f"({summary['gate_events']['approve']} approve, {summary['gate_events']['reject']} reject, "
+        f"{summary['gate_events']['pending']} pending)",
         "",
         "## Hours returned",
         f"- Estimated hours returned: {summary['hours_returned']}",
@@ -194,6 +204,7 @@ def render_markdown(summary: dict) -> str:
         f"- Committed: {iteration['committed']}",
         f"- Done: {iteration['done']}",
         f"- Carryover: {iteration['carryover']}",
+        f"- Item update events: {summary['iteration_events']}",
         "",
         "## DORA signals",
     ])
