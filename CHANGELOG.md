@@ -27,6 +27,10 @@ The Claude Code policy is unchanged. Version not yet assigned.
 - README, the port READMEs, and `docs/teams-layer.md` use the same wording. `approve.py` checks
   names; it does not authenticate people or bind approval to a diff. Test and build artifacts
   are not product edits. No policy revision or runtime behavior changed.
+- README names `ovhirup/stackwich` as the canonical source and the plugin as the only supported
+  install path, separates the repository version from `policy-rev` and each port's revision,
+  and marks the older `abhirup-artizent/stackwich` copy, whose clone instructions no longer
+  work after 3.0.
 
 ## 3.2.0 — measured teams layer
 
