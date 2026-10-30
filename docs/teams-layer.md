@@ -70,13 +70,23 @@ point it at that period's log.
 ledger. It does not edit the product tree except to write a single marker after
 an approved execute.
 
-Four roles must be different people: planner, writer, verifier, and approver.
+Four roles must have different names: planner, writer, verifier, and approver.
 The planner records a dry run. The approver is the only role that can approve.
 The writer is the only role that can execute, and only after approval. A dry run
 prints the decision and writes nothing. A second execute is refused.
 
 This is the regulated-environment shape: a human gate, an audit ledger, no silent
-write, and no person holding two sides of the same change.
+write, and no name holding two sides of the same change.
+
+The gate checks the names it is given. It does not authenticate the people behind
+them, so one person can supply four names. Approval records a summary and a list
+of file paths, not a commit or patch, so a change made after approval is not
+detected. Execute writes a marker file; it does not apply the diff. The ledger is
+a local JSON file with no tamper evidence. Treat the gate as a workflow check and
+an audit trail. Where separation of duties must hold against a determined person,
+pair it with authenticated review bound to the change, such as protected branches
+with required reviews. [enforcement.md](enforcement.md) lists every mode's
+mechanical and instructed checks.
 
 ## What this base does not do
 

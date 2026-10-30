@@ -20,6 +20,14 @@ The Claude Code policy is unchanged. Version not yet assigned.
   event history separate from current state.
 - Regression tests for transitions, repeated events, distinct identities, and log ordering.
 
+### Documentation
+- `docs/enforcement.md` lists, for the Claude Code plugin, the Codex and Grok ports, the
+  measured approval gate, and the Dynamic LLM Router integration, which safeguards are
+  mechanical, which depend on the model following instructions, and which are not provided.
+- README, the port READMEs, and `docs/teams-layer.md` use the same wording. `approve.py` checks
+  names; it does not authenticate people or bind approval to a diff. Test and build artifacts
+  are not product edits. No policy revision or runtime behavior changed.
+
 ## 3.2.0 — measured teams layer
 
 The Claude Code policy is unchanged: `policy-rev` stays at 5 and there is nothing to re-run.

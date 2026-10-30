@@ -18,7 +18,7 @@ Stackwich is 15 years of delivery coaching — plan → build → test → revie
 |---|---|
 | **Prompt** | Meta-prompt every delegation. Context-full, with a stated done condition. Understanding never gets delegated. |
 | **Context** | Fork research and read-heavy scans off the main thread. Memory, plans, and tasks each do their own job. |
-| **Harness** | One writer. Read-only enforced in practice, not just in the tool list. Nothing "done" until observed. |
+| **Harness** | One writer. Read-only roles stay read-only in practice, not just in the tool list. Nothing "done" until observed. |
 | **Loop** | Recurring work runs on `/loop`. Failure loops are capped at 2 cycles and never silent. |
 | **Graph** | `advisor` plans → `executor` implements → `verifier` gates → `advisor` reviews, with explicit hand-off contracts. |
 
@@ -30,12 +30,14 @@ The layer names are structure for the humans auditing the setup. Inside the inst
 
 | Stage | Agent | Model | Contract |
 |---|---|---|---|
-| 🍞 **Plan** | `advisor` | opus | Read-only. Exact files, exact edits, a verification command per step. Flags anything irreversible. |
+| 🍞 **Plan** | `advisor` | opus | Read-only: no edit tools; `Bash` for inspection by instruction. Exact files, exact edits, a verification command per step. Flags anything irreversible. |
 | 🥩 **Execute** | `executor` | haiku | Mechanical and exact. No redesigns, no improvising, no suffixed file copies. |
 | 🧪 **Verify** | `verifier` | sonnet | Runs the project's real tests/lint/build. `GATE: PASS` or `GATE: FAIL` — never repairs. |
 | 🍞 **Review** | `advisor` | opus | Diff vs. plan, conventions, blast radius. `APPROVE` or `REVISE: <list>`. |
 
 Small, reversible changes skip the ceremony — the verifier alone closes the loop. If the same verification fails twice, iteration stops and escalates to the advisor. Speed without a gate is just faster mistakes.
+
+Most of this is policy the model is instructed to follow, not a boundary the runtime enforces. [What Stackwich enforces](docs/enforcement.md) lists, per mode, which checks are mechanical, which depend on the model following instructions, and which guarantees are not provided.
 
 ## Install
 
@@ -84,9 +86,9 @@ rm -rf ./.claude/skills/stackwich      # project level, in each repo you install
 
 **The marker never changes.** `<!-- stackwich:v1 -->` is the permanent search key; the actual revision lives on a `policy-rev` comment inside the block. If the marker were versioned, a newer release couldn't find older installs to upgrade. The rule binds each port to whatever marker it shipped with: `grok/` reuses `stackwich:v1`, while `codex/` writes `<!-- stackwich-codex:v1 -->` to `AGENTS.md` and keeps it — renaming a marker that is already installed somewhere is precisely the upgrade break this rule exists to prevent.
 
-**Single writer.** Only `executor` mutates the filesystem. `advisor` and `verifier` have `Bash` for inspection and verification, explicitly scoped away from writes — a fix from a reviewer is an unreviewed change nobody knows exists.
+**Single writer.** Only `executor` mutates the filesystem. `advisor` and `verifier` have no edit tools, and their `Bash` is for inspection and verification, scoped away from writes by instruction — a fix from a reviewer is an unreviewed change nobody knows exists. The tool list is enforced by Claude Code; the `Bash` boundary depends on the model following it. Tests and builds the verifier runs can still create caches and build output; what read-only protects is product source and external state. See [docs/enforcement.md](docs/enforcement.md).
 
-**Loops are capped.** `GATE: FAIL` and `REVISE:` both route back to `executor` with the original plan attached, for at most 2 cycles. On the third, it stops and surfaces everything to the human. Verdict lines are fixed strings so the routing is mechanical, not interpretive.
+**Loops are capped.** `GATE: FAIL` and `REVISE:` both route back to `executor` with the original plan attached, for at most 2 cycles. On the third, it stops and surfaces everything to the human. Verdict lines are fixed strings so routing doesn't depend on interpreting prose; the main session still does the routing, and the cap is instructed, not counted by a tool.
 
 **Input contracts are explicit.** Each agent states what it must receive and is instructed to stop when a piece is missing rather than reconstruct it — a reviewer that rebuilds the plan from the diff reviews the change against itself and approves anything self-consistent.
 
@@ -110,6 +112,7 @@ stackwich/
 ├── evals/evals.json              # five install paths + two policy-behavior cases
 ├── docs/sandwich.jpg
 ├── docs/teams-layer.md           # measured-layer design note
+├── docs/enforcement.md           # which safeguards are mechanical vs. instructed
 ├── measured/                     # optional local JSONL log, report, and approval gate
 ├── grok/                         # Grok port (stackwich-grok) — not a Claude Code skill
 ├── codex/                        # Codex port (stackwich-codex) — not a Claude Code skill
@@ -124,7 +127,7 @@ stackwich/
 
 Optional local instrumentation beside the skill. It does not change the installed policy (`policy-rev` stays 5) and it is not written into `CLAUDE.md`.
 
-`measured/` appends sandwich, model-tier, human-gate, and delivery events to a JSONL file on disk. `measured/report.py` prints a Markdown or JSON report: verification pass rate, review approve rate, human gate pass rate, hours returned, retro scores, commitment versus carryover, DORA numbers, and open risks. `measured/approve.py` is a four-role dry-run and approval gate. The planner, writer, verifier, and approver must be different people, and a dry run writes nothing.
+`measured/` appends sandwich, model-tier, human-gate, and delivery events to a JSONL file on disk. `measured/report.py` prints a Markdown or JSON report: verification pass rate, review approve rate, human gate pass rate, hours returned, retro scores, commitment versus carryover, DORA numbers, and open risks. `measured/approve.py` is a four-role dry-run and approval gate. It refuses a change where the planner, writer, verifier, and approver names collide, and a dry run writes nothing. It does not authenticate who supplied each name or bind approval to an exact diff — it is a local workflow check, not proof of four distinct people.
 
 Azure DevOps and Jira are export targets. There is no tracker client and no dashboard service. The public demo log is `measured/examples/sprint.jsonl`. The design note is [docs/teams-layer.md](docs/teams-layer.md).
 

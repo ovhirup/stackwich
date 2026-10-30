@@ -17,9 +17,13 @@ Stackwich installs five layers into Codex sessions:
 4. **Loop** — schedule recurring work; failure cycles are capped, never silent
 5. **Graph** — PLAN → EXECUTE → VERIFY → REVIEW for anything risky
 
-It also enforces the two-strike rule (same failure twice → stop and escalate), verification
+It also instructs the two-strike rule (same failure twice → stop and escalate), verification
 by behavior rather than re-reading a just-written file, and no suffixed file copies as a
 debugging strategy.
+
+`advisor` and `verifier` run with `sandbox_mode = "read-only"`, so Codex's sandbox blocks their
+writes. The rest is policy the model follows by instruction. See
+[What Stackwich enforces](../docs/enforcement.md) for which checks are mechanical in each mode.
 
 ---
 
@@ -30,6 +34,7 @@ debugging strategy.
 | Policy location | `CLAUDE.md` | `AGENTS.md` (`$CODEX_HOME` or repo root) |
 | Agent format | Markdown in `~/.claude/agents/` | TOML in `$CODEX_HOME/agents/` or `<repo>/.codex/agents/` |
 | Model tiering | Named tiers (opus / haiku / sonnet) | No pinned models — reasoning and sandbox settings only, for portability across accounts |
+| Read-only roles | No edit tools; `Bash` limited to inspection by instruction | `sandbox_mode = "read-only"`, enforced by Codex's sandbox |
 | Block marker | `<!-- stackwich:v1 -->` | `<!-- stackwich-codex:v1 -->` |
 
 Both versions share the same philosophy. The implementation is adapted to each platform.

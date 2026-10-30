@@ -20,11 +20,15 @@ Stackwich installs five layers into Grok coding sessions:
 4. **Loop** — deliberate iteration, capped at two cycles before you're brought in
 5. **Graph** — PLAN → EXECUTE → VERIFY → REVIEW for anything risky
 
-It also enforces:
-- A hard verification gate (`GATE: PASS` / `GATE: FAIL`)
+It also instructs:
+- A verification gate with fixed verdicts (`GATE: PASS` / `GATE: FAIL`)
 - Two-strike rule (same failure twice → stop and escalate)
 - No suffixed file copies as a debugging strategy
 - Concrete plans with verification commands before non-trivial edits
+
+All of these are policy the model follows by instruction. The port runs the phases inside one
+agent, so no role has fewer tools than another. See
+[What Stackwich enforces](../docs/enforcement.md) for what is mechanical in each mode.
 
 ---
 
