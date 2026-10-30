@@ -98,6 +98,73 @@ class MeasuredTests(unittest.TestCase):
         summary = summarize([opened, closed, other])
         self.assertEqual(summary["risks"], {"open": 1, "closed": 1})
 
+    def test_latest_gate_state(self):
+        pending = dict(FIXTURE[6])
+        pending["decision"] = "pending"
+        approved = dict(FIXTURE[6])
+        approved["ts"] = "2026-10-15T00:06:00Z"
+        summary = summarize([pending, approved])
+        self.assertEqual(summary["gates"], {"approve": 1, "reject": 0, "pending": 0})
+        self.assertEqual(summary["gate_pass_rate"], 1.0)
+        self.assertEqual(summary["gate_events"], {"approve": 1, "reject": 0, "pending": 1})
+        text = render_markdown(summary)
+        self.assertIn("(1 approve, 0 reject, 0 pending)", text)
+        self.assertIn("Gate decision events: 2 (1 approve, 0 reject, 1 pending)", text)
+
+    def test_repeated_gate_decision_counts_once(self):
+        first = dict(FIXTURE[7])
+        repeat = dict(FIXTURE[7])
+        repeat["ts"] = "2026-10-15T00:06:00Z"
+        summary = summarize([first, repeat])
+        self.assertEqual(summary["gates"], {"approve": 0, "reject": 1, "pending": 0})
+        self.assertEqual(summary["gate_events"]["reject"], 2)
+
+    def test_gates_distinct_by_gate_and_work_id(self):
+        release = dict(FIXTURE[6])
+        prod = dict(FIXTURE[6])
+        prod["gate"] = "prod"
+        prod["decision"] = "pending"
+        other_work = dict(FIXTURE[6])
+        other_work["work_id"] = "other-sprint"
+        other_work["decision"] = "reject"
+        summary = summarize([release, prod, other_work])
+        self.assertEqual(summary["gates"], {"approve": 1, "reject": 1, "pending": 1})
+
+    def test_latest_iteration_item_state(self):
+        open_item = dict(FIXTURE[10])
+        finished = dict(open_item)
+        finished["ts"] = "2026-10-15T00:09:00Z"
+        finished["done"] = True
+        summary = summarize([open_item, finished])
+        self.assertEqual(summary["iteration"], {"committed": 1, "done": 1, "carryover": 0})
+        self.assertEqual(summary["iteration_events"], 2)
+        repeated = summarize([open_item, dict(open_item)])
+        self.assertEqual(repeated["iteration"], {"committed": 1, "done": 0, "carryover": 1})
+
+    def test_uncommitted_item_leaves_commitment(self):
+        committed = dict(FIXTURE[10])
+        dropped = dict(committed)
+        dropped["ts"] = "2026-10-15T00:09:00Z"
+        dropped["committed"] = False
+        summary = summarize([committed, dropped])
+        self.assertEqual(summary["iteration"], {"committed": 0, "done": 0, "carryover": 0})
+
+    def test_iteration_items_distinct_by_item_and_work_id(self):
+        story = dict(FIXTURE[10])
+        same_id_other_work = dict(story)
+        same_id_other_work["work_id"] = "other-sprint"
+        same_id_other_work["done"] = True
+        summary = summarize([story, same_id_other_work, dict(FIXTURE[11])])
+        self.assertEqual(summary["iteration"], {"committed": 3, "done": 2, "carryover": 1})
+
+    def test_latest_state_uses_log_order_not_ts(self):
+        later_ts = dict(FIXTURE[6])
+        later_ts["ts"] = "2026-10-15T09:00:00Z"
+        later_ts["decision"] = "pending"
+        earlier_ts_logged_last = dict(FIXTURE[6])
+        summary = summarize([later_ts, earlier_ts_logged_last])
+        self.assertEqual(summary["gates"], {"approve": 1, "reject": 0, "pending": 0})
+
 
 if __name__ == "__main__":
     unittest.main()

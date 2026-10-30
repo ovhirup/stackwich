@@ -3,6 +3,23 @@
 Headings are `## <repo version> — <what moved>`. Ports are named in the body with their own rev
 counters: a port tracks the parent's layer structure, not its revision number.
 
+## Unreleased — measured reports count current state
+
+The Claude Code policy is unchanged. Version not yet assigned.
+
+### Fixed
+- `report.py` counts the latest decision of each human gate, keyed by work id and gate. A gate
+  that moves pending → approve is one approved gate, not one approved and one pending.
+- `report.py` counts the latest state of each iteration item, keyed by work id and item id. An
+  item logged not done and then done is one committed, one done, and no carryover.
+- "Latest" is log order, not `ts`. `docs/teams-layer.md` documents identities, ordering, and
+  that a report covers the whole log it is given.
+
+### Added
+- `gate_events` and `iteration_events` in the JSON report, and matching lines in Markdown, keep
+  event history separate from current state.
+- Regression tests for transitions, repeated events, distinct identities, and log ordering.
+
 ## 3.2.0 — measured teams layer
 
 The Claude Code policy is unchanged: `policy-rev` stays at 5 and there is nothing to re-run.
