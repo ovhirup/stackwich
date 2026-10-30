@@ -41,6 +41,8 @@ Most of this is policy the model is instructed to follow, not a boundary the run
 
 ## Install
 
+This repository, [`ovhirup/stackwich`](https://github.com/ovhirup/stackwich), is the canonical source, and the plugin below is the only supported install path. Instructions elsewhere that clone a repository into a skills directory describe the pre-3.0 layout — see [Older copies](#older-copies).
+
 Add the marketplace, then install the plugin. Both are slash commands, typed inside a Claude Code session:
 
 ```
@@ -70,6 +72,23 @@ rm -rf ./.claude/skills/stackwich      # project level, in each repo you install
 ```
 
 **Don't `git pull` instead.** The skill no longer lives at the repo root, so pulling into an existing clone deletes `SKILL.md` and `assets/` and leaves a directory Claude Code can load as neither a skill nor a plugin. `/stackwich` stops resolving — with no error, and no pointer to the new install method.
+
+## Versions
+
+Four numbers move independently. Only the policy revisions change what an installed session does.
+
+| Number | Current | Where it lives | When you act |
+|---|---|---|---|
+| Repository and plugin version | 3.2.0 | `plugin.json`, git tags `vX.Y.Z`, [CHANGELOG](CHANGELOG.md) headings | Update the plugin. |
+| Claude Code policy revision | `policy-rev 5` | The comment inside the `<!-- stackwich:v1 -->` block in your `CLAUDE.md` | Re-run `/stackwich:stackwich` when it changes. |
+| Grok port revision | `stackwich-grok-rev 2` | Inside the block the Grok port writes | Re-apply the Grok port when it changes. |
+| Codex port revision | `stackwich-codex-rev 3` | Inside the `<!-- stackwich-codex:v1 -->` block in `AGENTS.md` | Re-apply the Codex port when it changes. |
+
+A repository release can leave every policy revision unchanged; 3.2.0 did. Each CHANGELOG entry says whether there is anything to re-run. The markers themselves never change.
+
+### Older copies
+
+[`abhirup-artizent/stackwich`](https://github.com/abhirup-artizent/stackwich) is an older copy. Its README still describes cloning this repository into `~/.claude/skills/stackwich`, which no longer works: the skill moved under `plugins/` in 3.0, so a clone gives a directory Claude Code loads as neither a skill nor a plugin. Install the plugin above instead, and follow [Upgrading from 2.x](#upgrading-from-2x) if you installed from a clone.
 
 ## What it writes
 
