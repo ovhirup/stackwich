@@ -63,3 +63,10 @@ One version for the repo, declared in `plugins/stackwich/.claude-plugin/plugin.j
 skill's frontmatter. CI asserts they agree and that `CHANGELOG.md` has a matching heading.
 
 `policy-rev` is separate and only moves when the policy block's content changes.
+
+## Releasing
+
+Each release is published from its `CHANGELOG.md` section by the `release` workflow: **Actions →
+release → Run workflow**, with the version (for example `3.4.0`), the commit to tag if the tag
+does not exist yet, and whether it is the latest release. The workflow refuses a version with no
+matching heading and never replaces an existing tag or release.

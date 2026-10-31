@@ -1,0 +1,76 @@
+name: release
+
+# Publishes one GitHub Release from its CHANGELOG.md section. Run it by hand
+# (Actions → release → Run workflow) with the version and, for a tag that does
+# not exist yet, the commit to tag. It never rewrites an existing tag or release.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version without the v, e.g. 3.4.0. Must have a '## <version> — …' heading in CHANGELOG.md."
+        required: true
+      target:
+        description: "Commit to tag if the tag does not exist yet. Ignored for an existing tag."
+        required: false
+        default: ""
+      latest:
+        description: "Mark as the latest release"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract the CHANGELOG section
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          python3 - <<'PY'
+          import os, re, sys
+          version = os.environ["VERSION"].strip()
+          if not re.fullmatch(r"\d+\.\d+\.\d+", version):
+              sys.exit(f"::error::version must look like 3.4.0, got {version!r}")
+          text = open("CHANGELOG.md", encoding="utf-8").read()
+          sections = re.split(r"^## ", text, flags=re.M)[1:]
+          match = [s for s in sections if s.split(" ", 1)[0] == version]
+          if len(match) != 1:
+              sys.exit(f"::error::CHANGELOG.md needs exactly one '## {version} ' heading, found {len(match)}")
+          heading, _, body = match[0].partition("\n")
+          open("notes.md", "w", encoding="utf-8").write(body.strip() + "\n")
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env:
+              env.write(f"TITLE=v{heading.strip()}\n")
+          PY
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+          TARGET: ${{ inputs.target }}
+          LATEST: ${{ inputs.latest }}
+        run: |
+          tag="v${VERSION}"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "::error::release $tag already exists; nothing changed"
+            exit 1
+          fi
+          args=(--title "$TITLE" --notes-file notes.md --verify-tag)
+          if ! git rev-parse -q --verify "refs/tags/$tag" >/dev/null; then
+            [ -n "$TARGET" ] || { echo "::error::tag $tag does not exist; give the commit to tag as target"; exit 1; }
+            git rev-parse -q --verify "${TARGET}^{commit}" >/dev/null || { echo "::error::target $TARGET is not a commit"; exit 1; }
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git tag -a "$tag" "$TARGET" -m "$TITLE"
+            git push origin "refs/tags/$tag"
+          fi
+          if [ "$LATEST" = "true" ]; then args+=(--latest); else args+=(--latest=false); fi
+          gh release create "$tag" "${args[@]}"
+          echo "published $tag: $TITLE"
