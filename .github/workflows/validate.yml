@@ -193,3 +193,16 @@ jobs:
         run: |
           cd measured && python3 -m unittest -v test_measured
           python3 approve.py --self-check
+
+  recipes:
+    name: Acceptance-check recipes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Playwright and Chromium
+        run: cd recipes && npm ci && npx playwright install --with-deps chromium
+      - name: Run recipes against the fixture site
+        run: cd recipes && npm test

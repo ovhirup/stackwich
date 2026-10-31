@@ -1,0 +1,9 @@
+{
+  "name": "stackwich-recipes",
+  "private": true,
+  "type": "module",
+  "description": "Acceptance-check recipes a Stackwich verifier can run",
+  "engines": { "node": ">=20" },
+  "scripts": { "test": "node --test test/recipes.test.mjs" },
+  "dependencies": { "playwright": "1.63.0" }
+}
