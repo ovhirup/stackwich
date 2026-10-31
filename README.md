@@ -60,6 +60,8 @@ Plugin skills are namespaced by the plugin that ships them, which is why the nam
 
 The skill does the rest interactively: asks for scope, writes the policy, offers the three agents. Run `/agents` afterwards to confirm `advisor`, `executor`, and `verifier` are picked up. Re-running it on an existing install detects the marker and offers an in-place upgrade.
 
+To check what an install left behind, run `python3 tools/check_install.py ~/.claude` from a clone of this repository (or `./.claude` for a project-level install). It reads files only and reports each marker, revision, block, and agent check as PASS or FAIL. [docs/evals.md](docs/evals.md) explains these checks and the separate behavior evals.
+
 ### Upgrading from 2.x
 
 **The move itself changes nothing about your policy.** 3.0 left your `CLAUDE.md` block at `policy-rev 3` and your `advisor`, `executor` and `verifier` untouched — only the delivery mechanism moved. Releases from 3.1.0 on do change the policy; see [CHANGELOG](CHANGELOG.md), and re-run `/stackwich:stackwich` to apply the current revision in place.
@@ -129,9 +131,11 @@ stackwich/
 │           ├── verifier.md
 │           └── rebound.md        # cost/rebound playbook, read only for cost or loop questions
 ├── evals/evals.json              # five install paths + two policy-behavior cases
+├── tools/check_install.py        # checks an installed scope against SKILL.md
 ├── docs/sandwich.jpg
 ├── docs/teams-layer.md           # measured-layer design note
 ├── docs/enforcement.md           # which safeguards are mechanical vs. instructed
+├── docs/evals.md                 # deterministic checks vs. behavior evals, and how to run each
 ├── measured/                     # optional local JSONL log, report, and approval gate
 ├── grok/                         # Grok port (stackwich-grok) — not a Claude Code skill
 ├── codex/                        # Codex port (stackwich-codex) — not a Claude Code skill
