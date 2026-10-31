@@ -60,7 +60,7 @@ Plugin skills are namespaced by the plugin that ships them, which is why the nam
 
 The skill does the rest interactively: asks for scope, writes the policy, offers the three agents. Run `/agents` afterwards to confirm `advisor`, `executor`, and `verifier` are picked up. Re-running it on an existing install detects the marker and offers an in-place upgrade.
 
-To check what an install left behind, run `python3 tools/check_install.py ~/.claude` from a clone of this repository (or `./.claude` for a project-level install). It reads files only and reports each marker, revision, block, and agent check as PASS or FAIL. [docs/evals.md](docs/evals.md) explains these checks and the separate behavior evals.
+New to Stackwich? [Your first verified task](docs/first-task.md) walks from install to a verified fix on a small demo and back out again. To list what is installed at each level and any conflicts, run `python3 tools/diagnose.py` from your project. To check what an install left behind, run `python3 tools/check_install.py ~/.claude` from a clone of this repository (or `./.claude` for a project-level install). It reads files only and reports each marker, revision, block, and agent check as PASS or FAIL. [docs/evals.md](docs/evals.md) explains these checks and the separate behavior evals.
 
 ### Upgrading from 2.x
 
@@ -131,11 +131,13 @@ stackwich/
 │           ├── verifier.md
 │           └── rebound.md        # cost/rebound playbook, read only for cost or loop questions
 ├── evals/evals.json              # five install paths + two policy-behavior cases
-├── tools/check_install.py        # checks an installed scope against SKILL.md
+├── tools/                        # check_install, diagnose, and uninstall (read-only unless --apply)
+├── examples/first-task/          # the demo project for docs/first-task.md
 ├── docs/sandwich.jpg
 ├── docs/teams-layer.md           # measured-layer design note
 ├── docs/enforcement.md           # which safeguards are mechanical vs. instructed
 ├── docs/evals.md                 # deterministic checks vs. behavior evals, and how to run each
+├── docs/first-task.md            # install → diagnose → fail → fix → verify → uninstall
 ├── measured/                     # optional local JSONL log, report, and approval gate
 ├── grok/                         # Grok port (stackwich-grok) — not a Claude Code skill
 ├── codex/                        # Codex port (stackwich-codex) — not a Claude Code skill
@@ -167,14 +169,15 @@ python3 measured/test_measured.py
 /plugin marketplace remove stackwich
 ```
 
-The agents were scaffolded into your own agents directory, not shipped by the plugin, so removing the plugin leaves them behind. Delete them from whichever scope you installed into:
+The agents were scaffolded into your own agents directory, not shipped by the plugin, so removing the plugin leaves them and the `CLAUDE.md` block behind. From a clone of this repository, preview and then remove them for each scope you installed into:
 
 ```bash
-rm -f ~/.claude/agents/{advisor,executor,verifier}.md      # user level
-rm -f ./.claude/agents/{advisor,executor,verifier}.md      # project level, in each repo
+python3 tools/uninstall.py ~/.claude            # user level: prints what it would remove
+python3 tools/uninstall.py ~/.claude --apply    # removes it, after backing up CLAUDE.md
+python3 tools/uninstall.py ./.claude --apply    # project level, in each repo
 ```
 
-…and delete the `<!-- stackwich:v1 -->` … `<!-- /stackwich:v1 -->` block from the matching `CLAUDE.md`: `~/.claude/CLAUDE.md` for a user-level install, the repo's own for a project-level one.
+It removes the `<!-- stackwich:v1 -->` block and only the agent files that carry the Stackwich author credit, including ones renamed for a collision. Your own agents and the rest of `CLAUDE.md` are kept. Don't delete `advisor.md`, `executor.md`, and `verifier.md` by name: if you renamed a Stackwich agent to avoid a collision, the file called `executor.md` is your own.
 
 ## FAQ
 
