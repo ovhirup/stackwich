@@ -103,7 +103,7 @@ When the user asks to install or activate Stackwich:
 
 ```markdown
 <!-- stackwich:v1 -->
-<!-- stackwich-grok-rev: 3 -->
+<!-- stackwich-grok-rev: 4 -->
 ## Working Architecture (Stackwich)
 
 ### Prompt
@@ -118,6 +118,12 @@ When the user asks to install or activate Stackwich:
   Summarize, or write intermediate results to files, rather than carrying them forward.
 - Durable memory is for facts that outlive the task; a plan is for implementation alignment;
   task tracking is for current progress. These are not interchangeable.
+- When work may outlive the session (a cycle in flight, a multi-step plan), keep
+  `.stackwich/handoff.md` current at each phase change: the plan and where it lives, the phase,
+  the next step, the last gate verdict with its command, and the commit plus
+  `git status --short`. On resuming, read it first, compare the repository with what it
+  recorded, and treat any difference as unverified: re-run VERIFY before building on an
+  earlier PASS.
 - Don't re-read a file you just wrote to "confirm" it — the write already succeeded or it
   errored. Don't re-derive facts already established in this session.
 

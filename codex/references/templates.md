@@ -7,7 +7,7 @@ credit in every custom-agent file.
 
 ```markdown
 <!-- stackwich-codex:v1 -->
-<!-- stackwich-codex-rev: 4 -->
+<!-- stackwich-codex-rev: 5 -->
 ## Working Architecture (Stackwich Codex)
 
 ### Prompt
@@ -26,6 +26,12 @@ credit in every custom-agent file.
   unrelated.
 - Use a plan for implementation alignment, task tracking for current progress, and durable
   memory only for cross-session facts. Do not treat these mechanisms as interchangeable.
+- When work may outlive the task (a sandwich in flight, a multi-step plan), keep
+  `.stackwich/handoff.md` current at each stage change: the plan and where it lives, the stage,
+  the next step, the last gate verdict with its command, and the commit plus
+  `git status --short`. On resuming, read it first, compare the repository with what it
+  recorded, and treat any difference as unverified: re-run the gate before building on an
+  earlier PASS.
 - Do not re-fetch or re-derive facts already established in the current task. After editing,
   verify behavior, structure, or the diff; do not re-read a file solely to confirm that a
   successful write occurred.

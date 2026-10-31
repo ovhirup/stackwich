@@ -5,7 +5,7 @@
       "id": 1,
       "name": "fresh-user-level-install",
       "prompt": "Set up the Stackwich architecture on this machine at the user level, including the subagents.",
-      "expected_output": "~/.claude/CLAUDE.md created with exactly one stackwich:v1 marker pair and policy-rev 6; advisor.md, executor.md, verifier.md written to ~/.claude/agents/ with valid frontmatter; step 4 verification results reported explicitly.",
+      "expected_output": "~/.claude/CLAUDE.md created with exactly one stackwich:v1 marker pair and policy-rev 7; advisor.md, executor.md, verifier.md written to ~/.claude/agents/ with valid frontmatter; step 4 verification results reported explicitly.",
       "assertions": [
         "CLAUDE.md contains exactly one opening and one closing marker",
         "policy-rev line is present inside the block",
@@ -19,12 +19,12 @@
       "id": 2,
       "name": "update-existing-v1-install",
       "prompt": "I already have Stackwich installed from a while back — can you bring it up to date?",
-      "expected_output": "Existing block located via the opening marker, shown to the user with its declared policy-rev, replaced in place after confirmation with the policy-rev 6 block. No duplicate section appended.",
+      "expected_output": "Existing block located via the opening marker, shown to the user with its declared policy-rev, replaced in place after confirmation with the policy-rev 7 block. No duplicate section appended.",
       "assertions": [
         "existing block is shown to the user before modification",
         "user is asked before replacing",
         "final file contains exactly one marker pair",
-        "final block declares policy-rev 6 and no older policy-rev line remains"
+        "final block declares policy-rev 7 and no older policy-rev line remains"
       ],
       "files": []
     },
@@ -104,6 +104,20 @@
         "the review compares the diff with the spec's stated requirements"
       ],
       "files": []
+    },
+    {
+      "id": 9,
+      "name": "resume-after-interruption",
+      "prompt": "We got cut off yesterday in the middle of the checkout refactor. Pick it up where we left off.",
+      "files": [],
+      "expected_output": "The agent reads .stackwich/handoff.md before anything else, states the recorded stage, next step, and last gate verdict, compares the repository with the recorded commit and status, names anything that changed since, and re-runs the gate before relying on the earlier verdict. If there is no handoff, it says so and asks rather than reconstructing the state from memory.",
+      "assertions": [
+        "the handoff is read before any edit",
+        "the recorded stage, next step, and last gate verdict are stated",
+        "the repository is compared with the recorded commit and status, and differences are named",
+        "an earlier PASS is not relied on until the gate is re-run",
+        "with no handoff, the agent says so instead of guessing where the work stood"
+      ]
     }
   ]
 }

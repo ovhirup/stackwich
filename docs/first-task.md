@@ -21,15 +21,15 @@ cd ~/my-project
 python3 ~/stackwich-tools/tools/diagnose.py
 ```
 
-A healthy user-level install reports `policy-rev 6`, three Stackwich agents, and
+A healthy user-level install reports `policy-rev 7`, three Stackwich agents, and
 `Problems: none found`. Here is a setup with a real conflict: the project has its own agent
 called `executor`, which shadows Stackwich's.
 
 ```text
-Stackwich policy-rev in this checkout: 6
+Stackwich policy-rev in this checkout: 7
 
 user (~/.claude)
-  CLAUDE.md policy: installed, policy-rev 6
+  CLAUDE.md policy: installed, policy-rev 7
   agent advisor: Stackwich
   agent executor: Stackwich
   agent verifier: Stackwich

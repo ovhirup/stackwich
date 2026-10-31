@@ -3,8 +3,8 @@ name: stackwich
 description: Installs the Stackwich architecture — meta-prompt delegation, a plan/execute/verify/review sandwich, loop-by-default for recurring work, and fork-based context engineering — into any Claude Code setup. Writes the operating policy into CLAUDE.md and optionally scaffolds three companion subagents (advisor/executor/verifier). Use this whenever the user wants to adopt, install, bootstrap, upgrade, or re-apply this delegation architecture on a new machine, project, or someone else's setup — and also when they ask more loosely for help making their Claude Code setup more disciplined, setting up planner/executor/reviewer subagents, adding a review gate before risky changes, enforcing cheap-model tiering, or fixing agents that make sloppy or out-of-scope edits. Also use it when the user asks why agent usage or cost keeps climbing despite cheaper models, or whether a loop or more parallel agents will actually save effort.
 metadata:
   author: Abhirup Banerjee (@ovhirup)
-  version: 3.3.0
-  policy-rev: 6
+  version: 3.4.0
+  policy-rev: 7
 ---
 
 # Stackwich — install the Stackwich architecture
@@ -59,7 +59,7 @@ substitute consistently everywhere they appear.
 
 ```markdown
 <!-- stackwich:v1 -->
-<!-- policy-rev: 6 -->
+<!-- policy-rev: 7 -->
 ## Working Architecture (Stackwich)
 
 ### Prompt
@@ -77,6 +77,12 @@ substitute consistently everywhere they appear.
 - Use memory (if available) for durable cross-session facts, plans for pre-implementation
   alignment, tasks for in-conversation progress — each mechanism for its own purpose, not
   interchangeably.
+- When work may outlive the session (a sandwich in flight, a multi-step plan), keep
+  `.stackwich/handoff.md` current at each stage change: the plan and where it lives, the stage,
+  the next step, the last gate verdict with its command, and the commit plus
+  `git status --short`. On resuming, read it first, compare the repository with what it
+  recorded, and treat any difference as unverified — re-run the gate before building on an
+  earlier PASS.
 - Don't re-read a file you just wrote/edited to "confirm" it — the write already succeeded or
   would have errored. Don't re-fetch or re-derive facts already established this session.
 
@@ -188,7 +194,7 @@ This skill installs a verify-before-done policy, so it holds itself to it. After
 confirm and report actual observed results — not intentions:
 
 1. Both markers present in `<scope>/CLAUDE.md`, exactly once each.
-2. `policy-rev: 6` is present inside the block (an upgrade from an older revision must
+2. `policy-rev: 7` is present inside the block (an upgrade from an older revision must
    leave no trace of the previous one).
 3. If agents were scaffolded: all three files exist in `<scope>/agents/`, each starts with
    valid YAML frontmatter containing `name`, `description`, `model`, and `tools`.

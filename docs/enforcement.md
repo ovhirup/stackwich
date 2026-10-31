@@ -109,6 +109,15 @@ or a hook) runs `check` before treating a change as done. See [verify-gate.md](v
 | The command is a good verification | Not provided | The tool records the verdict of whatever command it is given. |
 | The record is tamper-evident | Not provided | `.stackwich/verify.jsonl` is a local file. |
 
+## Handoffs (`tools/handoff.py`)
+
+| Behavior | Kind | Detail |
+|---|---|---|
+| Keeping a handoff and reading it on resume | Instructed | The policy asks for it; nothing makes the model write or read it. |
+| Changes since the handoff are found | Mechanical, when `resume` runs | `resume` names every product file changed, added, or removed, and a moved commit. |
+| An earlier PASS is not trusted after a change | Mechanical, when `check` or `resume` runs | Both report `STALE` against the last `verify_gate` PASS. |
+| The handoff's description is accurate | Not provided | Stage and next step are what the writer said. |
+
 ## What would make more of this mechanical
 
 These are research ideas, not shipped features. See H1 in
