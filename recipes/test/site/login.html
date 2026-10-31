@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Sign in</title></head>
+<body>
+<form id="login">
+  <label for="email">Email</label> <input id="email" type="email">
+  <label for="password">Password</label> <input id="password" type="password">
+  <button type="submit">Sign in</button>
+</form>
+<p id="error" hidden>Wrong password</p>
+<script>
+document.getElementById("login").addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (document.getElementById("password").value === "s3cret") location.href = "welcome.html";
+  else document.getElementById("error").hidden = false;
+});
+</script>
+</body></html>

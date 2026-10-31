@@ -79,6 +79,12 @@ Runs `verify_gate.py` against temporary git repositories:
 - the third failure blocks further runs until a reset, and changes are counted separately;
 - the measured log gets a valid `sandwich.verified` event with the tree.
 
+### Acceptance-check recipes: `recipes/test/recipes.test.mjs`
+
+Runs each recipe in [recipes.md](recipes.md) against a local fixture site with a passing and a
+failing page, and checks that secrets from environment variables never appear in the output.
+It runs in a separate CI job, because it installs Chromium.
+
 ### Measured layer: `measured/test_measured.py`
 
 Covers the append-only log, report rates, latest-state reporting for gates, items, and risks,

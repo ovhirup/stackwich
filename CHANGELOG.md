@@ -41,11 +41,17 @@ The Claude Code policy is unchanged. Version not yet assigned.
 - `measured/` accepts an optional `tree` hash on `sandwich.verified` events.
 - `examples/first-task/.gitignore` ignores bytecode and `.stackwich/`.
 
+- `recipes/`: acceptance checks a verifier can run: `api-check.mjs`, `browser-flow.mjs`,
+  `responsive.mjs`, and `a11y-basics.mjs`. Each prints what it checked and what it did not, and
+  reads secrets only from environment variables. A separate CI job runs them against a fixture
+  site.
+
 ### Changed
 - README's uninstall steps use `tools/uninstall.py`. Deleting `advisor.md`, `executor.md`, and
   `verifier.md` by name could delete a user's own agent after a collision rename.
 
 ### Documentation
+- `docs/recipes.md` explains each recipe, its limits, and how to use it as the gate.
 - `docs/verify-gate.md` explains verification records with a recorded example.
   `docs/enforcement.md` lists which rows the tool makes mechanical, and only where `check` runs.
 - `docs/first-task.md` walks from install through diagnostics, a failing test, a gated fix, and
