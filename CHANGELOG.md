@@ -25,8 +25,22 @@ The Claude Code policy is unchanged. Version not yet assigned.
 - `tools/test_check_install.py`: fixtures for fresh install, upgrade, collision, policy-only, and
   missing-marker paths, plus deliberately broken installs that must fail with a named reason.
 - CI runs the install-result fixtures and the measured-layer tests.
+- `tools/diagnose.py` lists the policy revision and agents at user and project level and
+  reports conflicts: stale or malformed blocks, a pre-3.0 clone, policy at both levels, and
+  agents defined at both levels. It prints names and revisions, never file contents.
+- `tools/uninstall.py` removes the policy block and only the agents that carry the Stackwich
+  credit, keeping everything else. It previews by default, backs up `CLAUDE.md` on `--apply`,
+  and refuses a malformed block.
+- `examples/first-task/`: a small demo with one bug, used by `docs/first-task.md`. CI checks
+  that it fails and passes exactly as the walkthrough shows.
+
+### Changed
+- README's uninstall steps use `tools/uninstall.py`. Deleting `advisor.md`, `executor.md`, and
+  `verifier.md` by name could delete a user's own agent after a collision rename.
 
 ### Documentation
+- `docs/first-task.md` walks from install through diagnostics, a failing test, a gated fix, and
+  evidence, to a clean uninstall, with recorded command output.
 - `docs/evals.md` separates deterministic checks, which CI runs, from behavior evals, which need
   a model, and documents how to run and record each.
 - `docs/enforcement.md` lists, for the Claude Code plugin, the Codex and Grok ports, the

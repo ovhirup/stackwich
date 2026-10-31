@@ -186,8 +186,8 @@ jobs:
       - name: README hero image exists
         run: test -f docs/sandwich.jpg && echo "docs OK"
 
-      - name: Install-result checks and fixtures
-        run: cd tools && python3 -m unittest -v test_check_install
+      - name: Install checks, diagnostics, uninstall, and first-task demo
+        run: cd tools && python3 -m unittest discover -v
 
       - name: Measured-layer tests
         run: |

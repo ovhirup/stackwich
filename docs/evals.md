@@ -59,6 +59,16 @@ they cannot drift from the release:
 | Rename applied to only one side | Fail: names the leftover name or the missing agent file |
 | Agent file missing `tools` or its author credit | Fail: names each problem |
 
+### Diagnostics, uninstall, and the demo: `tools/test_tools.py`
+
+- `diagnose.py` reports stale or malformed policy blocks, a pre-3.0 clone, policy at both
+  levels, Stackwich agents with no policy, and agents defined at both levels, and never prints
+  file contents.
+- `uninstall.py` changes nothing without `--apply`, keeps unrelated `CLAUDE.md` content and
+  agents without the Stackwich credit, backs up `CLAUDE.md`, and refuses a malformed block.
+- The [first-task](first-task.md) demo must fail exactly as the walkthrough shows and pass
+  after the fix it shows.
+
 ### Measured layer: `measured/test_measured.py`
 
 Covers the append-only log, report rates, latest-state reporting for gates, items, and risks,
@@ -67,7 +77,7 @@ and the approval gate's self-check.
 ### Running them
 
 ```bash
-(cd tools && python3 -m unittest -v test_check_install)
+(cd tools && python3 -m unittest discover -v)
 (cd measured && python3 -m unittest -v test_measured && python3 approve.py --self-check)
 ```
 
