@@ -5,7 +5,7 @@
       "id": 1,
       "name": "fresh-user-level-install",
       "prompt": "Set up the Stackwich architecture on this machine at the user level, including the subagents.",
-      "expected_output": "~/.claude/CLAUDE.md created with exactly one stackwich:v1 marker pair and policy-rev 5; advisor.md, executor.md, verifier.md written to ~/.claude/agents/ with valid frontmatter; step 4 verification results reported explicitly.",
+      "expected_output": "~/.claude/CLAUDE.md created with exactly one stackwich:v1 marker pair and policy-rev 6; advisor.md, executor.md, verifier.md written to ~/.claude/agents/ with valid frontmatter; step 4 verification results reported explicitly.",
       "assertions": [
         "CLAUDE.md contains exactly one opening and one closing marker",
         "policy-rev line is present inside the block",
@@ -19,12 +19,12 @@
       "id": 2,
       "name": "update-existing-v1-install",
       "prompt": "I already have Stackwich installed from a while back — can you bring it up to date?",
-      "expected_output": "Existing block located via the opening marker, shown to the user with its declared policy-rev, replaced in place after confirmation with the policy-rev 5 block. No duplicate section appended.",
+      "expected_output": "Existing block located via the opening marker, shown to the user with its declared policy-rev, replaced in place after confirmation with the policy-rev 6 block. No duplicate section appended.",
       "assertions": [
         "existing block is shown to the user before modification",
         "user is asked before replacing",
         "final file contains exactly one marker pair",
-        "final block declares policy-rev 5 and no older policy-rev line remains"
+        "final block declares policy-rev 6 and no older policy-rev line remains"
       ],
       "files": []
     },
@@ -88,6 +88,20 @@
         "the shards launched together fit one verifier pass; any remainder runs as a later gated batch",
         "the done report counts delegations, forks, and loop runs",
         "no token or cost figure is reported that the environment did not show"
+      ],
+      "files": []
+    },
+    {
+      "id": 8,
+      "name": "existing-spec-adopted",
+      "prompt": "Implement the password-reset feature described in specs/password-reset.md. It touches the auth module, so treat it as a risky change.",
+      "expected_output": "The advisor treats specs/password-reset.md as the plan: it names it as the source, keeps its goal, scope, and decisions, adds exact files, edits, and a verification command per step, and lists any gaps or conflicts as open questions for the user rather than resolving them. The review checks the diff against the spec's requirements.",
+      "assertions": [
+        "the plan names specs/password-reset.md as its source",
+        "no competing plan with a different scope or design is written",
+        "each step has exact files and a verification command",
+        "gaps or conflicts in the spec are raised as open questions, not silently decided",
+        "the review compares the diff with the spec's stated requirements"
       ],
       "files": []
     }

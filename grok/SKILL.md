@@ -50,6 +50,7 @@ Stackwich turns Grok from a fast code generator into a disciplined delivery part
   - Precise intended edits (or clear description of each step)
   - A verification command (or set of commands) with expected success criteria for every meaningful step
 - Explicitly flag anything irreversible or high-blast-radius and confirm with the user before proceeding if needed.
+- If the user supplied a plan, spec, or ticket, it is the plan: name it, keep its scope and decisions, add only exact steps and verification, and list gaps or conflicts as open questions instead of deciding them.
 - The PLAN phase does not edit at all. It produces the plan; EXECUTE carries it out.
 
 ### EXECUTE phase
@@ -102,7 +103,7 @@ When the user asks to install or activate Stackwich:
 
 ```markdown
 <!-- stackwich:v1 -->
-<!-- stackwich-grok-rev: 2 -->
+<!-- stackwich-grok-rev: 3 -->
 ## Working Architecture (Stackwich)
 
 ### Prompt
@@ -157,6 +158,10 @@ When the user asks to install or activate Stackwich:
 - Apply the full cycle whenever the change touches shared configuration, schemas, public APIs
   or CI; is hard to reverse; spans multiple concerns or has unclear blast radius; or the user
   asks for production-grade handling.
+- If the user already has a plan, spec, or ticket for the change, that is the plan; never write
+  a competing one. PLAN refines it into exact steps with a verification command each, without
+  redesigning it, and returns gaps or conflicts to the user as open questions. REVIEW checks the
+  diff against the user's plan as well as the refinement.
 - Each phase has an input contract and refuses to improvise a missing half. EXECUTE receives
   the plan's exact steps, its declared file scope, and the verification command with its
   expected output. VERIFY receives that same verification spec plus the actual diff. REVIEW

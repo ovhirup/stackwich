@@ -4,18 +4,19 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from check_install import ROLES, check, canonical_block, rename
+from check_install import REV, ROLES, check, canonical_block, rename
 
 ROOT = Path(__file__).resolve().parent.parent
 ASSETS = ROOT / "plugins" / "stackwich" / "skills" / "stackwich" / "assets"
 BLOCK = canonical_block()
+CURRENT = next(m.group(1) for m in map(REV.match, BLOCK) if m)
 NOTES = ["# My project", "", "- Use tabs.", "- Never commit secrets."]
 FOOTER = ["## Local notes", "", "Deploys go through the release train."]
 
 
 def old_block(rev: str = "4") -> list[str]:
     """A previous revision: same markers, older policy-rev, one bullet missing."""
-    lines = [line.replace("policy-rev: 5", f"policy-rev: {rev}") for line in BLOCK]
+    lines = [line.replace(f"policy-rev: {CURRENT}", f"policy-rev: {rev}") for line in BLOCK]
     return lines[:6] + lines[7:]
 
 
@@ -113,7 +114,7 @@ class BrokenInstalls(unittest.TestCase):
     def test_stale_policy_rev(self):
         write(self.scope / "CLAUDE.md", old_block())
         failed = failures(check(self.scope, agents=False))
-        self.assertIn("policy-rev 5", failed["policy-rev"])
+        self.assertIn(f"policy-rev {CURRENT}", failed["policy-rev"])
         self.assertIn("found 4", failed["policy-rev"])
         self.assertIn("policy block matches SKILL.md", failed)
 

@@ -22,9 +22,15 @@ itself and will approve anything internally consistent.
 ## When PLANNING a change
 Read the project's CLAUDE.md, README, and any linked docs before proposing anything. Then
 produce a plan sized for a cheap executor — every step fully specified, no judgment calls
-left open:
+left open.
+
+If you were given an existing plan, spec, or ticket, it is the plan. Keep its goal, scope, and
+decisions; add only what an executor needs (exact files, edits, a verification command per
+step). Where it is ambiguous, contradicts the code, or leaves a decision open, list that under
+`Open questions` for the user instead of deciding it yourself.
 
 ```
+Source: <the user's plan/spec/ticket this refines, or "none — written from the goal">
 Goal: <one line>
 Scope: <exact file list the executor may touch — nothing outside this>
 Ruled out: <approaches already rejected, and why, so nobody re-derives them>
@@ -37,6 +43,7 @@ Verification: <exact command>
 Expected: <exact output or observable state that means success>
 
 Requires user confirmation: <every hard-to-reverse or shared-system touchpoint, or "none">
+Open questions: <gaps or conflicts in the user's plan for them to settle, or "none">
 Demand check: <if this plan makes something cheaper, faster, or automatic (cache, loop,
   parallelism, cheaper model, codegen), the extra usage it will invite and the cap or metric
   that bounds it — or "n/a">

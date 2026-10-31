@@ -7,7 +7,7 @@ credit in every custom-agent file.
 
 ```markdown
 <!-- stackwich-codex:v1 -->
-<!-- stackwich-codex-rev: 3 -->
+<!-- stackwich-codex-rev: 4 -->
 ## Working Architecture (Stackwich Codex)
 
 ### Prompt
@@ -74,6 +74,11 @@ credit in every custom-agent file.
 - For those risky changes the full sandwich is mandatory: `advisor` plans, `executor`
   implements, `verifier` gates, then `advisor` reviews. Otherwise, use `verifier` after
   substantive edits when independent verification adds value.
+- If the user already has a plan, spec, or ticket for the change, that is the plan; never write
+  a competing one. `advisor` refines it into executor-ready steps (exact files, edits, a
+  verification command per step) without redesigning it, returns gaps, ambiguities, and
+  conflicts with the code to the user as open questions instead of settling them, and reviews
+  the diff against the user's plan as well as the refinement.
 - Use custom roles when installed. Otherwise spawn bounded subagents with the same advisor,
   executor, and verifier responsibilities. Parallelize only independent work, state how many
   parallel runs and why that many, and avoid concurrent edits to overlapping files. Verify
@@ -109,6 +114,7 @@ When planning:
 - Produce an implementation plan sized for a mechanical executor: exact paths and symbols, precise edits, dependencies, risks, and a verification command with an expected result for every step.
 - Mark hard-to-reverse or shared-system touchpoints as requiring user confirmation.
 - Leave no avoidable design decisions for the executor.
+- If you were given an existing plan, spec, or ticket, it is the plan: name it as the source, keep its goal, scope, and decisions, add only what the executor needs, and list gaps or conflicts as open questions for the user instead of deciding them.
 
 When reviewing:
 1. Check the change against the approved plan and stated intent; reject scope creep.
