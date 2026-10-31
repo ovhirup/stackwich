@@ -3,7 +3,7 @@
 Headings are `## <repo version> — <what moved>`. Ports are named in the body with their own rev
 counters: a port tracks the parent's layer structure, not its revision number.
 
-## Unreleased — measured reports count current state
+## Unreleased
 
 The Claude Code policy is unchanged. Version not yet assigned.
 
@@ -19,8 +19,16 @@ The Claude Code policy is unchanged. Version not yet assigned.
 - `gate_events` and `iteration_events` in the JSON report, and matching lines in Markdown, keep
   event history separate from current state.
 - Regression tests for transitions, repeated events, distinct identities, and log ordering.
+- `tools/check_install.py` checks an installed scope against `SKILL.md`: markers, current
+  `policy-rev`, the block line for line, agent renames, unrelated content, and agent
+  frontmatter. It only reads files.
+- `tools/test_check_install.py`: fixtures for fresh install, upgrade, collision, policy-only, and
+  missing-marker paths, plus deliberately broken installs that must fail with a named reason.
+- CI runs the install-result fixtures and the measured-layer tests.
 
 ### Documentation
+- `docs/evals.md` separates deterministic checks, which CI runs, from behavior evals, which need
+  a model, and documents how to run and record each.
 - `docs/enforcement.md` lists, for the Claude Code plugin, the Codex and Grok ports, the
   measured approval gate, and the Dynamic LLM Router integration, which safeguards are
   mechanical, which depend on the model following instructions, and which are not provided.

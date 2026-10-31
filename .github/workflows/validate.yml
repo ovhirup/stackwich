@@ -185,3 +185,11 @@ jobs:
 
       - name: README hero image exists
         run: test -f docs/sandwich.jpg && echo "docs OK"
+
+      - name: Install-result checks and fixtures
+        run: cd tools && python3 -m unittest -v test_check_install
+
+      - name: Measured-layer tests
+        run: |
+          cd measured && python3 -m unittest -v test_measured
+          python3 approve.py --self-check
