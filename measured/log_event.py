@@ -61,9 +61,11 @@ ALLOWED_KEYS = {
     "severity",
     "open",
     "summary",
+    "tree",
 }
 
 VERIFY_VERDICTS = {"PASS", "FAIL"}
+TREE_CHARS = set("0123456789abcdef")
 REVIEW_VERDICTS = {"APPROVE", "REVISE"}
 TIERS = {"plan", "execute", "verify", "review"}
 DECISIONS = {"approve", "reject", "pending"}
@@ -134,6 +136,12 @@ def _check_values(name: str, event: dict) -> None:
         raise EventError("dry_run must be a boolean")
     if name == "sandwich.verified" and event["verdict"] not in VERIFY_VERDICTS:
         raise EventError("verdict must be PASS or FAIL")
+    if "tree" in event:
+        tree = event["tree"]
+        if name != "sandwich.verified":
+            raise EventError("tree is only recorded on sandwich.verified")
+        if not isinstance(tree, str) or len(tree) != 64 or not set(tree) <= TREE_CHARS:
+            raise EventError("tree must be a 64-character lowercase sha256 hex digest")
     if name == "sandwich.reviewed" and event["verdict"] not in REVIEW_VERDICTS:
         raise EventError("verdict must be APPROVE or REVISE")
     if name == "model.tier":
