@@ -10,6 +10,8 @@ Most people run AI coding agents like slot machines: prompt → pull the lever �
 
 Stackwich is 15 years of delivery coaching — plan → build → test → review, the oldest idea in software — compressed into standing policy for [Claude Code](https://docs.claude.com/en/docs/claude-code). Install it once and every future session works this way.
 
+**See it first:** the [interactive Stackwich showcase](https://abhirupbanerjee.com/stackwich) is an interactive tour of the workflow and its models. This README is the install guide.
+
 ![The Stackwich sandwich: plan (advisor·opus) → execute (executor·haiku) → verify (the gate·sonnet) → review (advisor·opus)](docs/sandwich.jpg)
 
 ## The five layers

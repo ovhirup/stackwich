@@ -53,6 +53,7 @@ The Claude Code policy is unchanged. Version not yet assigned.
   install path, separates the repository version from `policy-rev` and each port's revision,
   and marks the older `abhirup-artizent/stackwich` copy, whose clone instructions no longer
   work after 3.0.
+- README links the interactive showcase at abhirupbanerjee.com/stackwich.
 
 ## 3.2.0 — measured teams layer
 
