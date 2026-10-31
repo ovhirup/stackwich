@@ -3,8 +3,8 @@ name: stackwich
 description: Installs the Stackwich architecture — meta-prompt delegation, a plan/execute/verify/review sandwich, loop-by-default for recurring work, and fork-based context engineering — into any Claude Code setup. Writes the operating policy into CLAUDE.md and optionally scaffolds three companion subagents (advisor/executor/verifier). Use this whenever the user wants to adopt, install, bootstrap, upgrade, or re-apply this delegation architecture on a new machine, project, or someone else's setup — and also when they ask more loosely for help making their Claude Code setup more disciplined, setting up planner/executor/reviewer subagents, adding a review gate before risky changes, enforcing cheap-model tiering, or fixing agents that make sloppy or out-of-scope edits. Also use it when the user asks why agent usage or cost keeps climbing despite cheaper models, or whether a loop or more parallel agents will actually save effort.
 metadata:
   author: Abhirup Banerjee (@ovhirup)
-  version: 3.2.0
-  policy-rev: 5
+  version: 3.3.0
+  policy-rev: 6
 ---
 
 # Stackwich — install the Stackwich architecture
@@ -59,7 +59,7 @@ substitute consistently everywhere they appear.
 
 ```markdown
 <!-- stackwich:v1 -->
-<!-- policy-rev: 5 -->
+<!-- policy-rev: 6 -->
 ## Working Architecture (Stackwich)
 
 ### Prompt
@@ -128,6 +128,11 @@ substitute consistently everywhere they appear.
   reviews) is MANDATORY, not optional, whenever a change meets that bar — do not skip it
   because the change looks small or under time pressure. Otherwise `verifier` alone closes the
   loop.
+- If the user already has a plan, spec, or ticket for the change, that is the plan — never
+  write a competing one. `advisor` refines it into executor-ready steps (exact files, edits, a
+  verification command per step) without redesigning it, returns gaps, ambiguities, and
+  conflicts with the code to the user as open questions instead of settling them silently, and
+  reviews the diff against the user's plan as well as the refinement.
 - You are the orchestrator: artifacts travel through you, so forward them intact. `executor`
   receives the plan's exact steps plus its verification command and expected output.
   `verifier` receives that same verification spec plus the executor's raw reported diff and the
@@ -183,7 +188,7 @@ This skill installs a verify-before-done policy, so it holds itself to it. After
 confirm and report actual observed results — not intentions:
 
 1. Both markers present in `<scope>/CLAUDE.md`, exactly once each.
-2. `policy-rev: 5` is present inside the block (an upgrade from an older revision must
+2. `policy-rev: 6` is present inside the block (an upgrade from an older revision must
    leave no trace of the previous one).
 3. If agents were scaffolded: all three files exist in `<scope>/agents/`, each starts with
    valid YAML frontmatter containing `name`, `description`, `model`, and `tools`.
@@ -202,5 +207,5 @@ retroactively audit anything already built. If the subagents were scaffolded, su
 The repository also ships `measured/` and `docs/teams-layer.md`. That layer records sandwich
 steps, model tiers, human gates, and delivery signals as local JSONL, and it can print a
 Markdown or JSON report. It is not written into `CLAUDE.md`. Installing or upgrading this
-skill does not enable it, and `policy-rev` stays 5. Read `docs/teams-layer.md` only when the
+skill does not enable it, and does not change `policy-rev`. Read `docs/teams-layer.md` only when the
 user asks for the measured layer, a teams report, or the approval gate.

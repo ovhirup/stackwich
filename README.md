@@ -83,12 +83,12 @@ Four numbers move independently. Only the policy revisions change what an instal
 
 | Number | Current | Where it lives | When you act |
 |---|---|---|---|
-| Repository and plugin version | 3.2.0 | `plugin.json`, git tags `vX.Y.Z`, [CHANGELOG](CHANGELOG.md) headings | Update the plugin. |
-| Claude Code policy revision | `policy-rev 5` | The comment inside the `<!-- stackwich:v1 -->` block in your `CLAUDE.md` | Re-run `/stackwich:stackwich` when it changes. |
-| Grok port revision | `stackwich-grok-rev 2` | Inside the block the Grok port writes | Re-apply the Grok port when it changes. |
-| Codex port revision | `stackwich-codex-rev 3` | Inside the `<!-- stackwich-codex:v1 -->` block in `AGENTS.md` | Re-apply the Codex port when it changes. |
+| Repository and plugin version | 3.3.0 | `plugin.json`, git tags `vX.Y.Z`, [CHANGELOG](CHANGELOG.md) headings | Update the plugin. |
+| Claude Code policy revision | `policy-rev 6` | The comment inside the `<!-- stackwich:v1 -->` block in your `CLAUDE.md` | Re-run `/stackwich:stackwich` when it changes. |
+| Grok port revision | `stackwich-grok-rev 3` | Inside the block the Grok port writes | Re-apply the Grok port when it changes. |
+| Codex port revision | `stackwich-codex-rev 4` | Inside the `<!-- stackwich-codex:v1 -->` block in `AGENTS.md` | Re-apply the Codex port when it changes. |
 
-A repository release can leave every policy revision unchanged; 3.2.0 did. Each CHANGELOG entry says whether there is anything to re-run. The markers themselves never change.
+A repository release can leave every policy revision unchanged; 3.2.0 did, and 3.3.0 moved all three. Each CHANGELOG entry says whether there is anything to re-run. The markers themselves never change.
 
 ### Older copies
 
@@ -155,7 +155,7 @@ stackwich/
 
 ## Measured layer (Teams)
 
-Optional local instrumentation beside the skill. It does not change the installed policy (`policy-rev` stays 5) and it is not written into `CLAUDE.md`.
+Optional local instrumentation beside the skill. It does not change the installed policy (it never changes `policy-rev`) and it is not written into `CLAUDE.md`.
 
 `measured/` appends sandwich, model-tier, human-gate, and delivery events to a JSONL file on disk. `measured/report.py` prints a Markdown or JSON report: verification pass rate, review approve rate, human gate pass rate, hours returned, retro scores, commitment versus carryover, DORA numbers, and open risks. `measured/approve.py` is a four-role dry-run and approval gate. It refuses a change where the planner, writer, verifier, and approver names collide, and a dry run writes nothing. It does not authenticate who supplied each name or bind approval to an exact diff — it is a local workflow check, not proof of four distinct people.
 

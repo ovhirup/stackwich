@@ -3,9 +3,23 @@
 Headings are `## <repo version> — <what moved>`. Ports are named in the body with their own rev
 counters: a port tracks the parent's layer structure, not its revision number.
 
-## Unreleased
+## 3.3.0 — policy-rev 6: work from the user's own plan
 
-The Claude Code policy is unchanged. Version not yet assigned.
+The Claude Code policy changes, so `policy-rev` moves from 5 to 6: re-run `/stackwich:stackwich`
+to apply it in place. The `<!-- stackwich:v1 -->` marker is unchanged. Agents scaffolded before
+this release keep the older `advisor.md`; accept the scaffolding again to pick up its new plan
+format.
+
+### Policy
+- If the user already has a plan, spec, or ticket, that is the plan. `advisor` refines it into
+  executor-ready steps without redesigning it, returns gaps and conflicts to the user as open
+  questions, and reviews the diff against the user's plan as well as the refinement. (#24)
+- `advisor.md` records the plan's `Source:` and its `Open questions:`.
+- `evals/evals.json` case 8 describes the expected behavior with an existing spec.
+
+### Ports
+- Codex moves to `stackwich-codex-rev 4` and Grok to `stackwich-grok-rev 3` with the same rule;
+  re-apply each port to pick it up.
 
 ### Fixed
 - `report.py` counts the latest decision of each human gate, keyed by work id and gate. A gate
