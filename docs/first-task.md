@@ -8,12 +8,17 @@ it is not evidence that Stackwich improves results on real work. See
 [enforcement.md](enforcement.md) for what is mechanical and what depends on the model.
 
 The command output below is real, recorded on 2026-10-31 with Python 3.13. Temporary paths are
-shortened. What Claude says in step 4 depends on the model and is described, not quoted.
+shortened. What Claude says in step 4 depends on the model. On 2026-10-31 the walkthrough was run
+end to end in Claude Code 2.1.316 against the published 3.4.0 plugin; step 4 summarises what that
+session did.
 
 ## 1. Install and check
 
-Install the plugin and run the skill, as in the [README](../README.md#install). Then clone this
-repository somewhere outside your project and run the diagnostics from your project directory:
+Install the plugin and run the skill, as in the [README](../README.md#install). Claude Code asks
+permission before the skill writes `CLAUDE.md`, reads the plugin's agent files, and creates the
+`agents/` folder; approve each prompt. If a write is refused, the skill changes nothing, reports
+every step 4 check as FAIL, and tells you what to allow. Then clone this repository somewhere
+outside your project and run the diagnostics from your project directory:
 
 ```bash
 git clone https://github.com/ovhirup/stackwich ~/stackwich-tools
@@ -101,6 +106,11 @@ What to watch for:
 
 If the first attempt is wrong you will see the gate fail. That is the workflow working. Whether
 the gate is used at all depends on the model following the policy; nothing forces it.
+
+In the recorded run, Claude read both files, made the one-line fix to `total()`, ran the tests,
+and then handed the change to the `verifier` subagent. The verifier re-ran `python3 -m unittest`
+itself, checked that only `cart.py` had changed, and ended its report with `GATE: PASS`. The final
+report quoted the command and its output and counted one subagent, no forks, and no loops.
 
 ## 5. Check the evidence yourself
 
