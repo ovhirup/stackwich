@@ -94,9 +94,24 @@ line is instructed; under Codex the sandbox draws a stricter line that can also 
 artifacts; under the Router, report files are excluded from commits and the scope check covers
 everything else.
 
+## Verification records (`tools/verify_gate.py`)
+
+Optional. These rows hold only in setups that run the tool, and only where someone (a person, CI,
+or a hook) runs `check` before treating a change as done. See [verify-gate.md](verify-gate.md).
+
+| Behavior | Kind | Detail |
+|---|---|---|
+| A PASS names the files it tested | Mechanical | Each record holds the commit and a hash of every product file, committed or not. |
+| An edit after a PASS is caught | Mechanical, when `check` runs | `check` fails and names each added, modified, or removed file. |
+| The verification command does not edit product files | Mechanical, during `run` | A run whose command changed product files is `GATE: FAIL`, whatever its exit code. |
+| Failure loops capped at 2 cycles | Mechanical, when runs go through the tool | After the first run and 2 failed correction cycles, `run` refuses until a person records a reset. |
+| The agent uses the tool | Instructed | Nothing makes the model call `run`. A `check` that you run is what it cannot skip. |
+| The command is a good verification | Not provided | The tool records the verdict of whatever command it is given. |
+| The record is tamper-evident | Not provided | `.stackwich/verify.jsonl` is a local file. |
+
 ## What would make more of this mechanical
 
 These are research ideas, not shipped features. See H1 in
-[next-version-research.md](next-version-research.md): tie verification to the exact tested
-revision, invalidate a verdict when the product changes afterwards, and make scope violations,
-missing evidence, or exhausted retries unable to produce a successful status.
+[next-version-research.md](next-version-research.md). `tools/verify_gate.py` covers binding a
+verdict to the tested tree and the failure cap. Scope checks against a plan, signed records, and
+running `check` automatically remain open.

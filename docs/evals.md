@@ -69,6 +69,16 @@ they cannot drift from the release:
 - The [first-task](first-task.md) demo must fail exactly as the walkthrough shows and pass
   after the fix it shows.
 
+### Verification records: `tools/test_verify_gate.py`
+
+Runs `verify_gate.py` against temporary git repositories:
+- a PASS records the commit and tree, including uncommitted edits;
+- a later edit, an added file, or a deleted file makes `check` fail and names it;
+- declared artifacts and ignored output do not invalidate a PASS;
+- a command that edits product files fails;
+- the third failure blocks further runs until a reset, and changes are counted separately;
+- the measured log gets a valid `sandwich.verified` event with the tree.
+
 ### Measured layer: `measured/test_measured.py`
 
 Covers the append-only log, report rates, latest-state reporting for gates, items, and risks,

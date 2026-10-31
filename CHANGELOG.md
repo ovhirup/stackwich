@@ -34,11 +34,20 @@ The Claude Code policy is unchanged. Version not yet assigned.
 - `examples/first-task/`: a small demo with one bug, used by `docs/first-task.md`. CI checks
   that it fails and passes exactly as the walkthrough shows.
 
+- `tools/verify_gate.py` binds a verification verdict to the commit and every product file it
+  tested. `check` fails after any later product change and names the files. A command that edits
+  product files fails the gate. After the first run and 2 failed correction cycles, `run` refuses
+  until a person records a reset. Optional and local; see `docs/verify-gate.md`.
+- `measured/` accepts an optional `tree` hash on `sandwich.verified` events.
+- `examples/first-task/.gitignore` ignores bytecode and `.stackwich/`.
+
 ### Changed
 - README's uninstall steps use `tools/uninstall.py`. Deleting `advisor.md`, `executor.md`, and
   `verifier.md` by name could delete a user's own agent after a collision rename.
 
 ### Documentation
+- `docs/verify-gate.md` explains verification records with a recorded example.
+  `docs/enforcement.md` lists which rows the tool makes mechanical, and only where `check` runs.
 - `docs/first-task.md` walks from install through diagnostics, a failing test, a gated fix, and
   evidence, to a clean uninstall, with recorded command output.
 - `docs/evals.md` separates deterministic checks, which CI runs, from behavior evals, which need
