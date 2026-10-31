@@ -85,6 +85,13 @@ Runs each recipe in [recipes.md](recipes.md) against a local fixture site with a
 failing page, and checks that secrets from environment variables never appear in the output.
 It runs in a separate CI job, because it installs Chromium.
 
+### Handoffs: `tools/test_handoff.py`
+
+Runs `handoff.py` against temporary git repositories: `save` records stage, plan, commit, and
+status; `resume` reports unchanged trees, names changed, added, and removed files and a moved
+commit, ignores ignored output, reports whether the last PASS still holds, and handles a missing,
+hand-written, or corrupt handoff.
+
 ### Measured layer: `measured/test_measured.py`
 
 Covers the append-only log, report rates, latest-state reporting for gates, items, and risks,

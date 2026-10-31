@@ -62,7 +62,7 @@ Plugin skills are namespaced by the plugin that ships them, which is why the nam
 
 The skill does the rest interactively: asks for scope, writes the policy, offers the three agents. Run `/agents` afterwards to confirm `advisor`, `executor`, and `verifier` are picked up. Re-running it on an existing install detects the marker and offers an in-place upgrade.
 
-New to Stackwich? [Your first verified task](docs/first-task.md) walks from install to a verified fix on a small demo and back out again. To list what is installed at each level and any conflicts, run `python3 tools/diagnose.py` from your project. No browser or API tests in your project? [Acceptance-check recipes](docs/recipes.md) give the verifier something real to run. To bind a `GATE: PASS` to the exact files it tested, see [verification records](docs/verify-gate.md). To check what an install left behind, run `python3 tools/check_install.py ~/.claude` from a clone of this repository (or `./.claude` for a project-level install). It reads files only and reports each marker, revision, block, and agent check as PASS or FAIL. [docs/evals.md](docs/evals.md) explains these checks and the separate behavior evals.
+New to Stackwich? [Your first verified task](docs/first-task.md) walks from install to a verified fix on a small demo and back out again. To list what is installed at each level and any conflicts, run `python3 tools/diagnose.py` from your project. No browser or API tests in your project? [Acceptance-check recipes](docs/recipes.md) give the verifier something real to run. To bind a `GATE: PASS` to the exact files it tested, see [verification records](docs/verify-gate.md); to pick up interrupted work safely, see [handoffs](docs/handoff.md). To check what an install left behind, run `python3 tools/check_install.py ~/.claude` from a clone of this repository (or `./.claude` for a project-level install). It reads files only and reports each marker, revision, block, and agent check as PASS or FAIL. [docs/evals.md](docs/evals.md) explains these checks and the separate behavior evals.
 
 ### Upgrading from 2.x
 
@@ -83,12 +83,12 @@ Four numbers move independently. Only the policy revisions change what an instal
 
 | Number | Current | Where it lives | When you act |
 |---|---|---|---|
-| Repository and plugin version | 3.3.0 | `plugin.json`, git tags `vX.Y.Z`, [CHANGELOG](CHANGELOG.md) headings | Update the plugin. |
-| Claude Code policy revision | `policy-rev 6` | The comment inside the `<!-- stackwich:v1 -->` block in your `CLAUDE.md` | Re-run `/stackwich:stackwich` when it changes. |
-| Grok port revision | `stackwich-grok-rev 3` | Inside the block the Grok port writes | Re-apply the Grok port when it changes. |
-| Codex port revision | `stackwich-codex-rev 4` | Inside the `<!-- stackwich-codex:v1 -->` block in `AGENTS.md` | Re-apply the Codex port when it changes. |
+| Repository and plugin version | 3.4.0 | `plugin.json`, git tags `vX.Y.Z`, [CHANGELOG](CHANGELOG.md) headings | Update the plugin. |
+| Claude Code policy revision | `policy-rev 7` | The comment inside the `<!-- stackwich:v1 -->` block in your `CLAUDE.md` | Re-run `/stackwich:stackwich` when it changes. |
+| Grok port revision | `stackwich-grok-rev 4` | Inside the block the Grok port writes | Re-apply the Grok port when it changes. |
+| Codex port revision | `stackwich-codex-rev 5` | Inside the `<!-- stackwich-codex:v1 -->` block in `AGENTS.md` | Re-apply the Codex port when it changes. |
 
-A repository release can leave every policy revision unchanged; 3.2.0 did, and 3.3.0 moved all three. Each CHANGELOG entry says whether there is anything to re-run. The markers themselves never change.
+A repository release can leave every policy revision unchanged; 3.2.0 did, while 3.3.0 and 3.4.0 each moved all three. Each CHANGELOG entry says whether there is anything to re-run. The markers themselves never change.
 
 ### Older copies
 
@@ -133,7 +133,7 @@ stackwich/
 │           ├── verifier.md
 │           └── rebound.md        # cost/rebound playbook, read only for cost or loop questions
 ├── evals/evals.json              # five install paths + two policy-behavior cases
-├── tools/                        # check_install, diagnose, uninstall, and verify_gate
+├── tools/                        # check_install, diagnose, uninstall, verify_gate, and handoff
 ├── examples/first-task/          # the demo project for docs/first-task.md
 ├── recipes/                      # API, browser-flow, responsive, and accessibility checks
 ├── docs/sandwich.jpg
@@ -142,6 +142,7 @@ stackwich/
 ├── docs/evals.md                 # deterministic checks vs. behavior evals, and how to run each
 ├── docs/first-task.md            # install → diagnose → fail → fix → verify → uninstall
 ├── docs/verify-gate.md           # bind verification verdicts to the tree they tested
+├── docs/handoff.md               # resume interrupted work and see what changed since
 ├── docs/recipes.md               # acceptance-check recipes and what each does not check
 ├── measured/                     # optional local JSONL log, report, and approval gate
 ├── grok/                         # Grok port (stackwich-grok) — not a Claude Code skill

@@ -3,6 +3,27 @@
 Headings are `## <repo version> — <what moved>`. Ports are named in the body with their own rev
 counters: a port tracks the parent's layer structure, not its revision number.
 
+## 3.4.0 — policy-rev 7: resume interrupted work safely
+
+The Claude Code policy changes, so `policy-rev` moves from 6 to 7: re-run `/stackwich:stackwich`
+to apply it in place. The `<!-- stackwich:v1 -->` marker is unchanged.
+
+### Policy
+- When work may outlive the session, keep `.stackwich/handoff.md` current at each stage change:
+  the plan, the stage, the next step, the last gate verdict, and the commit plus
+  `git status --short`. On resuming, read it first, compare the repository with it, and treat any
+  difference as unverified. (#26)
+- `evals/evals.json` case 9 describes the expected behavior after an interruption.
+
+### Added
+- `tools/handoff.py`: `save` writes the handoff and a fingerprint of every product file;
+  `resume` prints it, names each file changed since, reports a moved commit, and says whether the
+  last `verify_gate` PASS still holds. It handles a missing or hand-written handoff.
+- `docs/handoff.md` explains the handoff and the tool.
+
+### Ports
+- Codex moves to `stackwich-codex-rev 5` and Grok to `stackwich-grok-rev 4` with the same rule.
+
 ## 3.3.0 — policy-rev 6: work from the user's own plan
 
 The Claude Code policy changes, so `policy-rev` moves from 5 to 6: re-run `/stackwich:stackwich`
