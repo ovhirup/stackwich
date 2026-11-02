@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 
 from diagnose import inspect, problems
-from test_check_install import BLOCK, CURRENT, FOOTER, NOTES, old_block, scaffold, write
+from test_check_install import BLOCK, CURRENT, FOOTER, NOTES, edit_agent, old_block, scaffold, write
 from uninstall import UninstallError, run
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -55,6 +55,24 @@ class Diagnose(unittest.TestCase):
         (self.user / "CLAUDE.md").unlink()
         scaffold(self.user)
         self.assertIn("no policy block", "\n".join(problems(self.scopes(), CURRENT)))
+
+    def test_reports_stale_agents(self):
+        write(self.user / "CLAUDE.md", BLOCK)
+        scaffold(self.user)
+        edit_agent(self.user, "advisor", "Open questions:", "Notes:")
+        scopes = self.scopes()
+        self.assertEqual(scopes[0].stale, ["advisor"])
+        found = "\n".join(problems(scopes, CURRENT))
+        self.assertIn("user: Stackwich agent(s) advisor differ from this checkout's assets", found)
+
+    def test_renamed_and_model_swapped_agents_are_current(self):
+        names = {"executor": "builder"}
+        write(self.user / "CLAUDE.md", BLOCK)
+        scaffold(self.user, names)
+        edit_agent(self.user, "verifier", "model: sonnet", "model: haiku")
+        scopes = self.scopes()
+        self.assertEqual(scopes[0].stale, [])
+        self.assertEqual(problems(scopes, CURRENT), [])
 
     def test_output_never_contains_file_contents(self):
         write(self.user / "CLAUDE.md", ["SECRET_TOKEN=abc123", ""] + BLOCK)

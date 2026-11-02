@@ -58,12 +58,13 @@ they cannot drift from the release:
 | Unrelated content lost | Fail: names a lost line |
 | Rename applied to only one side | Fail: names the leftover name or the missing agent file |
 | Agent file missing `tools` or its author credit | Fail: names each problem |
+| Agent body differs from its asset (stale after an upgrade, or edited) | Fail: names the asset and the first differing line; a `model:` swap or a full rename still passes |
 
 ### Diagnostics, uninstall, and the demo: `tools/test_tools.py`
 
 - `diagnose.py` reports stale or malformed policy blocks, a pre-3.0 clone, policy at both
-  levels, Stackwich agents with no policy, and agents defined at both levels, and never prints
-  file contents.
+  levels, Stackwich agents with no policy, Stackwich agents that differ from the current
+  assets, and agents defined at both levels, and never prints file contents.
 - `uninstall.py` changes nothing without `--apply`, keeps unrelated `CLAUDE.md` content and
   agents without the Stackwich credit, backs up `CLAUDE.md`, and refuses a malformed block.
 - The [first-task](first-task.md) demo must fail exactly as the walkthrough shows and pass

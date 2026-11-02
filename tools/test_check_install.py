@@ -27,13 +27,20 @@ def write(path: Path, lines: list[str]) -> Path:
 
 
 def scaffold(scope: Path, names: dict[str, str] | None = None) -> None:
+    """Copy the assets as SKILL.md step 3 does: a rename applies to name: and in-body references."""
     names = names or {}
     for role in ROLES:
         name = names.get(role, role)
-        text = (ASSETS / f"{role}.md").read_text(encoding="utf-8")
-        text = text.replace(f"name: {role}\n", f"name: {name}\n", 1)
+        text = "\n".join(rename((ASSETS / f"{role}.md").read_text(encoding="utf-8").splitlines(), names)) + "\n"
         (scope / "agents").mkdir(parents=True, exist_ok=True)
         (scope / "agents" / f"{name}.md").write_text(text, encoding="utf-8")
+
+
+def edit_agent(scope: Path, name: str, old: str, new: str) -> None:
+    path = scope / "agents" / f"{name}.md"
+    text = path.read_text(encoding="utf-8")
+    assert old in text, f"{old!r} not in {path}"
+    path.write_text(text.replace(old, new, 1), encoding="utf-8")
 
 
 def failures(report) -> dict[str, str]:
@@ -79,6 +86,13 @@ class InstallFixtures(unittest.TestCase):
         report = check(self.scope, agents=True, names=names)
         self.assertTrue(report.ok, report.render())
         self.assertIn("unrelated", (self.scope / "agents" / "executor.md").read_text())
+
+    def test_model_swap_is_allowed(self):
+        write(self.scope / "CLAUDE.md", BLOCK)
+        scaffold(self.scope)
+        edit_agent(self.scope, "advisor", "model: opus", "model: sonnet")
+        report = check(self.scope, agents=True)
+        self.assertTrue(report.ok, report.render())
 
     def test_policy_only_install(self):
         write(self.scope / "CLAUDE.md", BLOCK)
@@ -157,6 +171,26 @@ class BrokenInstalls(unittest.TestCase):
         detail = failures(check(self.scope, agents=True))["agent verifier"]
         self.assertIn("frontmatter missing tools", detail)
         self.assertIn("author line edited or removed", detail)
+
+    def test_stale_agent_body_after_upgrade(self):
+        """An advisor scaffolded before 3.3.0 has no Open questions line; the policy expects one."""
+        write(self.scope / "CLAUDE.md", BLOCK)
+        scaffold(self.scope)
+        edit_agent(self.scope, "advisor", "Open questions:", "Notes:")
+        failed = failures(check(self.scope, agents=True))
+        self.assertIn("body differs from assets/advisor.md", failed["agent advisor"])
+        self.assertIn("first difference at line", failed["agent advisor"])
+        self.assertNotIn("agent executor", failed)
+        self.assertNotIn("agent verifier", failed)
+
+    def test_rename_left_out_of_agent_bodies(self):
+        names = {"executor": "builder"}
+        write(self.scope / "CLAUDE.md", rename(BLOCK, names))
+        scaffold(self.scope)
+        (self.scope / "agents" / "executor.md").rename(self.scope / "agents" / "builder.md")
+        edit_agent(self.scope, "builder", "name: executor", "name: builder")
+        failed = failures(check(self.scope, agents=True, names=names))
+        self.assertIn("body differs from assets/verifier.md", failed["agent verifier"])
 
     def test_missing_claude_md(self):
         failed = failures(check(self.scope, agents=False))
