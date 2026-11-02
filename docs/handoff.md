@@ -14,7 +14,8 @@ records:
 - the commit and `git status --short` at that moment.
 
 On resuming, anything that differs from the handoff is treated as unverified, and the gate runs
-again before anything builds on an earlier PASS. Add `.stackwich/` to `.gitignore`.
+again before anything builds on an earlier PASS. The tools keep `.stackwich/` out of git with a
+`.stackwich/.gitignore` of `*`; a handoff written by hand needs `.stackwich/` in `.gitignore`.
 
 ## The helper: `tools/handoff.py`
 

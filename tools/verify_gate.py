@@ -125,9 +125,18 @@ def records(root: Path) -> list[dict]:
     return out
 
 
+def state_dir(root: Path) -> Path:
+    """Create .stackwich/ ignoring itself, so `git add -A` never commits it. An existing .gitignore there is kept."""
+    state = root / STATE_DIR
+    state.mkdir(parents=True, exist_ok=True)
+    ignore = state / ".gitignore"
+    if not ignore.exists():
+        ignore.write_text("*\n", encoding="utf-8")
+    return state
+
+
 def append(root: Path, record: dict) -> None:
-    path = root / STATE_DIR / RECORDS
-    path.parent.mkdir(parents=True, exist_ok=True)
+    path = state_dir(root) / RECORDS
     with path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(record, sort_keys=True, separators=(",", ":")) + "\n")
 
