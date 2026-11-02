@@ -3,6 +3,16 @@
 Headings are `## <repo version> — <what moved>`. Ports are named in the body with their own rev
 counters: a port tracks the parent's layer structure, not its revision number.
 
+## 3.6.1 — confirm agents without `/agents`
+
+The policy is unchanged: `policy-rev` stays at 9 and there is nothing to re-run. Update the plugin
+to get the corrected installer text.
+
+### Fixed
+- The installer's final report and the README told users to run `/agents` to confirm the three
+  agents. Current Claude Code has removed that command. Both now say to start a new session and
+  ask Claude to list the user-level (or project-level) subagents. (#49)
+
 ## 3.6.0 — policy-rev 9: research that retries, then says what it didn't check
 
 The Claude Code policy changes, so `policy-rev` moves from 8 to 9: re-run `/stackwich:stackwich`
