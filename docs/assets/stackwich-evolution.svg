@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" font-family="Inter, Helvetica, Arial, sans-serif">
+<rect width="1600" height="900" fill="#0B1426"/>
+<text x="80" y="78" fill="#2F86FF" font-size="16" font-weight="600" letter-spacing="2">AGILE AI PIONEERS · FIELD NOTES</text>
+<text x="80" y="122" fill="#FFFFFF" font-size="38" font-weight="700">The evolution of Stackwich</text>
+<text x="80" y="156" fill="#9FB0CC" font-size="18">14 releases, Jul – Nov 2026 · policy-rev 1 → 9 · Claude Code plugin with Codex and Grok ports</text>
+<rect x="80" y="205" width="288" height="54" rx="8" fill="#13213B" stroke="#24375C"/>
+<text x="224" y="229" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="700" letter-spacing="1.5">FOUNDATIONS</text>
+<text x="224" y="249" text-anchor="middle" fill="#9FB0CC" font-size="13">Jul 2026</text>
+<rect x="392" y="205" width="184" height="54" rx="8" fill="#13213B" stroke="#24375C"/>
+<text x="484" y="229" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="700" letter-spacing="1.5">PORTS + PLUGIN</text>
+<text x="484" y="249" text-anchor="middle" fill="#9FB0CC" font-size="13">Sep 2026</text>
+<rect x="600" y="205" width="392" height="54" rx="8" fill="#13213B" stroke="#24375C"/>
+<text x="796" y="229" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="700" letter-spacing="1.5">CEILINGS + MEASUREMENT</text>
+<text x="796" y="249" text-anchor="middle" fill="#9FB0CC" font-size="13">Oct 2026</text>
+<rect x="1016" y="205" width="496" height="54" rx="8" fill="#13213B" stroke="#24375C"/>
+<text x="1264" y="229" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="700" letter-spacing="1.5">PLANS, RESUME, LEAN</text>
+<text x="1264" y="249" text-anchor="middle" fill="#9FB0CC" font-size="13">Oct – Nov 2026</text>
+<line x1="90" y1="470" x2="1502" y2="470" stroke="#2F86FF" stroke-width="3"/>
+<line x1="120" y1="470" x2="120" y2="420" stroke="#24375C" stroke-width="2"/>
+<circle cx="120" cy="470" r="8" fill="#0B1426" stroke="#2F86FF" stroke-width="3"/>
+<text x="120" y="320" text-anchor="middle" fill="#2F86FF" font-size="20" font-weight="700">v1.0.0</text>
+<text x="120" y="340" text-anchor="middle" fill="#9FB0CC" font-size="13">Jul 2026 · rev 1</text>
+<text x="120" y="362" text-anchor="middle" fill="#E6ECF5" font-size="13">Policy block,</text>
+<text x="120" y="379" text-anchor="middle" fill="#E6ECF5" font-size="13">3 subagents</text>
+<line x1="224" y1="470" x2="224" y2="520" stroke="#24375C" stroke-width="2"/>
+<circle cx="224" cy="470" r="8" fill="#0B1426" stroke="#2F86FF" stroke-width="3"/>
+<text x="224" y="530" text-anchor="middle" fill="#2F86FF" font-size="20" font-weight="700">v2.0.0</text>
+<text x="224" y="550" text-anchor="middle" fill="#9FB0CC" font-size="13">Jul 2026 · rev 2</text>
+<text x="224" y="572" text-anchor="middle" fill="#E6ECF5" font-size="13">Capped fail routing,</text>
+<text x="224" y="589" text-anchor="middle" fill="#E6ECF5" font-size="13">self-checked install</text>
+<line x1="328" y1="470" x2="328" y2="420" stroke="#24375C" stroke-width="2"/>
+<circle cx="328" cy="470" r="8" fill="#0B1426" stroke="#2F86FF" stroke-width="3"/>
+<text x="328" y="320" text-anchor="middle" fill="#2F86FF" font-size="20" font-weight="700">v2.1.0</text>
+<text x="328" y="340" text-anchor="middle" fill="#9FB0CC" font-size="13">28 Jul · rev 3</text>
+<text x="328" y="362" text-anchor="middle" fill="#E6ECF5" font-size="13">Five named layers,</text>
+<text x="328" y="379" text-anchor="middle" fill="#E6ECF5" font-size="13">harness explicit</text>
+<line x1="432" y1="470" x2="432" y2="520" stroke="#24375C" stroke-width="2"/>
+<circle cx="432" cy="470" r="8" fill="#0B1426" stroke="#2F86FF" stroke-width="3"/>
+<text x="432" y="530" text-anchor="middle" fill="#2F86FF" font-size="20" font-weight="700">v2.2.0</text>
+<text x="432" y="550" text-anchor="middle" fill="#9FB0CC" font-size="13">15 Sep · rev 3</text>
+<text x="432" y="572" text-anchor="middle" fill="#E6ECF5" font-size="13">Codex + Grok ports</text>
+<text x="432" y="589" text-anchor="middle" fill="#E6ECF5" font-size="13">reach parity</text>
+<line x1="536" y1="470" x2="536" y2="420" stroke="#24375C" stroke-width="2"/>
+<circle cx="536" cy="470" r="8" fill="#0B1426" stroke="#2F86FF" stroke-width="3"/>
+<text x="536" y="320" text-anchor="middle" fill="#2F86FF" font-size="20" font-weight="700">v3.0.0</text>
+<text x="536" y="340" text-anchor="middle" fill="#9FB0CC" font-size="13">15 Sep · rev 3</text>
+<text x="536" y="362" text-anchor="middle" fill="#E6ECF5" font-size="13">Installs as a</text>
+<text x="536" y="379" text-anchor="middle" fill="#E6ECF5" font-size="13">Claude Code plugin</text>
+<line x1="640" y1="470" x2="640" y2="520" stroke="#24375C" stroke-width="2"/>
+<circle cx="640" cy="470" r="8" fill="#0B1426" stroke="#2F86FF" stroke-width="3"/>
+<text x="640" y="530" text-anchor="middle" fill="#2F86FF" font-size="20" font-weight="700">v3.1.0</text>
+<text x="640" y="550" text-anchor="middle" fill="#9FB0CC" font-size="13">1 Oct · rev 4</text>
+<text x="640" y="572" text-anchor="middle" fill="#E6ECF5" font-size="13">Every efficiency</text>
+<text x="640" y="589" text-anchor="middle" fill="#E6ECF5" font-size="13">gets a ceiling</text>
+<line x1="744" y1="470" x2="744" y2="420" stroke="#24375C" stroke-width="2"/>
+<circle cx="744" cy="470" r="8" fill="#0B1426" stroke="#2F86FF" stroke-width="3"/>
+<text x="744" y="320" text-anchor="middle" fill="#2F86FF" font-size="20" font-weight="700">v3.1.1</text>
+<text x="744" y="340" text-anchor="middle" fill="#9FB0CC" font-size="13">1 Oct · rev 5</text>
+<text x="744" y="362" text-anchor="middle" fill="#E6ECF5" font-size="13">Parallel shards fit</text>
+<text x="744" y="379" text-anchor="middle" fill="#E6ECF5" font-size="13">one verifier pass</text>
+<line x1="848" y1="470" x2="848" y2="520" stroke="#24375C" stroke-width="2"/>
+<circle cx="848" cy="470" r="8" fill="#0B1426" stroke="#2F86FF" stroke-width="3"/>
+<text x="848" y="530" text-anchor="middle" fill="#2F86FF" font-size="20" font-weight="700">v3.1.2</text>
+<text x="848" y="550" text-anchor="middle" fill="#9FB0CC" font-size="13">2 Oct · rev 5</text>
+<text x="848" y="572" text-anchor="middle" fill="#E6ECF5" font-size="13">Same fix for</text>
+<text x="848" y="589" text-anchor="middle" fill="#E6ECF5" font-size="13">the Codex port</text>
+<line x1="952" y1="470" x2="952" y2="420" stroke="#24375C" stroke-width="2"/>
+<circle cx="952" cy="470" r="8" fill="#0B1426" stroke="#2F86FF" stroke-width="3"/>
+<text x="952" y="320" text-anchor="middle" fill="#2F86FF" font-size="20" font-weight="700">v3.2.0</text>
+<text x="952" y="340" text-anchor="middle" fill="#9FB0CC" font-size="13">15 Oct · rev 5</text>
+<text x="952" y="362" text-anchor="middle" fill="#E6ECF5" font-size="13">Optional measured</text>
+<text x="952" y="379" text-anchor="middle" fill="#E6ECF5" font-size="13">teams layer</text>
+<line x1="1056" y1="470" x2="1056" y2="520" stroke="#24375C" stroke-width="2"/>
+<circle cx="1056" cy="470" r="8" fill="#0B1426" stroke="#2F86FF" stroke-width="3"/>
+<text x="1056" y="530" text-anchor="middle" fill="#2F86FF" font-size="20" font-weight="700">v3.3.0</text>
+<text x="1056" y="550" text-anchor="middle" fill="#9FB0CC" font-size="13">31 Oct · rev 6</text>
+<text x="1056" y="572" text-anchor="middle" fill="#E6ECF5" font-size="13">Works from the</text>
+<text x="1056" y="589" text-anchor="middle" fill="#E6ECF5" font-size="13">user&#8217;s own plan</text>
+<line x1="1160" y1="470" x2="1160" y2="420" stroke="#24375C" stroke-width="2"/>
+<circle cx="1160" cy="470" r="8" fill="#0B1426" stroke="#2F86FF" stroke-width="3"/>
+<text x="1160" y="320" text-anchor="middle" fill="#2F86FF" font-size="20" font-weight="700">v3.4.0</text>
+<text x="1160" y="340" text-anchor="middle" fill="#9FB0CC" font-size="13">31 Oct · rev 7</text>
+<text x="1160" y="362" text-anchor="middle" fill="#E6ECF5" font-size="13">Resume interrupted</text>
+<text x="1160" y="379" text-anchor="middle" fill="#E6ECF5" font-size="13">work safely</text>
+<line x1="1264" y1="470" x2="1264" y2="520" stroke="#24375C" stroke-width="2"/>
+<circle cx="1264" cy="470" r="8" fill="#0B1426" stroke="#2F86FF" stroke-width="3"/>
+<text x="1264" y="530" text-anchor="middle" fill="#2F86FF" font-size="20" font-weight="700">v3.5.0</text>
+<text x="1264" y="550" text-anchor="middle" fill="#9FB0CC" font-size="13">2 Nov · rev 8</text>
+<text x="1264" y="572" text-anchor="middle" fill="#E6ECF5" font-size="13">952 → 700 words,</text>
+<text x="1264" y="589" text-anchor="middle" fill="#E6ECF5" font-size="13">one failure ladder</text>
+<line x1="1368" y1="470" x2="1368" y2="420" stroke="#24375C" stroke-width="2"/>
+<circle cx="1368" cy="470" r="8" fill="#0B1426" stroke="#2F86FF" stroke-width="3"/>
+<text x="1368" y="320" text-anchor="middle" fill="#2F86FF" font-size="20" font-weight="700">v3.6.0</text>
+<text x="1368" y="340" text-anchor="middle" fill="#9FB0CC" font-size="13">2 Nov · rev 9</text>
+<text x="1368" y="362" text-anchor="middle" fill="#E6ECF5" font-size="13">Research retries,</text>
+<text x="1368" y="379" text-anchor="middle" fill="#E6ECF5" font-size="13">names what&#8217;s unchecked</text>
+<line x1="1472" y1="470" x2="1472" y2="520" stroke="#24375C" stroke-width="2"/>
+<circle cx="1472" cy="470" r="11" fill="#0B1426" stroke="#5BE3A6" stroke-width="3"/>
+<text x="1472" y="530" text-anchor="middle" fill="#5BE3A6" font-size="20" font-weight="700">v3.6.1</text>
+<text x="1472" y="550" text-anchor="middle" fill="#9FB0CC" font-size="13">2 Nov · rev 9</text>
+<text x="1472" y="572" text-anchor="middle" fill="#E6ECF5" font-size="13">Confirm agents</text>
+<text x="1472" y="589" text-anchor="middle" fill="#E6ECF5" font-size="13">without /agents</text>
+<rect x="80" y="660" width="345" height="130" rx="10" fill="#13213B" stroke="#24375C"/>
+<rect x="80" y="660" width="4" height="130" fill="#5BE3A6"/>
+<text x="102" y="694" fill="#FFFFFF" font-size="17" font-weight="700">Token leanness</text>
+<text x="102" y="726" fill="#C9D4E5" font-size="13">Agents moved out of SKILL.md (~55% smaller body).</text>
+<text x="102" y="748" fill="#C9D4E5" font-size="13">Policy block 952 → 700 words; CI budget 735.</text>
+<rect x="445" y="660" width="345" height="130" rx="10" fill="#13213B" stroke="#24375C"/>
+<rect x="445" y="660" width="4" height="130" fill="#5BE3A6"/>
+<text x="467" y="694" fill="#FFFFFF" font-size="17" font-weight="700">Safety: failure ladder</text>
+<text x="467" y="726" fill="#C9D4E5" font-size="13">2-cycle cap (2.0) became one ladder (3.5):</text>
+<text x="467" y="748" fill="#C9D4E5" font-size="13">executor → advisor → user. Count never resets.</text>
+<rect x="810" y="660" width="345" height="130" rx="10" fill="#13213B" stroke="#24375C"/>
+<rect x="810" y="660" width="4" height="130" fill="#5BE3A6"/>
+<text x="832" y="694" fill="#FFFFFF" font-size="17" font-weight="700">Ports</text>
+<text x="832" y="726" fill="#C9D4E5" font-size="13">Codex and Grok reached five-layer parity in 2.2;</text>
+<text x="832" y="748" fill="#C9D4E5" font-size="13">now codex-rev 7, grok-rev 6, same rules.</text>
+<rect x="1175" y="660" width="345" height="130" rx="10" fill="#13213B" stroke="#24375C"/>
+<rect x="1175" y="660" width="4" height="130" fill="#5BE3A6"/>
+<text x="1197" y="694" fill="#FFFFFF" font-size="17" font-weight="700">Install + upgrade</text>
+<text x="1197" y="726" fill="#C9D4E5" font-size="13">Marker-based in-place upgrades; plugin in 3.0;</text>
+<text x="1197" y="748" fill="#C9D4E5" font-size="13">stale agents detected and refreshed in 3.5.</text>
+<text x="80" y="850" fill="#6F82A3" font-size="13">Abhirup Banerjee · github.com/ovhirup/stackwich · Source: CHANGELOG.md and GitHub releases</text>
+<circle cx="1330" cy="846" r="6" fill="none" stroke="#2F86FF" stroke-width="2"/><text x="1344" y="850" fill="#9FB0CC" font-size="13">release</text>
+<circle cx="1420" cy="846" r="6" fill="none" stroke="#5BE3A6" stroke-width="2"/><text x="1434" y="850" fill="#9FB0CC" font-size="13">latest (v3.6.1)</text>
+</svg>
