@@ -68,7 +68,8 @@ def canonical_block(skill: Path = SKILL) -> list[str]:
 def rename(lines: list[str], names: dict[str, str]) -> list[str]:
     if not names:
         return list(lines)
-    pattern = re.compile(r"\b(" + "|".join(map(re.escape, names)) + r")\b")
+    # Longest first: `executor` must not match the start of a rename such as `executor-stackwich`.
+    pattern = re.compile(r"\b(" + "|".join(map(re.escape, sorted(names, key=len, reverse=True))) + r")\b")
     return [pattern.sub(lambda m: names[m.group(1)], line) for line in lines]
 
 

@@ -1,3 +1,4 @@
+import os
 import shutil
 import subprocess
 import sys
@@ -73,6 +74,17 @@ class Diagnose(unittest.TestCase):
         scopes = self.scopes()
         self.assertEqual(scopes[0].stale, [])
         self.assertEqual(problems(scopes, CURRENT), [])
+
+    def test_rename_that_extends_a_role_name_is_current_under_any_hash_seed(self):
+        """diagnose builds its name set from a set(); string hashing must not decide the result."""
+        write(self.user / "CLAUDE.md", BLOCK)
+        scaffold(self.user, {"executor": "executor-stackwich"})
+        probe = ("import sys; from pathlib import Path; from diagnose import inspect; "
+                 "print(inspect('user', Path(sys.argv[1])).stale)")
+        for seed in range(8):
+            out = subprocess.run([sys.executable, "-c", probe, str(self.user)], capture_output=True, text=True,
+                                 cwd=Path(__file__).parent, env={**os.environ, "PYTHONHASHSEED": str(seed)})
+            self.assertEqual(out.stdout.strip(), "[]", f"seed {seed}: {out.stdout}{out.stderr}")
 
     def test_output_never_contains_file_contents(self):
         write(self.user / "CLAUDE.md", ["SECRET_TOKEN=abc123", ""] + BLOCK)

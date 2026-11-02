@@ -197,6 +197,13 @@ class BrokenInstalls(unittest.TestCase):
         self.assertIn("not found", failed["CLAUDE.md exists"])
 
 
+class Rename(unittest.TestCase):
+    def test_longer_name_wins_over_its_prefix(self):
+        """`executor` must not match the start of `executor-stackwich`, whatever order the names come in."""
+        for names in ({"executor": "A", "executor-stackwich": "B"}, {"executor-stackwich": "B", "executor": "A"}):
+            self.assertEqual(rename(["executor-stackwich and executor"], names), ["B and A"])
+
+
 class Cli(unittest.TestCase):
     def run_cli(self, *args: str) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
