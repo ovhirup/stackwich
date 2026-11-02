@@ -3,6 +3,16 @@
 Headings are `## <repo version> — <what moved>`. Ports are named in the body with their own rev
 counters: a port tracks the parent's layer structure, not its revision number.
 
+## Unreleased
+
+No policy or Claude Code plugin change; `stackwich-codex-rev` stays at 7.
+
+### Fixed
+- The Codex installer left Stackwich agents from an earlier revision in place on an upgrade. Step 4
+  now treats an agent carrying the Stackwich Codex credit as an earlier install and offers an
+  in-place refresh that keeps its `name` and model settings; step 5 checks it. Codex users pick it
+  up by copying `codex/` again. (#51)
+
 ## 3.6.1 — confirm agents without `/agents`
 
 The policy is unchanged: `policy-rev` stays at 9 and there is nothing to re-run. Update the plugin

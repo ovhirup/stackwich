@@ -57,6 +57,14 @@ matching `name` values. If a name belongs to an unrelated agent, ask for a repla
 substitute it consistently in the policy block, filenames, TOML `name` values, descriptions,
 and in-body references. Never overwrite an unrelated agent.
 
+An existing agent file whose header comment is the Stackwich Codex credit (`# Created by
+Abhirup Banerjee (@ovhirup) as part of the Stackwich Codex architecture.`) is an earlier
+install, not a collision. Compare it with its template, with any rename applied and ignoring
+`model` and `model_reasoning_effort`, which users may tune. If it differs, tell the user it is
+out of date and offer to replace it in place, keeping its `name` and those model settings;
+never overwrite it without asking. On an upgrade, offer this even if the user doesn't mention
+agents.
+
 Write standalone TOML files from the templates to the chosen agents directory. Do not pin
 model names: the templates use reasoning and sandbox settings so they remain portable across
 accounts and future model catalogs.
@@ -65,6 +73,8 @@ accounts and future model catalogs.
 
 - Confirm there is exactly one opening marker and one closing marker in the target file.
 - Parse every created agent TOML with Python's `tomllib` when Python 3.11+ is available.
+- Every Stackwich agent written or kept matches its template apart from renames and model
+  settings, or the user chose to keep an older or edited one, and you say so.
 - Inspect the resulting diff or changed paths and run `git diff --check` for project scope
   when the target is in a Git repository.
 - Verify behavior or structure rather than re-reading a just-written file solely to confirm
