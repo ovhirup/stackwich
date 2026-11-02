@@ -6,9 +6,9 @@ counters: a port tracks the parent's layer structure, not its revision number.
 ## 3.5.0 — policy-rev 8: a leaner policy with one failure ladder
 
 The Claude Code policy changes, so `policy-rev` moves from 7 to 8: re-run `/stackwich:stackwich`
-to apply it in place. The `<!-- stackwich:v1 -->` marker is unchanged. `executor.md` changed too:
-agents scaffolded before this release keep the older file, so accept the scaffolding again to
-pick it up.
+to apply it in place. The `<!-- stackwich:v1 -->` marker is unchanged. `executor.md` changed too;
+on re-run the installer now finds agents scaffolded by an earlier release and offers to refresh
+them in place.
 
 ### Policy
 - One failure ladder replaces the 2-cycle cap and the two-strike rule, which overlapped. A first
@@ -27,6 +27,19 @@ pick it up.
   to `stackwich-grok-rev 5` (failure ladder as EXECUTE, then PLAN, then the user). Their other
   bullets are unchanged: the cuts above rely on Claude Code's own behavior, which the ports'
   runtimes may not share.
+
+### Fixed
+- An upgrade left agents scaffolded by an earlier release in place, and nothing reported it.
+  `SKILL.md` step 3 treats an agent carrying the Stackwich credit as an earlier install and offers
+  an in-place refresh that keeps its `name:` and `model:`; step 4 checks it. `check_install.py`
+  fails an agent whose body differs from its asset, naming the line, and `diagnose.py` reports it
+  as stale. Renames that extend a role name, such as `executor-stackwich`, still match. (#31)
+- `handoff.py` and `verify_gate.py` create `.stackwich/` with a `.gitignore` of `*`, so their
+  state is never committed. (#34)
+
+### Added
+- `python3 tools/validate.py` runs the repository checks CI's skill-lint job runs, with the same
+  messages; CI calls it, and CONTRIBUTING documents the one command. (#35)
 
 ## 3.4.0 — policy-rev 7: resume interrupted work safely
 
