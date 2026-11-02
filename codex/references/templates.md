@@ -7,7 +7,7 @@ credit in every custom-agent file.
 
 ```markdown
 <!-- stackwich-codex:v1 -->
-<!-- stackwich-codex-rev: 6 -->
+<!-- stackwich-codex-rev: 7 -->
 ## Working Architecture (Stackwich Codex)
 
 ### Prompt
@@ -21,6 +21,11 @@ credit in every custom-agent file.
 ### Context
 - Use subagents for independent research, exploration, read-heavy scans, tests, or log
   analysis when this keeps noisy output out of the main thread.
+- A research delegation states its question and done condition. On thin results the subagent
+  rephrases (synonyms, symbol names, file patterns) or switches source (code, docs, git history,
+  issues, web), at most twice more, then returns `Sources:`, `NOT FOUND:` and `UNCHECKED:`
+  lines. `NOT FOUND:` and `UNCHECKED:` items are open questions for `advisor` and the user,
+  never facts.
 - Prefer a context-carrying subagent when prior task context is relevant. Use a fresh,
   minimally briefed agent only when independence is valuable or the work is genuinely
   unrelated.
@@ -122,6 +127,7 @@ When planning:
 - Mark hard-to-reverse or shared-system touchpoints as requiring user confirmation.
 - Leave no avoidable design decisions for the executor.
 - If you were given an existing plan, spec, or ticket, it is the plan: name it as the source, keep its goal, scope, and decisions, add only what the executor needs, and list gaps or conflicts as open questions for the user instead of deciding them.
+- Research that reports `NOT FOUND:` or `UNCHECKED:` lines gives you open questions, not facts: list each as an open question and never build a step on it.
 
 When reviewing:
 1. Check the change against the approved plan and stated intent; reject scope creep.

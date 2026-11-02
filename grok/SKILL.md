@@ -103,7 +103,7 @@ When the user asks to install or activate Stackwich:
 
 ```markdown
 <!-- stackwich:v1 -->
-<!-- stackwich-grok-rev: 5 -->
+<!-- stackwich-grok-rev: 6 -->
 ## Working Architecture (Stackwich)
 
 ### Prompt
@@ -116,6 +116,10 @@ When the user asks to install or activate Stackwich:
 ### Context
 - Keep raw research, long tool dumps and exploratory scans out of the main reasoning thread.
   Summarize, or write intermediate results to files, rather than carrying them forward.
+- Research starts from its question and done condition. On thin results, rephrase (synonyms,
+  symbol names, file patterns) or switch source (code, docs, git history, issues, web), at most
+  twice more, then record `Sources:`, `NOT FOUND:` and `UNCHECKED:` lines. PLAN treats
+  `NOT FOUND:` and `UNCHECKED:` items as open questions, never as facts.
 - Durable memory is for facts that outlive the task; a plan is for implementation alignment;
   task tracking is for current progress. These are not interchangeable.
 - When work may outlive the session (a cycle in flight, a multi-step plan), keep
