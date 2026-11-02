@@ -104,7 +104,7 @@ and the approval gate's self-check.
 (cd measured && python3 -m unittest -v test_measured && python3 approve.py --self-check)
 ```
 
-`.github/workflows/validate.yml` runs both after its structural checks.
+`.github/workflows/validate.yml` runs both after its structural checks, `python3 tools/validate.py`.
 
 ## Behavior evals: `evals/evals.json`
 
