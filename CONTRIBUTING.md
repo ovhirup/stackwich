@@ -3,7 +3,7 @@
 Issues and pull requests are welcome. This file exists because the repo has five rules that
 aren't obvious from reading the code, and each one has already caused a real bug.
 
-`.github/workflows/validate.yml` enforces all of them. If CI fails on your PR, it is probably
+`tools/validate.py`, which CI runs, enforces all of them. If CI fails on your PR, it is probably
 one of these.
 
 ## 1. Markers are never renamed
@@ -41,7 +41,8 @@ opening marker `<!-- stackwich:v1 -->`" as prose, next to the real marker.
 A substring check is satisfied by the documentation instead of the thing it documents. That is
 not hypothetical: a release once shipped with its opening marker destroyed, and CI passed,
 because the grep matched the prose. Every marker and revision assertion is an exact whole-line
-count. Do not relax them to `grep -q`.
+count. Do not relax them to substring matches; `tools/test_validate.py` fails if the prose alone
+satisfies the opening-marker check.
 
 ## 5. `SKILL.md` and `assets/` move together
 
@@ -50,12 +51,16 @@ silently breaks scaffolding for every user, and nothing outside the assets check
 
 ## Running the checks locally
 
+Everything the `skill-lint` CI job runs, from the repository root:
+
 ```bash
 python3 -m pip install pyyaml
+python3 tools/validate.py && (cd tools && python3 -m unittest discover) && (cd measured && python3 -m unittest test_measured && python3 approve.py --self-check)
 ```
 
-Then run the steps in `.github/workflows/validate.yml`. There is no separate test command — the
-workflow is the test suite.
+`tools/validate.py` prints one `OK` line per category, or an `::error::` line per problem, and
+exits 1 if any category failed. The `recipes` job needs Node and Playwright; see
+[docs/recipes.md](docs/recipes.md).
 
 ## Versioning
 

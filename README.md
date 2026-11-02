@@ -133,7 +133,7 @@ stackwich/
 │           ├── verifier.md
 │           └── rebound.md        # cost/rebound playbook, read only for cost or loop questions
 ├── evals/evals.json              # five install paths + two policy-behavior cases
-├── tools/                        # check_install, diagnose, uninstall, verify_gate, and handoff
+├── tools/                        # check_install, diagnose, uninstall, verify_gate, handoff, and validate (CI's checks)
 ├── examples/first-task/          # the demo project for docs/first-task.md
 ├── recipes/                      # API, browser-flow, responsive, and accessibility checks
 ├── docs/sandwich.jpg
