@@ -3,6 +3,31 @@
 Headings are `## <repo version> — <what moved>`. Ports are named in the body with their own rev
 counters: a port tracks the parent's layer structure, not its revision number.
 
+## 3.5.0 — policy-rev 8: a leaner policy with one failure ladder
+
+The Claude Code policy changes, so `policy-rev` moves from 7 to 8: re-run `/stackwich:stackwich`
+to apply it in place. The `<!-- stackwich:v1 -->` marker is unchanged. `executor.md` changed too:
+agents scaffolded before this release keep the older file, so accept the scaffolding again to
+pick it up.
+
+### Policy
+- One failure ladder replaces the 2-cycle cap and the two-strike rule, which overlapped. A first
+  `GATE: FAIL` or `REVISE:` goes back to `executor`; a second goes to `advisor` to re-plan; a
+  third stops and goes to the user. The count never resets. (#39)
+- Read-heavy scans go to a fork, never to `executor`, which only writes. `executor.md`'s
+  description no longer offers scans. (#40)
+- The block is 700 words, down from 952, and is read on every turn. Removed: the
+  memory/plans/tasks bullet and "don't re-read a file you just wrote", which restate Claude Code's
+  own behavior; the separate "consult `advisor` before" bullet, merged into the mandatory-sandwich
+  rule with the same triggers. The handoff rule now keeps `.stackwich/` out of git. (#41)
+- CI fails if the block grows past a 735-word budget.
+
+### Ports
+- Codex moves to `stackwich-codex-rev 6` (failure ladder; scans never go to `executor`) and Grok
+  to `stackwich-grok-rev 5` (failure ladder as EXECUTE, then PLAN, then the user). Their other
+  bullets are unchanged: the cuts above rely on Claude Code's own behavior, which the ports'
+  runtimes may not share.
+
 ## 3.4.0 — policy-rev 7: resume interrupted work safely
 
 The Claude Code policy changes, so `policy-rev` moves from 6 to 7: re-run `/stackwich:stackwich`

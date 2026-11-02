@@ -7,7 +7,7 @@ credit in every custom-agent file.
 
 ```markdown
 <!-- stackwich-codex:v1 -->
-<!-- stackwich-codex-rev: 5 -->
+<!-- stackwich-codex-rev: 6 -->
 ## Working Architecture (Stackwich Codex)
 
 ### Prompt
@@ -59,21 +59,22 @@ credit in every custom-agent file.
 - Before creating a scheduled automation or any repeating run, state its stop condition and a
   maximum run count; if either is missing, ask the user instead of starting. A repeating run
   with no change for 3 consecutive runs stops and reports (unless the user set another number).
-- Failure routing, with hard stops:
-  - `GATE: FAIL` -> return the failure output to `executor` together with the original plan.
-  - `REVISE: ...` -> return the numbered list to `executor` together with the original plan.
-  - Either path is capped at 2 cycles. On the third, stop and bring the user the plan, what was
-    tried, and the outstanding gate or review output. Never loop silently.
+- Failure ladder for `GATE: FAIL` or `REVISE: ...` on the same change; the count never resets:
+  1. First failure -> return the failure output or numbered list to `executor` together with
+     the original plan.
+  2. Second -> `advisor` re-plans from the plan, the commands, outputs, and attempted fixes;
+     `executor` applies the new plan.
+  3. Third -> stop and bring the user the plan, what was tried, and the outstanding gate or
+     review output.
+  Never loop silently, and never create a suffixed copy of a real file to debug around a
+  failure.
 - Distinguish an infrastructure failure, such as a missing dependency or an unavailable
   service, from a failed change, so cycles are not burned on environment problems.
-- Two-strike rule: if the same verification fails twice, stop blind iteration and escalate to
-  `advisor` with the commands, outputs, and attempted fixes. Never create a suffixed copy of a
-  real file merely to debug around the failure.
 
 ### Graph
 - Work alone for small, reversible changes. Delegate to `executor` for a fully specified
-  mechanical batch of roughly five or more files, or for a read-heavy scan that would pollute
-  the main context. Batch related mechanical work into one delegation.
+  mechanical batch of roughly five or more files; read-heavy scans go to a context-carrying
+  subagent, never `executor`. Batch related mechanical work into one delegation.
 - Consult `advisor` before any change that is hard to reverse, touches shared or production
   systems, or spans repositories or services. Obtain user confirmation before any action that
   needs new authority or mutates shared or production state.
@@ -142,7 +143,7 @@ Every item in a REVISE list must be independently actionable. The executor gets 
 ```toml
 # Created by Abhirup Banerjee (@ovhirup) as part of the Stackwich Codex architecture.
 name = "executor"
-description = "Low-reasoning executor for fully specified mechanical edits, large batches, and read-heavy scans."
+description = "Low-reasoning executor for fully specified mechanical edits and large batches."
 model_reasoning_effort = "low"
 developer_instructions = """
 Carry out the provided instructions exactly. Do not redesign, extend, or opportunistically refactor.
@@ -152,7 +153,7 @@ Inputs you require: the plan's exact steps, its declared file scope, and the ver
 - Follow every applicable AGENTS.md file and existing conventions for touched files.
 - Never create suffixed copies such as name2.ts or fix-v2.py to work around a problem.
 - If an instruction is ambiguous, stop and report the ambiguity instead of guessing.
-- If the same verification fails twice, stop and return both attempts, outputs, and relevant diff.
+- If the same verification fails twice, stop and return both attempts, outputs, and relevant diff; a second failure goes to `advisor` to re-plan, not to another blind retry.
 - Report changed paths, the diff or edits made, commands run, exit codes, and material raw output.
 - Never mutate shared or production state, deploy, push, publish, or call a live write API unless the parent task explicitly authorizes that exact action.
 """
