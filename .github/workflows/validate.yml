@@ -29,7 +29,9 @@ jobs:
       - name: Policy block within its word budget
         run: |
           BUDGET=735
-          W=$(awk '/^<!-- stackwich:v1 -->$/,/^<!-- \/stackwich:v1 -->$/' plugins/stackwich/skills/stackwich/SKILL.md | wc -w)
+          # LC_ALL=C: count whitespace-separated words the same way everywhere; a UTF-8 locale counts
+          # the block's em dashes as extra words, so CI and a local run disagreed.
+          W=$(awk '/^<!-- stackwich:v1 -->$/,/^<!-- \/stackwich:v1 -->$/' plugins/stackwich/skills/stackwich/SKILL.md | LC_ALL=C wc -w)
           [ "$W" -gt 0 ] || { echo "::error::no policy block found to measure"; exit 1; }
           [ "$W" -le "$BUDGET" ] || { echo "::error::policy block is $W words, over its $BUDGET-word budget — it is read on every turn, so cut before adding"; exit 1; }
           echo "policy block: $W of $BUDGET words OK"
