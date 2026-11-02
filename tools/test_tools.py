@@ -1,3 +1,4 @@
+import os
 import shutil
 import subprocess
 import sys
@@ -6,7 +7,7 @@ import unittest
 from pathlib import Path
 
 from diagnose import inspect, problems
-from test_check_install import BLOCK, CURRENT, FOOTER, NOTES, old_block, scaffold, write
+from test_check_install import BLOCK, CURRENT, FOOTER, NOTES, edit_agent, old_block, scaffold, write
 from uninstall import UninstallError, run
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -55,6 +56,35 @@ class Diagnose(unittest.TestCase):
         (self.user / "CLAUDE.md").unlink()
         scaffold(self.user)
         self.assertIn("no policy block", "\n".join(problems(self.scopes(), CURRENT)))
+
+    def test_reports_stale_agents(self):
+        write(self.user / "CLAUDE.md", BLOCK)
+        scaffold(self.user)
+        edit_agent(self.user, "advisor", "Open questions:", "Notes:")
+        scopes = self.scopes()
+        self.assertEqual(scopes[0].stale, ["advisor"])
+        found = "\n".join(problems(scopes, CURRENT))
+        self.assertIn("user: Stackwich agent(s) advisor differ from this checkout's assets", found)
+
+    def test_renamed_and_model_swapped_agents_are_current(self):
+        names = {"executor": "builder"}
+        write(self.user / "CLAUDE.md", BLOCK)
+        scaffold(self.user, names)
+        edit_agent(self.user, "verifier", "model: sonnet", "model: haiku")
+        scopes = self.scopes()
+        self.assertEqual(scopes[0].stale, [])
+        self.assertEqual(problems(scopes, CURRENT), [])
+
+    def test_rename_that_extends_a_role_name_is_current_under_any_hash_seed(self):
+        """diagnose builds its name set from a set(); string hashing must not decide the result."""
+        write(self.user / "CLAUDE.md", BLOCK)
+        scaffold(self.user, {"executor": "executor-stackwich"})
+        probe = ("import sys; from pathlib import Path; from diagnose import inspect; "
+                 "print(inspect('user', Path(sys.argv[1])).stale)")
+        for seed in range(8):
+            out = subprocess.run([sys.executable, "-c", probe, str(self.user)], capture_output=True, text=True,
+                                 cwd=Path(__file__).parent, env={**os.environ, "PYTHONHASHSEED": str(seed)})
+            self.assertEqual(out.stdout.strip(), "[]", f"seed {seed}: {out.stdout}{out.stderr}")
 
     def test_output_never_contains_file_contents(self):
         write(self.user / "CLAUDE.md", ["SECRET_TOKEN=abc123", ""] + BLOCK)

@@ -19,12 +19,13 @@
       "id": 2,
       "name": "update-existing-v1-install",
       "prompt": "I already have Stackwich installed from a while back — can you bring it up to date?",
-      "expected_output": "Existing block located via the opening marker, shown to the user with its declared policy-rev, replaced in place after confirmation with the policy-rev 8 block. No duplicate section appended.",
+      "expected_output": "Existing block located via the opening marker, shown to the user with its declared policy-rev, replaced in place after confirmation with the policy-rev 8 block. No duplicate section appended. Scaffolded Stackwich agents that differ from the current assets are named as out of date and offered for in-place refresh, keeping their name and model; none is overwritten without asking.",
       "assertions": [
         "existing block is shown to the user before modification",
         "user is asked before replacing",
         "final file contains exactly one marker pair",
-        "final block declares policy-rev 8 and no older policy-rev line remains"
+        "final block declares policy-rev 8 and no older policy-rev line remains",
+        "stale Stackwich agents are reported and refreshed only after the user agrees"
       ],
       "files": []
     },

@@ -20,6 +20,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SKILL = ROOT / "plugins" / "stackwich" / "skills" / "stackwich" / "SKILL.md"
+ASSETS = SKILL.parent / "assets"
 OPEN = "<!-- stackwich:v1 -->"
 CLOSE = "<!-- /stackwich:v1 -->"
 REV = re.compile(r"^<!-- policy-rev: (\d+) -->$")
@@ -67,7 +68,8 @@ def canonical_block(skill: Path = SKILL) -> list[str]:
 def rename(lines: list[str], names: dict[str, str]) -> list[str]:
     if not names:
         return list(lines)
-    pattern = re.compile(r"\b(" + "|".join(map(re.escape, names)) + r")\b")
+    # Longest first: `executor` must not match the start of a rename such as `executor-stackwich`.
+    pattern = re.compile(r"\b(" + "|".join(map(re.escape, sorted(names, key=len, reverse=True))) + r")\b")
     return [pattern.sub(lambda m: names[m.group(1)], line) for line in lines]
 
 
@@ -100,6 +102,36 @@ def _frontmatter(text: str) -> dict[str, str] | None:
         if sep and key.strip() and not key.startswith(" "):
             fields[key.strip()] = value.strip()
     return fields
+
+
+def _body(lines: list[str]) -> tuple[int, list[str]] | None:
+    """An agent file's body after its frontmatter, and the 1-based line it starts on.
+
+    Frontmatter is left out: users may change model: (and name: on a rename).
+    """
+    if not lines or lines[0] != "---" or "---" not in lines[1:]:
+        return None
+    end = lines.index("---", 1)
+    body = [line.rstrip() for line in lines[end + 1:]]
+    while body and not body[-1]:
+        body.pop()
+    return end + 2, body
+
+
+def _body_difference(text: str, role: str, names: dict[str, str]) -> str:
+    """Empty when the body matches assets/<role>.md with the renames applied."""
+    found = _body(text.splitlines())
+    want = _body(rename((ASSETS / f"{role}.md").read_text(encoding="utf-8").splitlines(), names))
+    if found is None or want is None or found[1] == want[1]:
+        return ""
+    start, got = found
+    for number, (line, expected) in enumerate(zip(got, want[1]), start):
+        if line != expected:
+            where = f"first difference at line {number}: expected {expected!r}, found {line!r}"
+            break
+    else:
+        where = f"body has {len(got)} lines, the asset has {len(want[1])}"
+    return f"body differs from assets/{role}.md (stale or edited); {where}"
 
 
 def check_policy(claude_md: Path, report: Report, names: dict[str, str], before: Path | None, skill: Path) -> None:
@@ -189,6 +221,9 @@ def check_agents(agents: Path, report: Report, names: dict[str, str]) -> None:
             problems.append(f"name is {fields['name']!r}, expected {name!r}")
         if CREDIT not in fields.get("author", ""):
             problems.append("author line edited or removed")
+        difference = _body_difference(text, role, names)
+        if difference:
+            problems.append(difference)
         report.add(not problems, f"agent {name}", "; ".join(problems))
 
 

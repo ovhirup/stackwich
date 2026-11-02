@@ -6,6 +6,9 @@ the policy revision in each CLAUDE.md, the agents it finds and whether they are
 Stackwich's, and known conflicts. It prints names, paths, and revisions only:
 never file contents, so nothing in CLAUDE.md or an agent body is echoed.
 
+A Stackwich agent whose body differs from this checkout's assets is reported as
+stale. Agent names are ignored in that comparison, so renames still match.
+
 It reads files only. Exit 0 when no problem is found, 1 when one is.
 """
 
@@ -16,7 +19,7 @@ import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from check_install import CLOSE, CREDIT, OPEN, REV, ROLES, SKILL, _frontmatter, canonical_block
+from check_install import ASSETS, CLOSE, CREDIT, OPEN, REV, ROLES, SKILL, _body, _frontmatter, canonical_block, rename
 
 
 @dataclass
@@ -26,11 +29,18 @@ class Scope:
     policy: str = "none"
     revision: str | None = None
     agents: dict[str, bool] = field(default_factory=dict)
+    stale: list[str] = field(default_factory=list)
     legacy_clone: bool = False
 
 
 def current_revision() -> str:
     return next(m.group(1) for m in (REV.match(line) for line in canonical_block(SKILL)) if m)
+
+
+def _normalized(lines: list[str], names: set[str]) -> list[str] | None:
+    """An agent body with every agent name replaced, so a collision rename still matches."""
+    found = _body(rename(lines, {name: "<agent>" for name in names}))
+    return found[1] if found else None
 
 
 def inspect(label: str, root: Path) -> Scope:
@@ -46,11 +56,18 @@ def inspect(label: str, root: Path) -> Scope:
         revs = [m.group(1) for m in (REV.match(line) for line in lines) if m]
         scope.revision = ", ".join(revs) or None
     agents = root / "agents"
+    texts: dict[str, str] = {}
     if agents.is_dir():
         for path in sorted(agents.glob("*.md")):
-            fields = _frontmatter(path.read_text(encoding="utf-8", errors="replace")) or {}
+            text = path.read_text(encoding="utf-8", errors="replace")
+            fields = _frontmatter(text) or {}
             name = fields.get("name") or path.stem
             scope.agents[name] = CREDIT in fields.get("author", "")
+            if scope.agents[name]:
+                texts[name] = text
+    names = set(ROLES) | set(texts)
+    current = [_normalized((ASSETS / f"{role}.md").read_text(encoding="utf-8").splitlines(), names) for role in ROLES]
+    scope.stale = [name for name, text in texts.items() if _normalized(text.splitlines(), names) not in current]
     scope.legacy_clone = (root / "skills" / "stackwich").exists()
     return scope
 
@@ -67,6 +84,9 @@ def problems(scopes: list[Scope], want: str) -> list[str]:
         if s.legacy_clone:
             found.append(f"{s.label}: pre-3.0 clone at {s.root / 'skills' / 'stackwich'} — two skills named "
                          "stackwich; remove it as README 'Upgrading from 2.x' describes")
+        if s.stale:
+            found.append(f"{s.label}: Stackwich agent(s) {', '.join(s.stale)} differ from this checkout's assets "
+                         "(stale or edited); re-run /stackwich:stackwich and accept the agent refresh")
         mine = [name for name, ours in s.agents.items() if ours]
         if s.policy == "none" and mine:
             found.append(f"{s.label}: Stackwich agents ({', '.join(mine)}) but no policy block that refers to them")
@@ -90,7 +110,8 @@ def render(scopes: list[Scope], want: str) -> str:
         lines.append(f"  CLAUDE.md policy: {s.policy}" + (f", policy-rev {s.revision}" if s.revision else ""))
         if s.agents:
             for name, ours in s.agents.items():
-                lines.append(f"  agent {name}: {'Stackwich' if ours else 'not Stackwich'}")
+                kind = ("Stackwich, stale" if name in s.stale else "Stackwich") if ours else "not Stackwich"
+                lines.append(f"  agent {name}: {kind}")
         else:
             lines.append("  agents: none")
         lines.append("")

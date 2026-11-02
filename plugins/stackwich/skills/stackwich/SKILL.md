@@ -169,6 +169,12 @@ and the agent files — a rename applied to only one of the two leaves the polic
 agent that doesn't exist. Rename only the `name:` field and in-body references; never remove or
 edit the `author:` line or the "part of the Stackwich architecture" credit.
 
+An existing agent whose `author:` line carries that credit is an earlier Stackwich install, not
+a collision. Compare its body (below the frontmatter, with any rename applied) with the asset.
+If it differs, tell the user it is out of date and offer to replace it in place, keeping its
+`name:` and `model:`; never overwrite it without asking. On an upgrade, offer this even if the
+user doesn't mention agents.
+
 ## 4. Verify the install
 This skill installs a verify-before-done policy, so it holds itself to it. After writing,
 confirm and report actual observed results — not intentions:
@@ -180,6 +186,8 @@ confirm and report actual observed results — not intentions:
    valid YAML frontmatter containing `name`, `description`, `model`, and `tools`.
 4. If any name was changed for a collision: the new name appears in both the CLAUDE.md section
    and the agent file, and the old name appears in neither.
+5. Every Stackwich agent written or kept matches its asset below the frontmatter, apart from
+   renames — or the user chose to keep an older or edited one, and you say so.
 
 If any check fails, say which one and what you found, then fix it — don't report success.
 
