@@ -23,7 +23,8 @@ Three kinds of claim:
 | Each agent's model tier | Mechanical, as configuration | Set by `model:` in each agent's frontmatter. Which agent gets used for a task is instructed. |
 | Plan → execute → verify → review for risky changes | Instructed | The main session decides when a change is risky and whether to run the sandwich. |
 | Verdict lines (`GATE: PASS`, `APPROVE`, `REVISE:`) | Instructed | They are fixed strings so routing does not depend on reading prose, but the main session does the routing. |
-| Failure loops capped at 2 cycles | Instructed | No counter exists outside the conversation. |
+| Failure ladder: retry, then `advisor` re-plans, then stop at the third failure | Instructed | No counter exists outside the conversation. |
+| Read-heavy scans go to a fork, not `executor` | Instructed | The main session chooses where to send a scan. |
 | Nothing "done" until verified | Instructed | The policy requires reporting the command and its output. No tool checks that a claim matches a run. |
 
 ## Codex port
@@ -32,7 +33,7 @@ Three kinds of claim:
 |---|---|---|
 | `advisor` and `verifier` cannot write files | Mechanical, where Codex honors the setting | Their templates set `sandbox_mode = "read-only"`, so Codex runs their commands in its read-only sandbox. |
 | `executor` stays in scope and does not push, deploy, or publish | Instructed | `executor` has no `sandbox_mode` in its template and inherits the session's sandbox and approval settings. |
-| Sandwich, verdict routing, 2-cycle cap, two-strike rule | Instructed | Same as the Claude Code plugin. |
+| Sandwich, verdict routing, failure ladder, scan routing | Instructed | Same as the Claude Code plugin. |
 | Model choice | Not pinned | The templates set reasoning effort and sandbox only, so they stay portable across accounts. |
 
 A read-only sandbox also blocks legitimate writes. A test, build, or coverage run that needs to
@@ -44,7 +45,7 @@ verifier's instructions say to label environment problems as such.
 | Behavior | Kind | Detail |
 |---|---|---|
 | Single writer, PLAN/VERIFY/REVIEW never edit | Instructed | The port runs the sandwich as phases inside one agent. There is no separate role with fewer tools. |
-| Sandwich, 2-cycle cap, verification before "done" | Instructed | Same policy as the parent, carried by `grok/SKILL.md`. |
+| Sandwich, failure ladder (EXECUTE, then PLAN, then the user), verification before "done" | Instructed | Same policy as the parent, carried by `grok/SKILL.md`. |
 
 ## Measured approval gate (`measured/approve.py`)
 

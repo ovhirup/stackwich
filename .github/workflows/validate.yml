@@ -26,6 +26,14 @@ jobs:
           cd measured && python3 -m unittest -v test_measured
           python3 approve.py --self-check
 
+      - name: Policy block within its word budget
+        run: |
+          BUDGET=735
+          W=$(awk '/^<!-- stackwich:v1 -->$/,/^<!-- \/stackwich:v1 -->$/' plugins/stackwich/skills/stackwich/SKILL.md | wc -w)
+          [ "$W" -gt 0 ] || { echo "::error::no policy block found to measure"; exit 1; }
+          [ "$W" -le "$BUDGET" ] || { echo "::error::policy block is $W words, over its $BUDGET-word budget — it is read on every turn, so cut before adding"; exit 1; }
+          echo "policy block: $W of $BUDGET words OK"
+
   recipes:
     name: Acceptance-check recipes
     runs-on: ubuntu-latest
