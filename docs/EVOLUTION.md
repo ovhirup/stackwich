@@ -1,7 +1,7 @@
 # How Stackwich evolved
 
 Stackwich went from a single skill with a policy block (1.0.0, July 2026) to a Claude Code plugin
-with Codex and Grok ports, an optional measured layer, and policy-rev 9 (3.6.0, 2 Nov 2026).
+with Codex and Grok ports, an optional measured layer, and policy-rev 9. The latest release is 3.6.1 (2 Nov 2026), the 14th.
 Every fact below comes from [CHANGELOG.md](../CHANGELOG.md) and the GitHub releases.
 
 ![Stackwich evolution timeline](assets/stackwich-evolution.svg)
@@ -28,6 +28,7 @@ timeline
         3.4.0 : Resume interrupted work safely
         3.5.0 : 700-word policy, one failure ladder
         3.6.0 : Research retries, then names what it did not check
+        3.6.1 : Confirm agents without the removed /agents command
 ```
 
 ## Release by release
@@ -50,6 +51,7 @@ first commit is 22 Jul 2026.
 | 31 Oct 2026 | 3.4.0 | 7 | `.stackwich/handoff.md` and `tools/handoff.py` | Interrupted work resumes with changes flagged as unverified |
 | 2 Nov 2026 | 3.5.0 | 8 | Policy cut from 952 to 700 words; one failure ladder; scans go to forks; stale agents refreshed on upgrade; `tools/validate.py` | Fewer tokens every turn; a clear escalation path; upgrades really update |
 | 2 Nov 2026 | 3.6.0 | 9 | Research forks retry thin results at most twice, then report `Sources:`, `NOT FOUND:`, `UNCHECKED:` | Gaps in research are stated, not hidden |
+| 2 Nov 2026 | 3.6.1 | 9 | Installer report and README say to ask Claude to list subagents instead of running the removed `/agents` | Install confirmation works on current Claude Code |
 
 ## Themes
 
