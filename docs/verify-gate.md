@@ -24,8 +24,9 @@ python3 ~/stackwich-tools/tools/verify_gate.py check
   prints `UNVERIFIED` or `STALE` with each added, modified, or removed file, and exits 1.
 - `reset --by NAME --reason TEXT` records that a person reviewed a change that ran out of cycles.
 
-The change id defaults to the current branch; pass `--change ID` to name it yourself. Add
-`.stackwich/` to `.gitignore`. The tool leaves it out of the fingerprint either way.
+The change id defaults to the current branch; pass `--change ID` to name it yourself. The tool
+writes `.stackwich/.gitignore` (`*`) when it creates the directory, so its records never get
+committed, and leaves `.stackwich/` out of the fingerprint either way.
 
 ## Example
 

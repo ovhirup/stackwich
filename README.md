@@ -19,9 +19,9 @@ Stackwich is 15 years of delivery coaching — plan → build → test → revie
 | Layer | Habit |
 |---|---|
 | **Prompt** | Meta-prompt every delegation. Context-full, with a stated done condition. Understanding never gets delegated. |
-| **Context** | Fork research and read-heavy scans off the main thread. Memory, plans, and tasks each do their own job. |
+| **Context** | Fork research and read-heavy scans off the main thread, never to the writer. Interrupted work resumes from a handoff. |
 | **Harness** | One writer. Read-only roles stay read-only in practice, not just in the tool list. Nothing "done" until observed. |
-| **Loop** | Recurring work runs on `/loop`. Failure loops are capped at 2 cycles and never silent. |
+| **Loop** | Recurring work runs on `/loop`. Failures climb one ladder — retry, re-plan, then stop — and are never silent. |
 | **Graph** | `advisor` plans → `executor` implements → `verifier` gates → `advisor` reviews, with explicit hand-off contracts. |
 
 Cost discipline isn't a sixth layer — it's how the five are practiced: cheap models grind, expensive models only plan and review, and nothing already established gets re-derived.
@@ -83,12 +83,12 @@ Four numbers move independently. Only the policy revisions change what an instal
 
 | Number | Current | Where it lives | When you act |
 |---|---|---|---|
-| Repository and plugin version | 3.4.0 | `plugin.json`, git tags `vX.Y.Z`, [CHANGELOG](CHANGELOG.md) headings | Update the plugin. |
-| Claude Code policy revision | `policy-rev 7` | The comment inside the `<!-- stackwich:v1 -->` block in your `CLAUDE.md` | Re-run `/stackwich:stackwich` when it changes. |
-| Grok port revision | `stackwich-grok-rev 4` | Inside the block the Grok port writes | Re-apply the Grok port when it changes. |
-| Codex port revision | `stackwich-codex-rev 5` | Inside the `<!-- stackwich-codex:v1 -->` block in `AGENTS.md` | Re-apply the Codex port when it changes. |
+| Repository and plugin version | 3.5.0 | `plugin.json`, git tags `vX.Y.Z`, [CHANGELOG](CHANGELOG.md) headings | Update the plugin. |
+| Claude Code policy revision | `policy-rev 8` | The comment inside the `<!-- stackwich:v1 -->` block in your `CLAUDE.md` | Re-run `/stackwich:stackwich` when it changes. |
+| Grok port revision | `stackwich-grok-rev 5` | Inside the block the Grok port writes | Re-apply the Grok port when it changes. |
+| Codex port revision | `stackwich-codex-rev 6` | Inside the `<!-- stackwich-codex:v1 -->` block in `AGENTS.md` | Re-apply the Codex port when it changes. |
 
-A repository release can leave every policy revision unchanged; 3.2.0 did, while 3.3.0 and 3.4.0 each moved all three. Each CHANGELOG entry says whether there is anything to re-run. The markers themselves never change.
+A repository release can leave every policy revision unchanged; 3.2.0 did, while 3.3.0, 3.4.0 and 3.5.0 each moved all three. Each CHANGELOG entry says whether there is anything to re-run. The markers themselves never change.
 
 ### Older copies
 
@@ -111,7 +111,7 @@ A repository release can leave every policy revision unchanged; 3.2.0 did, while
 
 **Single writer.** Only `executor` mutates the filesystem. `advisor` and `verifier` have no edit tools, and their `Bash` is for inspection and verification, scoped away from writes by instruction — a fix from a reviewer is an unreviewed change nobody knows exists. The tool list is enforced by Claude Code; the `Bash` boundary depends on the model following it. Tests and builds the verifier runs can still create caches and build output; what read-only protects is product source and external state. See [docs/enforcement.md](docs/enforcement.md).
 
-**Loops are capped.** `GATE: FAIL` and `REVISE:` both route back to `executor` with the original plan attached, for at most 2 cycles. On the third, it stops and surfaces everything to the human. Verdict lines are fixed strings so routing doesn't depend on interpreting prose; the main session still does the routing, and the cap is instructed, not counted by a tool.
+**Loops are capped.** A first `GATE: FAIL` or `REVISE:` goes back to `executor` with the original plan attached; a second goes to `advisor` to re-plan from what was tried; a third stops and surfaces everything to the human. The count never resets. Verdict lines are fixed strings so routing doesn't depend on interpreting prose; the main session still does the routing, and the cap is instructed, not counted by a tool.
 
 **Input contracts are explicit.** Each agent states what it must receive and is instructed to stop when a piece is missing rather than reconstruct it — a reviewer that rebuilds the plan from the diff reviews the change against itself and approves anything self-consistent.
 
@@ -133,7 +133,7 @@ stackwich/
 │           ├── verifier.md
 │           └── rebound.md        # cost/rebound playbook, read only for cost or loop questions
 ├── evals/evals.json              # five install paths + two policy-behavior cases
-├── tools/                        # check_install, diagnose, uninstall, verify_gate, and handoff
+├── tools/                        # check_install, diagnose, uninstall, verify_gate, handoff, and validate (CI's checks)
 ├── examples/first-task/          # the demo project for docs/first-task.md
 ├── recipes/                      # API, browser-flow, responsive, and accessibility checks
 ├── docs/sandwich.jpg

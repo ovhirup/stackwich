@@ -17,12 +17,12 @@ Stackwich installs five layers into Grok coding sessions:
 1. **Prompt** — meta-prompt every non-trivial sub-task; never hand off understanding
 2. **Context** — keep research and raw tool output out of the main reasoning thread
 3. **Harness** — one writer, and nothing is "done" without observed output
-4. **Loop** — deliberate iteration, capped at two cycles before you're brought in
+4. **Loop** — deliberate iteration: retry, then re-plan, then you're brought in
 5. **Graph** — PLAN → EXECUTE → VERIFY → REVIEW for anything risky
 
 It also instructs:
 - A verification gate with fixed verdicts (`GATE: PASS` / `GATE: FAIL`)
-- Two-strike rule (same failure twice → stop and escalate)
+- A failure ladder (first failure → retry, second → re-plan, third → stop and ask you)
 - No suffixed file copies as a debugging strategy
 - Concrete plans with verification commands before non-trivial edits
 
@@ -60,7 +60,7 @@ cp SKILL.md LICENSE ~/.grok/skills/stackwich-grok/
 ```
 
 > **Port status:** at parity with the Claude Code parent's five-layer policy, as
-> `stackwich-grok-rev 4`. The port tracks the parent's layer structure, not its revision
+> `stackwich-grok-rev 5`. The port tracks the parent's layer structure, not its revision
 > number — a parent bump does not automatically oblige a port bump. The Graph layer is
 > expressed as explicit phases inside one agent rather than three subagents: a deliberate
 > design choice for this runtime, not a shortfall.

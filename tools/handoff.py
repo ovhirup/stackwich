@@ -17,7 +17,7 @@ import json
 import sys
 from pathlib import Path
 
-from verify_gate import STATE_DIR, GateError, check, default_change, diff, git, head, manifest, now, records, repo_root, tree_hash
+from verify_gate import STATE_DIR, GateError, check, default_change, diff, git, head, manifest, now, records, repo_root, state_dir, tree_hash
 
 HANDOFF = "handoff.md"
 FILES = "handoff-files.json"
@@ -57,8 +57,7 @@ def save(root: Path, change: str, stage: str, next_step: str, plan: str | None, 
     ]
     if note:
         lines += ["", "Note:", "", note.strip()]
-    state = root / STATE_DIR
-    state.mkdir(parents=True, exist_ok=True)
+    state = state_dir(root)
     (state / HANDOFF).write_text("\n".join(lines) + "\n", encoding="utf-8")
     (state / FILES).write_text(json.dumps({"change": change, "head": head(root), "tree": tree_hash(files),
                                            "files": files, "artifacts": artifacts}, indent=1) + "\n",

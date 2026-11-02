@@ -32,8 +32,8 @@ Stackwich turns Grok from a fast code generator into a disciplined delivery part
 
 4. **Loop — iterate deliberately, and cap it**
    Recurring work runs as explicit iteration that tracks what was attempted and what failed,
-   not as repeated one-shot "try again" prompts. Failure routes back to EXECUTE with the
-   original plan, capped at two cycles before the user is brought in.
+   not as repeated one-shot "try again" prompts. A first failure routes back to EXECUTE with
+   the original plan, a second back to PLAN, and a third brings the user in.
 
 5. **Graph — plan, execute, verify, review**
    Anything hard to reverse, production-touching, schema-changing, or wide in blast radius
@@ -103,7 +103,7 @@ When the user asks to install or activate Stackwich:
 
 ```markdown
 <!-- stackwich:v1 -->
-<!-- stackwich-grok-rev: 4 -->
+<!-- stackwich-grok-rev: 5 -->
 ## Working Architecture (Stackwich)
 
 ### Prompt
@@ -149,14 +149,12 @@ When the user asks to install or activate Stackwich:
   consecutive runs stops and reports (unless the user set a different number).
 - Recurring work runs as explicit iteration that tracks what was attempted and what failed,
   not as repeated one-shot "try again" prompts.
-- Failure routing, with a hard stop:
-  - `GATE: FAIL` -> return to EXECUTE with the failure output and the original plan.
-  - `REVISE: ...` -> return to EXECUTE with the numbered list and the original plan.
-  - Either path is capped at 2 cycles. On the third, stop and bring the user the plan, what was
-    tried, and the outstanding gate or review output. Never loop silently.
-- Two-strike rule: if the same verification fails twice, stop iterating blind and escalate with
-  what was tried. Never respond to repeated failure by creating a suffixed copy of a file to
-  debug in.
+- Failure ladder for `GATE: FAIL` or `REVISE: ...` on the same change; the count never resets:
+  1. First failure -> return to EXECUTE with the output (or numbered list) and the original plan.
+  2. Second -> return to PLAN: re-plan from the plan, what was tried, and the outputs; then
+     EXECUTE the new plan.
+  3. Third -> stop and bring the user the plan, what was tried, and the outstanding output.
+  Never loop silently, and never debug in a suffixed copy of a file.
 
 ### Graph
 - Risky or hard-to-reverse changes follow PLAN -> EXECUTE -> VERIFY -> REVIEW in full. Small,

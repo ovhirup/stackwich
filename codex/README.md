@@ -17,7 +17,8 @@ Stackwich installs five layers into Codex sessions:
 4. **Loop** — schedule recurring work; failure cycles are capped, never silent
 5. **Graph** — PLAN → EXECUTE → VERIFY → REVIEW for anything risky
 
-It also instructs the two-strike rule (same failure twice → stop and escalate), verification
+It also instructs a failure ladder (first failure → retry, second → `advisor` re-plans, third →
+stop and ask you), verification
 by behavior rather than re-reading a just-written file, and no suffixed file copies as a
 debugging strategy.
 
@@ -68,7 +69,7 @@ scaffold `advisor`, `executor`, and `verifier` as TOML agents.
 > insert a duplicate block.
 
 > **Port status:** at parity with the Claude Code parent's five-layer policy, as
-> `stackwich-codex-rev 5`. The port tracks the parent's layer structure, not its revision
+> `stackwich-codex-rev 6`. The port tracks the parent's layer structure, not its revision
 > number — a parent bump does not automatically oblige a port bump.
 
 ---

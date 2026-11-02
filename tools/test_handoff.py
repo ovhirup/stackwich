@@ -96,6 +96,33 @@ class HandoffTests(unittest.TestCase):
         self.assertIn("Stage: reviewing", out.stdout)
         self.assertIn("UNCHECKED", out.stdout)
 
+    def untracked(self):
+        out = subprocess.run(["git", "-C", str(self.repo), "status", "--porcelain", "--untracked-files=all"],
+                             check=True, capture_output=True, text=True)
+        return out.stdout
+
+    def test_state_directory_ignores_itself(self):
+        """Neither tool should leave .stackwich/ for a later `git add -A` to commit."""
+        self.run_tool(GATE, "run", "--", "python3 -c 'pass'")
+        self.assertTrue((self.repo / ".stackwich" / "verify.jsonl").is_file())
+        self.assertNotIn(".stackwich", self.untracked())
+        self.save()
+        self.assertTrue((self.repo / ".stackwich" / "handoff.md").is_file())
+        self.assertNotIn(".stackwich", self.untracked())
+        self.assertEqual((self.repo / ".gitignore").read_text(), "build/\n")
+
+    def test_handoff_alone_ignores_its_state(self):
+        self.save()
+        self.assertNotIn(".stackwich", self.untracked())
+
+    def test_existing_state_gitignore_is_kept(self):
+        (self.repo / ".stackwich").mkdir()
+        (self.repo / ".stackwich" / ".gitignore").write_text("verify.jsonl\n")
+        self.save()
+        self.run_tool(GATE, "run", "--", "python3 -c 'pass'")
+        self.assertEqual((self.repo / ".stackwich" / ".gitignore").read_text(), "verify.jsonl\n")
+        self.assertIn(".stackwich/handoff.md", self.untracked())
+
     def test_bad_input(self):
         self.assertEqual(self.run_tool(HANDOFF, "save", "--stage", "executing", "--next", " ").returncode, 2)
         self.assertEqual(self.run_tool(HANDOFF, "save", "--stage", "nowhere", "--next", "x").returncode, 2)

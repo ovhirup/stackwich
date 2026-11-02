@@ -70,9 +70,8 @@ accounts and future model catalogs.
 - Verify behavior or structure rather than re-reading a just-written file solely to confirm
   that the write occurred.
 
-Fix validation failures before reporting success. Apply the two-strike rule to repeated
-verification failures: after the same failure occurs twice, stop blind retries and report the
-evidence.
+Fix validation failures before reporting success. If the same validation failure occurs twice,
+stop blind retries and report the evidence.
 
 ## 6. Report the result
 
