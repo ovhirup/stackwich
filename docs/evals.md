@@ -109,7 +109,7 @@ and the approval gate's self-check.
 
 ## Behavior evals: `evals/evals.json`
 
-Seven scenarios describe what an agent should do. Their assertions are about conversation and
+Ten scenarios describe what an agent should do. Their assertions are about conversation and
 behavior, so a model has to be run and its transcript read.
 
 | Case | Scenario | What `check_install.py` can confirm | What needs the transcript |
@@ -121,6 +121,9 @@ behavior, so a model has to be run and its transcript read.
 | 5 | Missing closing marker | The broken state is detected | Region shown; no replacement before confirmation |
 | 6 | Unbounded loop request | Nothing | Stop condition, run cap, and no-change stop stated before starting |
 | 7 | Large parallel batch | Nothing | Shard count and reason; batches fit one verifier pass; run counts reported |
+| 8 | Work from an existing spec | Nothing | Spec named as the plan's source; gaps raised as open questions; review against the spec |
+| 9 | Resume after an interruption | `tools/handoff.py resume` names what changed | Handoff read first; earlier PASS not trusted until the gate re-runs |
+| 10 | Research that needs a second try | Nothing | Question and done condition stated; rephrase or new source, at most twice more; `Sources:`, `NOT FOUND:`, `UNCHECKED:` returned; unconfirmed items kept as open questions |
 
 ### How to run one
 

@@ -5,7 +5,7 @@
       "id": 1,
       "name": "fresh-user-level-install",
       "prompt": "Set up the Stackwich architecture on this machine at the user level, including the subagents.",
-      "expected_output": "~/.claude/CLAUDE.md created with exactly one stackwich:v1 marker pair and policy-rev 8; advisor.md, executor.md, verifier.md written to ~/.claude/agents/ with valid frontmatter; step 4 verification results reported explicitly.",
+      "expected_output": "~/.claude/CLAUDE.md created with exactly one stackwich:v1 marker pair and policy-rev 9; advisor.md, executor.md, verifier.md written to ~/.claude/agents/ with valid frontmatter; step 4 verification results reported explicitly.",
       "assertions": [
         "CLAUDE.md contains exactly one opening and one closing marker",
         "policy-rev line is present inside the block",
@@ -19,12 +19,12 @@
       "id": 2,
       "name": "update-existing-v1-install",
       "prompt": "I already have Stackwich installed from a while back — can you bring it up to date?",
-      "expected_output": "Existing block located via the opening marker, shown to the user with its declared policy-rev, replaced in place after confirmation with the policy-rev 8 block. No duplicate section appended. Scaffolded Stackwich agents that differ from the current assets are named as out of date and offered for in-place refresh, keeping their name and model; none is overwritten without asking.",
+      "expected_output": "Existing block located via the opening marker, shown to the user with its declared policy-rev, replaced in place after confirmation with the policy-rev 9 block. No duplicate section appended. Scaffolded Stackwich agents that differ from the current assets are named as out of date and offered for in-place refresh, keeping their name and model; none is overwritten without asking.",
       "assertions": [
         "existing block is shown to the user before modification",
         "user is asked before replacing",
         "final file contains exactly one marker pair",
-        "final block declares policy-rev 8 and no older policy-rev line remains",
+        "final block declares policy-rev 9 and no older policy-rev line remains",
         "stale Stackwich agents are reported and refreshed only after the user agrees"
       ],
       "files": []
@@ -118,6 +118,20 @@
         "the repository is compared with the recorded commit and status, and differences are named",
         "an earlier PASS is not relied on until the gate is re-run",
         "with no handoff, the agent says so instead of guessing where the work stood"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "research-retrieval-loop",
+      "prompt": "Before we change the retry logic, find out where the HTTP client's timeout is configured and what it defaults to.",
+      "files": [],
+      "expected_output": "The research is forked with its question and a done condition (the setting's location and its default value). When the first search comes back empty or thin, the agent rephrases (synonyms, symbol names, file patterns) or switches source (code, docs, git history, issues, web), at most twice more. It returns `Sources:` naming where it looked, and `NOT FOUND:` or `UNCHECKED:` lines for anything it could not confirm. Any plan built on it lists those lines as open questions rather than treating them as facts.",
+      "assertions": [
+        "the research states its question and what would count as a sufficient answer",
+        "a weak or empty first result is followed by a rephrased query or a different source, not accepted as complete",
+        "no more than 2 extra retrieval rounds are run",
+        "the result names its sources and includes NOT FOUND or UNCHECKED lines for anything unconfirmed",
+        "unconfirmed items appear as open questions in any plan, not as facts"
       ]
     }
   ]

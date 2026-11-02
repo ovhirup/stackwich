@@ -19,7 +19,7 @@ Stackwich is 15 years of delivery coaching — plan → build → test → revie
 | Layer | Habit |
 |---|---|
 | **Prompt** | Meta-prompt every delegation. Context-full, with a stated done condition. Understanding never gets delegated. |
-| **Context** | Fork research and read-heavy scans off the main thread, never to the writer. Interrupted work resumes from a handoff. |
+| **Context** | Fork research and read-heavy scans off the main thread, never to the writer. Research retries thin results twice at most, then names what it couldn't confirm. Interrupted work resumes from a handoff. |
 | **Harness** | One writer. Read-only roles stay read-only in practice, not just in the tool list. Nothing "done" until observed. |
 | **Loop** | Recurring work runs on `/loop`. Failures climb one ladder — retry, re-plan, then stop — and are never silent. |
 | **Graph** | `advisor` plans → `executor` implements → `verifier` gates → `advisor` reviews, with explicit hand-off contracts. |
@@ -83,12 +83,12 @@ Four numbers move independently. Only the policy revisions change what an instal
 
 | Number | Current | Where it lives | When you act |
 |---|---|---|---|
-| Repository and plugin version | 3.5.0 | `plugin.json`, git tags `vX.Y.Z`, [CHANGELOG](CHANGELOG.md) headings | Update the plugin. |
-| Claude Code policy revision | `policy-rev 8` | The comment inside the `<!-- stackwich:v1 -->` block in your `CLAUDE.md` | Re-run `/stackwich:stackwich` when it changes. |
-| Grok port revision | `stackwich-grok-rev 5` | Inside the block the Grok port writes | Re-apply the Grok port when it changes. |
-| Codex port revision | `stackwich-codex-rev 6` | Inside the `<!-- stackwich-codex:v1 -->` block in `AGENTS.md` | Re-apply the Codex port when it changes. |
+| Repository and plugin version | 3.6.0 | `plugin.json`, git tags `vX.Y.Z`, [CHANGELOG](CHANGELOG.md) headings | Update the plugin. |
+| Claude Code policy revision | `policy-rev 9` | The comment inside the `<!-- stackwich:v1 -->` block in your `CLAUDE.md` | Re-run `/stackwich:stackwich` when it changes. |
+| Grok port revision | `stackwich-grok-rev 6` | Inside the block the Grok port writes | Re-apply the Grok port when it changes. |
+| Codex port revision | `stackwich-codex-rev 7` | Inside the `<!-- stackwich-codex:v1 -->` block in `AGENTS.md` | Re-apply the Codex port when it changes. |
 
-A repository release can leave every policy revision unchanged; 3.2.0 did, while 3.3.0, 3.4.0 and 3.5.0 each moved all three. Each CHANGELOG entry says whether there is anything to re-run. The markers themselves never change.
+A repository release can leave every policy revision unchanged; 3.2.0 did, while 3.3.0 through 3.6.0 each moved all three. Each CHANGELOG entry says whether there is anything to re-run. The markers themselves never change.
 
 ### Older copies
 
@@ -132,7 +132,7 @@ stackwich/
 │           ├── executor.md
 │           ├── verifier.md
 │           └── rebound.md        # cost/rebound playbook, read only for cost or loop questions
-├── evals/evals.json              # five install paths + two policy-behavior cases
+├── evals/evals.json              # five install paths + five policy-behavior cases
 ├── tools/                        # check_install, diagnose, uninstall, verify_gate, handoff, and validate (CI's checks)
 ├── examples/first-task/          # the demo project for docs/first-task.md
 ├── recipes/                      # API, browser-flow, responsive, and accessibility checks

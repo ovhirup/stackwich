@@ -3,6 +3,26 @@
 Headings are `## <repo version> — <what moved>`. Ports are named in the body with their own rev
 counters: a port tracks the parent's layer structure, not its revision number.
 
+## 3.6.0 — policy-rev 9: research that retries, then says what it didn't check
+
+The Claude Code policy changes, so `policy-rev` moves from 8 to 9: re-run `/stackwich:stackwich`
+to apply it in place, and accept the agent refresh it offers, because `advisor.md` changed. The
+`<!-- stackwich:v1 -->` marker is unchanged.
+
+### Policy
+- A research fork states its question and done condition. On thin results it rephrases or
+  switches source (code, docs, history, issues, web), at most twice more, then returns
+  `Sources:`, `NOT FOUND:` and `UNCHECKED:` lines; `UNCHECKED:` items stay open. (#30)
+- `advisor.md` lists `NOT FOUND:` and `UNCHECKED:` items under `Open questions` and never builds a
+  step on them.
+- The block stays inside its 735-word budget (734 words): the Context fork bullet drops
+  "exploration", which "research" already covers.
+- `evals/evals.json` case 10 describes the expected behavior; `docs/evals.md` now lists cases 8–10.
+
+### Ports
+- Codex moves to `stackwich-codex-rev 7` and Grok to `stackwich-grok-rev 6` with the same rule;
+  Codex's `advisor` template gets the open-questions line.
+
 ## 3.5.0 — policy-rev 8: a leaner policy with one failure ladder
 
 The Claude Code policy changes, so `policy-rev` moves from 7 to 8: re-run `/stackwich:stackwich`

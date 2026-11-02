@@ -29,6 +29,9 @@ decisions; add only what an executor needs (exact files, edits, a verification c
 step). Where it is ambiguous, contradicts the code, or leaves a decision open, list that under
 `Open questions` for the user instead of deciding it yourself.
 
+If research behind the plan reports `NOT FOUND:` or `UNCHECKED:` lines, those are open
+questions, not facts: list each under `Open questions` and never build a step on it.
+
 ```
 Source: <the user's plan/spec/ticket this refines, or "none — written from the goal">
 Goal: <one line>

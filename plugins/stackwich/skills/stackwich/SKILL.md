@@ -3,8 +3,8 @@ name: stackwich
 description: Installs the Stackwich architecture — meta-prompt delegation, a plan/execute/verify/review sandwich, loop-by-default for recurring work, and fork-based context engineering — into any Claude Code setup. Writes the operating policy into CLAUDE.md and optionally scaffolds three companion subagents (advisor/executor/verifier). Use this whenever the user wants to adopt, install, bootstrap, upgrade, or re-apply this delegation architecture on a new machine, project, or someone else's setup — and also when they ask more loosely for help making their Claude Code setup more disciplined, setting up planner/executor/reviewer subagents, adding a review gate before risky changes, enforcing cheap-model tiering, or fixing agents that make sloppy or out-of-scope edits. Also use it when the user asks why agent usage or cost keeps climbing despite cheaper models, or whether a loop or more parallel agents will actually save effort.
 metadata:
   author: Abhirup Banerjee (@ovhirup)
-  version: 3.5.0
-  policy-rev: 8
+  version: 3.6.0
+  policy-rev: 9
 ---
 
 # Stackwich — install the Stackwich architecture
@@ -59,7 +59,7 @@ substitute consistently everywhere they appear.
 
 ```markdown
 <!-- stackwich:v1 -->
-<!-- policy-rev: 8 -->
+<!-- policy-rev: 9 -->
 ## Working Architecture (Stackwich)
 
 ### Prompt
@@ -68,9 +68,12 @@ substitute consistently everywhere they appear.
 - Every delegation states its done condition: the verification command and expected output.
 
 ### Context
-- Fork research, exploration, and read-heavy scans so raw tool output stays out of the main
-  conversation; prefer a fork over a fresh agent unless the work is unrelated. Never send
-  scans to `executor`.
+- Fork research and read-heavy scans so raw tool output stays out of the main conversation;
+  prefer a fork over a fresh agent unless the work is unrelated. Never send scans to
+  `executor`.
+- A research fork states its question and done condition. On thin results, rephrase or switch
+  source (code, docs, history, issues, web), at most twice more, then return `Sources:`,
+  `NOT FOUND:`, `UNCHECKED:`. `UNCHECKED:` stays open.
 - When work may outlive the session, keep `.stackwich/handoff.md` current at each stage change,
   with `.stackwich/` kept out of git: the plan and where it lives, the stage, the next step, the
   last gate verdict with its command, and the commit plus `git status --short`. On resuming,
@@ -180,7 +183,7 @@ This skill installs a verify-before-done policy, so it holds itself to it. After
 confirm and report actual observed results — not intentions:
 
 1. Both markers present in `<scope>/CLAUDE.md`, exactly once each.
-2. `policy-rev: 8` is present inside the block (an upgrade from an older revision must
+2. `policy-rev: 9` is present inside the block (an upgrade from an older revision must
    leave no trace of the previous one).
 3. If agents were scaffolded: all three files exist in `<scope>/agents/`, each starts with
    valid YAML frontmatter containing `name`, `description`, `model`, and `tools`.
